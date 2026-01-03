@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0
+    <title>Health Dashboard</title>
+    <h2 id="welcomeText"></h2>
+    <h3 id="dateText"></h3>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<nav class="bottom-nav"> 
+        <button data-page="dashboard"> 
+            <span>🏠</span> 
+            <small>Home</small> 
+        </button> 
+        <button data-page="vitals"> 
+            <span>❤️</span> 
+            <small>Vitals</small> 
+        </button> 
+        <button data-page="medications"> 
+            <span>💊</span> 
+            <small>Meds</small> 
+        </button> 
+        <button data-page="reports"> 
+            <span>📊</span> 
+            <small>Reports</small> 
+        </button> 
+        <button data-page="steps"> 
+            <span>👣</span> 
+            <small>Steps</small> 
+        </button> 
+    </nav>
+    <script src="bottom-nav.js"></script>
+<body data-page="dashboard"> 
+<div class="dashboard">
+
+  <h2 id="welcomeText" class="welcome"></h2>
+  <p class="date-text" id="todayDate"></p>
+
+  <!-- SOS -->
+  <button class="sos-btn" onclick="triggerSOS()">🚨 EMERGENCY SOS</button>
+
+  <!-- Alerts -->
+  <div id="alertsBox" class="card alert-card hidden">
+    <h3>⚠ Active Alerts</h3>
+    <div id="alertsList"></div>
+  </div>
+
+  <!-- Vitals -->
+  <div class="card">
+    <h3>❤️ Latest Vitals</h3>
+    <div class="vitals-grid">
+      <div>
+        <strong id="bp">--</strong>
+        <small>Blood Pressure</small>
+      </div>
+      <div>
+        <strong id="hr">--</strong>
+        <small>Heart Rate</small>
+      </div>
+      <div>
+        <strong id="temp">--</strong>
+        <small>Temperature</small>
+      </div>
+    </div>
+  </div>
+
+  <!-- Medications -->
+  <div class="card">
+    <h3>💊 Today's Medications</h3>
+    <div id="medList"></div>
+  </div>
+
+  <!-- Quick Stats -->
+  <div class="stats-grid">
+    <div class="card center">
+      🚶‍♂️
+      <strong id="stepsToday">0</strong>
+      <small>Steps Today</small>
+    </div>
+    <div class="card center">
+      🎯
+      <strong id="stepGoal">5000</strong>
+      <small>Daily Goal</small>
+    </div>
+  </div>
+
+</div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', (event) => {
+            const storedVitals = localStorage.getItem('vitals');
+
+            if (storedVitals) {
+                const vitals = JSON.parse(storedVitals);
+
+                if (vitals.bp) {
+                    document.getElementById('bp').textContent = vitals.bp;
+                }
+                if (vitals.hr) {
+                    document.getElementById('hr').textContent = vitals.hr;
+                }
+                if (vitals.temp) {
+                    document.getElementById('temp').textContent = vitals.temp;
+                }
+            } else {
+                console.log('No vitals found. Adding dummy data to test.');
+                
+                const dummyVitals = { bp: '120/80', hr: '75 bpm', temp: '98.6°F' };
+                localStorage.setItem('vitals', JSON.stringify(dummyVitals));
+
+            }
+        });
+    </script> 
+    <!-- Chatbot Floating Widget -->
+<!-- Chatbot Floating Button -->
+<button id="chatbot-toggle" class="chatbot-toggle">
+  💬
+</button>
+<div id="chatbot-container" class="chatbot hidden"></div>
+</body>
+<script src="login.js"></script>
+<script src="medications.js"></script>
+<script src="vitals.js"></script>
+<script src="steps.js"></script>
+<script src="reports.js"></script>
+<script src="chatbot.js"></script>
+</html>

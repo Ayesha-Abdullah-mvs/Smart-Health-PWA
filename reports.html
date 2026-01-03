@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Health Reports</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+ <nav class="bottom-nav">
+        <button data-page="dashboard"> 
+            <span>🏠</span> 
+            <small>Home</small> 
+        </button> 
+        <button data-page="vitals"> 
+            <span>❤️</span> 
+            <small>Vitals</small> 
+        </button> 
+        <button data-page="medications"> 
+            <span>💊</span> 
+            <small>Meds</small> 
+        </button> 
+        <button data-page="reports"> 
+            <span>📊</span> 
+            <small>Reports</small> 
+        </button> 
+        <button data-page="steps"> 
+            <span>👣</span> 
+            <small>Steps</small> 
+        </button> 
+    </nav>
+ <script src="bottom-nav.js"></script>
+<body data-page="reports">
+  <div class="container">
+    <h2>Health Reports</h2>
+    <div class="report-section">
+      <h3>Weekly Summary</h3>
+      <p>Total Steps: <span id="weeklySteps"></span></p>
+      <p>Missed Medicines: <span id="missedMeds"></span></p>
+      <p>Alerts Generated: <span id="alertsCount"></span></p>
+    </div>
+
+    <div class="report-card">
+      <h3>Medication Compliance</h3>
+      <table>
+        <tr>
+          <th>Medicine</th>
+          <th>Status</th>
+        </tr>
+        <tbody id="medTable"></tbody>
+      </table>
+    </div>
+  </div>
+</body>
+<script src="reports.js"></script>
+</html>

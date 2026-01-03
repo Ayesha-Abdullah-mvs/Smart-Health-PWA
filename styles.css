@@ -1,0 +1,462 @@
+/* login Part */ 
+body { 
+    font-family: Arial, sans-serif; 
+    background: #f2f6fa; 
+    display: flex; 
+    justify-content: center; 
+    align-items: center; 
+    height: 100vh; 
+    margin: 0; 
+} 
+
+.login-container { 
+    background: #ffffff; 
+    padding: 25px 30px; 
+    border-radius: 10px; 
+    width: 350px; 
+    box-shadow: 0 5px 18px rgba(0,0,0,0.15); 
+    text-align: center; 
+} 
+
+h2 { 
+    margin-bottom: 5px; 
+} 
+
+.subtitle { 
+    color: gray; 
+    font-size: 13px; 
+    margin-bottom: 20px; 
+} 
+
+.input-group { 
+    text-align: left; 
+    margin-bottom: 12px; 
+} 
+
+label { 
+    font-size: 13px; 
+} 
+
+input { 
+    width: 100%; 
+    padding: 10px; 
+    margin-top: 10px; 
+    border: 1px solid #ccc; 
+    border-radius: 6px;
+    /* Added property */
+    box-sizing: border-box; 
+} 
+
+.btn { 
+    width: 100%; 
+    padding: 10px; 
+    margin-top: 10px; 
+    border: none; 
+    border-radius: 6px; 
+    background: #4a6fd6; 
+    color: white; 
+    font-weight: bold; 
+    cursor: pointer;
+    /* Added property */
+    box-sizing: border-box; 
+} 
+
+.btn:hover { 
+    opacity: 0.9; 
+} 
+
+#msg { 
+    margin-top: 10px; 
+    font-size: 13px; 
+} 
+/* End Of Login */
+
+
+/*Dashboard Part */
+.dashboard {
+  padding: 16px;
+  padding-bottom: 80px;
+}
+
+.title {
+  text-align: center;
+  margin-bottom: 12px;
+}
+
+.card {
+  background: white;
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 12px;
+}
+
+.sos-btn {
+  width: 100%;
+  height: 70px;
+  background: red;
+  color: white;
+  font-size: 20px;
+  border-radius: 12px;
+  border: none;
+  margin-bottom: 16px;
+}
+
+.alert-card {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  background: #f9fafb;
+}
+
+
+.vitals-grid {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 12px;
+  font-size: 18px;
+}
+
+.stats-grid {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.med-item {
+  padding: 8px 0;
+  border-bottom: 1px solid #ddd;
+}
+
+.alert {
+  padding: 10px;
+  border-radius: 8px;
+  margin-bottom: 10px;
+  color: white;
+}
+
+.alert.emergency {
+  background-color: #dc2626;
+}
+.alert.warning {
+  background-color: #f59e0b;
+}
+.alert.info {
+  background-color: #3b82f6;
+}
+
+
+.info {
+    margin-top: 15px;
+    font-size: 14px;
+    color: #666;
+}
+
+/* Dasboard Tamam*/
+
+
+/*Bottom Navigation*/
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 70px;
+  background: #ffffff;
+  border-top: 1px solid #ddd;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  z-index: 1000;
+}
+
+.bottom-nav button {
+  background: none;
+  border: none;
+  text-align: center;
+  font-size: 12px;
+  color: #666;
+  cursor: pointer;
+}
+
+.bottom-nav button span {
+  font-size: 22px;
+  display: block;
+}
+
+.bottom-nav button.active {
+  color: #2563eb;
+  font-weight: bold;
+}
+
+.bottom-nav button.active span {
+  transform: scale(1.1);
+}
+
+
+/*Report Paage*/
+.report-card {
+  background: #f4f6f8;
+  padding: 15px;
+  margin: 15px 0;
+  border-radius: 8px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th, td {
+  border: 1px solid #ccc;
+  padding: 8px;
+  text-align: center;
+}
+
+button {
+  padding: 10px 15px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 6px;
+}
+
+
+/*  VITALS PAGE  */
+
+.vitals-page {
+  padding: 20px;
+  max-width: 480px;
+  margin: auto;
+}
+
+.page-title {
+  text-align: center;
+  font-size: 28px;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.vitals-card {
+  background: #ffffff;
+  padding: 25px;
+  border-radius: 14px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+}
+
+.section-title {
+  font-size: 20px;
+  margin-bottom: 15px;
+}
+
+.form-group {
+  margin-bottom: 18px;
+}
+
+.form-group label {
+  display: block;
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.form-group input {
+  width: 100%;
+  height: 48px;
+  font-size: 18px;
+  padding: 10px;
+  border-radius: 10px;
+  border: 1.5px solid #ccc;
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: #2563eb;
+}
+
+.form-group small {
+  display: block;
+  margin-top: 6px;
+  color: #666;
+  font-size: 13px;
+}
+
+.primary-btn {
+  width: 100%;
+  height: 54px;
+  background: #2563eb;
+  color: white;
+  font-size: 18px;
+  font-weight: bold;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+}
+
+.primary-btn:hover {
+  background: #1e4fd8;
+}
+
+
+/*Pedometer*/
+
+body {
+  font-family: Arial, sans-serif;
+  background: #f5f7fb;
+  margin: 0;
+}
+
+.page-container {
+  padding: 20px;
+  max-width: 480px;
+  margin: auto;
+}
+
+.page-title {
+  text-align: center;
+  font-size: 28px;
+  margin-bottom: 20px;
+}
+
+.card {
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  margin-bottom: 20px;
+}
+
+.center {
+  text-align: center;
+}
+
+.card-title {
+  font-size: 20px;
+  margin-bottom: 15px;
+}
+
+.form input {
+  width: 100%;
+  padding: 12px;
+  margin-top: 6px;
+  margin-bottom: 12px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}
+
+.primary-btn {
+  width: 100%;
+  padding: 14px;
+  background: #2563eb;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 16px;
+}
+
+.secondary-btn {
+  padding: 8px 12px;
+}
+
+.info-box {
+  background: #e0ebff;
+  padding: 15px;
+  border-radius: 10px;
+}
+
+.big-number {
+  font-size: 48px;
+  font-weight: bold;
+}
+
+.progress-bar {
+  background: #ddd;
+  border-radius: 10px;
+  height: 12px;
+  margin: 10px 0;
+}
+
+#progressFill {
+  background: #2563eb;
+  height: 12px;
+  width: 0%;
+  border-radius: 10px;
+}
+
+.hidden {
+  display: none;
+}
+
+.success {
+  color: green;
+  font-weight: bold;
+}
+
+/* Chatbot Styles */
+.chatbot-toggle {
+  position: fixed;
+  bottom: 90px;
+  right: 20px;
+  background: #0d47a1; 
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 55px;
+  height: 55px;
+  font-size: 24px;
+  cursor: pointer;
+  z-index: 999;
+}
+
+.chatbot {
+  position: fixed;
+  bottom: 160px;
+  right: 20px;
+  width: 300px;
+  background: #333333; /* Dark background for the chat window */
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.4); /* Slightly darker shadow */
+  z-index: 999;
+}
+
+.hidden {
+  display: none;
+}
+
+.chatbot-header {
+  background: #1a237e; /* Darker header color */
+  color: white;
+  padding: 10px;
+  display: flex;
+  justify-content: space-between;
+  border-radius: 12px 12px 0 0;
+}
+
+.chatbot-body {
+  padding: 12px;
+}
+
+.chat-option {
+  width: 100%;
+  margin-top: 8px;
+  padding: 8px;
+  background: #444444; /* Darker option background */
+  color: white; /* Added color for readability on dark background */
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.chat-option:hover {
+  background: #555555; /* Darker option hover state */
+}
+
+.bot-msg {
+  font-size: 14px;
+  margin-bottom: 10px;
+  color: #eeeeee; /* Added light color for message readability */
+}
+/* End of Chatbot */

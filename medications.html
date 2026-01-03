@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Medication Schedule</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<nav class="bottom-nav">
+  <button data-page="dashboard">
+    <span>🏠</span>
+    <small>Home</small>
+  </button>
+  <button data-page="vitals">
+    <span>❤️</span>
+    <small>Vitals</small>
+  </button>
+  <button data-page="medications">
+    <span>💊</span>
+    <small>Meds</small>
+  </button>
+  <button data-page="reports">
+    <span>📊</span>
+    <small>Reports</small>
+  </button>
+  <button data-page="steps">
+    <span>👣</span>
+    <small>Steps</small>
+  </button>
+</nav>
+<script src="bottom-nav.js"></script>
+<body data-page="medications">
+
+
+<h2>Medication Schedule</h2>
+
+<form id="medForm">
+  <input type="text" id="medName" placeholder="Medicine Name" required>
+  <input type="time" id="medTime" required>
+  <button type="submit">Add Medicine</button>
+</form>
+
+<ul id="medList"></ul>
+<script src="medications.js"></script>
+</body>
+</html>

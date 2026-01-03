@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Pedometer</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<nav class="bottom-nav"> 
+        <button data-page="dashboard"> 
+            <span>🏠</span> 
+            <small>Home</small> 
+        </button> 
+        <button data-page="vitals"> 
+            <span>❤️</span> 
+            <small>Vitals</small> 
+        </button> 
+        <button data-page="medications"> 
+            <span>💊</span> 
+            <small>Meds</small> 
+        </button> 
+        <button data-page="reports"> 
+            <span>📊</span> 
+            <small>Reports</small> 
+        </button> 
+        <button data-page="steps"> 
+            <span>👣</span> 
+            <small>Steps</small> 
+        </button> 
+    </nav>
+<script src="bottom-nav.js"></script>
+<body data-page="steps">
+<div class="page-container">
+  <h1 class="page-title">Step Counter</h1>
+
+  <div class="card center">
+    <div class="big-number" id="todaySteps">0</div>
+    <p class="muted">Steps Today</p>
+
+    <div class="progress-bar">
+      <div id="progressFill"></div>
+    </div>
+
+    <p id="progressText">0% of daily goal</p>
+    <p id="goalStatus" class="success"></p>
+  </div>
+
+  <div class="card">
+    <h2 class="card-title">Daily Goal</h2>
+
+    <div class="goal-row">
+      <span id="goalText">5000 steps</span>
+      <button class="secondary-btn" onclick="editGoal()">Edit</button>
+    </div>
+
+    <div id="goalEdit" class="hidden">
+      <input type="number" id="newGoal" min="1000" />
+      <button class="primary-btn" onclick="saveGoal()">Save</button>
+    </div>
+  </div>
+</div>
+</body>
+<script src="steps.js"></script>
+</html>
