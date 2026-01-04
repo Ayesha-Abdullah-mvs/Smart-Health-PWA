@@ -1,48 +1,54 @@
-document.addEventListener('DOMContentLoaded', () => {
-    const currentPage = document.body.getAttribute('data-page');
+// js/vitals.js
 
-    if (currentPage === 'vitals') {
-        const vitalsForm = document.getElementById('vitalsForm');
+document.addEventListener("DOMContentLoaded", () => {
+  const form = document.getElementById("vitalsForm");
+  const statusMsg = document.getElementById("statusMsg");
 
-        
-        const storedVitals = JSON.parse(localStorage.getItem('vitals'));
-        if (storedVitals) {
-            document.getElementById('bp').value = storedVitals.bp || '';
-            document.getElementById('hr').value = storedVitals.hr || '';
-            document.getElementById('temp').value = storedVitals.temp || '';
-        }
+  if (!form) {
+    console.error("Vitals form not found!");
+    return;
+  }
 
-        vitalsForm.addEventListener('submit', (e) => {
-            e.preventDefault();
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
 
-            const vitalsData = {
-                bp: document.getElementById('bp').value,
-                hr: document.getElementById('hr').value + ' bpm',
-                temp: document.getElementById('temp').value + '°C',
-                lastUpdated: new Date().toLocaleString()
-            };
+    const bp = document.getElementById("bp").value.trim();
+    const hr = document.getElementById("hr").value.trim();
+    const temp = document.getElementById("temp").value.trim();
 
-            localStorage.setItem('vitals', JSON.stringify(vitalsData));
-
-            alert('Vitals saved successfully!');
-             
-        });
+    if (!bp || !hr || !temp) {
+      statusMsg.textContent = "Please fill all fields!";
+      statusMsg.style.color = "red";
+      return;
     }
 
+    // Create vitals object
+    const vitalsEntry = {
+      bp,
+      hr: Number(hr),
+      temp: Number(temp),
+      timestamp: new Date().toISOString()
+    };
 
-    if (currentPage === 'dashboard') {
-        const storedVitals = JSON.parse(localStorage.getItem('vitals'));
-        
-        if (storedVitals) {
-            if (document.getElementById('bp')) document.getElementById('bp').textContent = storedVitals.bp;
-            if (document.getElementById('hr')) document.getElementById('hr').textContent = storedVitals.hr;
-            if (document.getElementById('temp')) document.getElementById('temp').textContent = storedVitals.temp;
-        } else {
-            // Set default/placeholder text if no data exists
-            if (document.getElementById('bp')) document.getElementById('bp').textContent = '--';
-            if (document.getElementById('hr')) document.getElementById('hr').textContent = '--';
-            if (document.getElementById('temp')) document.getElementById('temp').textContent = '--';
-        }
-        
+    // Get existing vitals array or new array
+    let vitalsHistory = [];
+    try {
+      vitalsHistory = JSON.parse(localStorage.getItem("vitals")) || [];
+    } catch (err) {
+      vitalsHistory = [];
     }
+
+    // Add new entry to array
+    vitalsHistory.push(vitalsEntry);
+
+    // Save back to localStorage
+    localStorage.setItem("vitals", JSON.stringify(vitalsHistory));
+
+    // Confirmation message
+    statusMsg.textContent = "Vitals saved successfully!";
+    statusMsg.style.color = "green";
+
+    // Clear the form
+    form.reset();
+  });
 });

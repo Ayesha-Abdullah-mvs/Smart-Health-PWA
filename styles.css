@@ -460,3 +460,24 @@ body {
   color: #eeeeee; /* Added light color for message readability */
 }
 /* End of Chatbot */
+
+/* Reports ka Vitals Table */
+#vitalsTable {
+  width: auto; 
+  max-width: 100%;
+  border-collapse: collapse;
+  margin: 10px 0;
+  table-layout: auto; /* Let columns fit content */
+}
+
+#vitalsTable th, #vitalsTable td {
+  border: 1px solid #ccc;
+  padding: 5px 10px;
+  text-align: left;
+  white-space: nowrap; /* prevent stretching */
+}
+
+#vitalsTable th {
+  background-color: #f0f0f0;
+}
+/* End of Vitals Table */

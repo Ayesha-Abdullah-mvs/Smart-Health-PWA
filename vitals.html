@@ -1,92 +1,55 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Enter Health Data</title>
-  <link rel="stylesheet" href="styles.css">
+    <meta charset="UTF-8" />
+    <title>Vitals</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="styles.css" />
 </head>
-<nav class="bottom-nav">
-  <button data-page="dashboard">
-    <span>🏠</span>
-    <small>Home</small>
-  </button>
-  <button data-page="vitals">
-    <span>❤️</span>
-    <small>Vitals</small>
-  </button>
-  <button data-page="medications">
-    <span>💊</span>
-    <small>Meds</small>
-  </button>
-  <button data-page="reports">
-    <span>📊</span>
-    <small>Reports</small>
-  </button>
-  <button data-page="steps">
-    <span>👣</span>
-    <small>Steps</small>
-  </button>
-</nav>
-<script src="bottom-nav.js"></script>
-<body data-page="vitals">
-<h1>Enter Daily Health Data</h1>
-<form id="vitalsForm">
-<div class="page vitals-page">
-  <h1 class="page-title">Record Vitals</h1>
+<body>
+    <nav class="bottom-nav">
+        <button data-page="dashboard">
+            <span>🏠</span>
+            <small>Home</small>
+        </button>
+        <button data-page="vitals">
+            <span>❤️</span>
+            <small>Vitals</small>
+        </button>
+        <button data-page="medications">
+            <span>💊</span>
+            <small>Meds</small>
+        </button>
+        <button data-page="reports">
+            <span>📊</span>
+            <small>Reports</small>
+        </button>
+        <button data-page="steps">
+            <span>👣</span>
+            <small>Steps</small>
+        </button>
+    </nav>
+    
+    <div class="page-container">
+        <h2>Record Vitals</h2>
+       <form id="vitalsForm">
+  <label>Blood Pressure</label>
+  <input type="text" id="bp" placeholder="120/80" required />
 
-  <div class="vitals-card">
-    <h2 class="section-title">Enter Health Measurements</h2>
+  <label>Heart Rate (bpm)</label>
+  <input type="number" id="hr" required />
 
-    <form id="vitalsForm">
-      <!-- Blood Pressure -->
-      <div class="form-group">
-        <label for="bp">Blood Pressure</label>
-        <input
-          type="text"
-          id="bp"
-          placeholder="120/80"
-          required
-        />
-        <small>Format: systolic/diastolic (e.g., 120/80)</small>
-      </div>
+  <label>Temperature (°C)</label>
+  <input type="number" step="0.1" id="temp" required />
 
-      <!-- Heart Rate -->
-      <div class="form-group">
-        <label for="hr">Heart Rate (bpm)</label>
-        <input
-          type="number"
-          id="hr"
-          placeholder="72"
-          min="40"
-          max="200"
-          required
-        />
-        <small>Normal range: 60–100 bpm</small>
-      </div>
+  <button type="submit">Save Vitals</button>
+</form>
 
-      <!-- Temperature -->
-      <div class="form-group">
-        <label for="temp">Temperature (°C)</label>
-        <input
-          type="number"
-          step="0.1"
-          id="temp"
-          placeholder="36.8"
-          min="35"
-          max="42"
-          required
-        />
-        <small>Normal range: 36.1–37.2°C</small>
-      </div>
+<p id="statusMsg"></p>
 
-      <button type="submit" class="primary-btn">
-        Save Vitals
-      </button>
-    </form>
-  </div>
-</div>
-
-
-<script src="vitals.js"></script>
+    </div>
+    <!-- Ensure your script tags are correctly referenced -->
+    <script src="bottom-nav.js"></script>
+    <script src="vitals.js"></script>
 </body>
 </html>

@@ -37,3 +37,21 @@ document.addEventListener('DOMContentLoaded', () => {
        
     }
 });
+document.addEventListener("DOMContentLoaded", () => {
+  const vitals = JSON.parse(localStorage.getItem("vitals")) || [];
+  const tbody = document.querySelector("#vitalsTable tbody");
+
+  // Clear old rows first
+  tbody.innerHTML = "";
+
+  vitals.forEach(v => {
+    const row = document.createElement("tr");
+    row.innerHTML = `
+      <td>${new Date(v.timestamp).toLocaleString()}</td>
+      <td>${v.bp}</td>
+      <td>${v.hr}</td>
+      <td>${v.temp}°C</td>
+    `;
+    tbody.appendChild(row);
+  });
+});

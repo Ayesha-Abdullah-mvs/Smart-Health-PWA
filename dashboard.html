@@ -51,15 +51,15 @@
     <h3>❤️ Latest Vitals</h3>
     <div class="vitals-grid">
       <div>
-        <strong id="bp">--</strong>
+        <strong id="dash-bp">--</strong>
         <small>Blood Pressure</small>
       </div>
       <div>
-        <strong id="hr">--</strong>
+        <strong id="dash-hr">--</strong>
         <small>Heart Rate</small>
       </div>
       <div>
-        <strong id="temp">--</strong>
+        <strong id="dash-temp">--</strong>
         <small>Temperature</small>
       </div>
     </div>
@@ -87,33 +87,7 @@
 
 </div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', (event) => {
-            const storedVitals = localStorage.getItem('vitals');
-
-            if (storedVitals) {
-                const vitals = JSON.parse(storedVitals);
-
-                if (vitals.bp) {
-                    document.getElementById('bp').textContent = vitals.bp;
-                }
-                if (vitals.hr) {
-                    document.getElementById('hr').textContent = vitals.hr;
-                }
-                if (vitals.temp) {
-                    document.getElementById('temp').textContent = vitals.temp;
-                }
-            } else {
-                console.log('No vitals found. Adding dummy data to test.');
-                
-                const dummyVitals = { bp: '120/80', hr: '75 bpm', temp: '98.6°F' };
-                localStorage.setItem('vitals', JSON.stringify(dummyVitals));
-
-            }
-        });
-    </script> 
-    <!-- Chatbot Floating Widget -->
-<!-- Chatbot Floating Button -->
+    <!-- Chatbot Floating Button -->
 <button id="chatbot-toggle" class="chatbot-toggle">
   💬
 </button>
@@ -125,4 +99,5 @@
 <script src="steps.js"></script>
 <script src="reports.js"></script>
 <script src="chatbot.js"></script>
+<script src="dashboard.js"></script>
 </html>
