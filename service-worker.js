@@ -36,3 +36,15 @@ self.addEventListener("fetch", event => {
     })
   );
 });
+self.addEventListener('periodicsync', (event) => {
+  if (event.tag === 'get-latest-steps') {
+    event.waitUntil(fetchAndStoreSteps());
+  }
+});
+
+async function fetchAndStoreSteps() {
+  // 1. In a real-world app, you would fetch data from a 
+  // fitness API here (e.g., Google Fit REST API).
+  // 2. Update IndexedDB or local storage with the new count.
+  console.log("Syncing steps in the background...");
+}

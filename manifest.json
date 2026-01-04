@@ -17,6 +17,12 @@
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any"
-    }
-  ]
+    },
+    {
+  "name": "Pedometer",
+  "display": "standalone",
+  "permissions": ["periodic-background-sync"]
 }
+]
+}
+

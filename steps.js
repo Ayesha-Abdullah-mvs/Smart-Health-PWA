@@ -105,3 +105,17 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 });
+async function registerPeriodicSync() {
+  const registration = await navigator.serviceWorker.ready;
+  try {
+    // Attempt to register a sync every 1 hour (minInterval is in ms)
+    await registration.periodicSync.register('get-latest-steps', {
+      minInterval: 60 * 60 * 1000, 
+    });
+  } catch (err) {
+    console.error("Periodic Sync could not be registered:", err);
+  }
+}
+
+// Call this after a user interaction
+document.body.addEventListener('click', registerPeriodicSync, { once: true });
