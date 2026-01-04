@@ -484,7 +484,7 @@ body {
 }
 
 #vitalsTable th {
-  background-color: #f0f0f0;
+  background-color: #007bff;
 }
 
 /* End of Vitals Table */
@@ -603,51 +603,7 @@ tbody tr:hover {
     color: #00796b;
 }
 
-/* --- Bottom Navigation Styling --- */
-.bottom-nav {
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    background-color: #fff;
-    box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
-    height: 70px;
-    border-top: 1px solid #eee;
-}
 
-.bottom-nav button {
-    background: none;
-    border: none;
-    color: #aaa;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    cursor: pointer;
-    padding: 0;
-    flex: 1;
-    transition: color 0.3s;
-}
-
-.bottom-nav button span {
-    font-size: 1.5rem;
-}
-
-.bottom-nav button small {
-    font-size: 0.75rem;
-    margin-top: 4px;
-}
-
-/* Active navigation button for the current page */
-body[data-page="reports"] .bottom-nav button[data-page="reports"] {
-    color: #007bff;
-}
-
-.bottom-nav button:focus {
-    outline: none;
-}
 
 /* --- Mobile Specific Styles (as requested in original HTML) --- */
 @media screen and (max-width: 600px) {
@@ -699,3 +655,4 @@ body[data-page="reports"] .bottom-nav button[data-page="reports"] {
     #vitalsTable td:nth-of-type(3)::before { content: "HR"; }
     #vitalsTable td:nth-of-type(4)::before { content: "Temp"; }
 }
+
