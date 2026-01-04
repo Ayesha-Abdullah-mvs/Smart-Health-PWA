@@ -522,6 +522,7 @@ body {
 
 /*Reports*/
 
+/* --- Global Resets & Base Styles --- */
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background-color: #f4f7f9;
@@ -538,10 +539,10 @@ body {
 }
 
 h2, h3 {
-    color: #004a99;
+    color: #004a99; /* Darker blue used here */
 }
 
-
+/* --- Report Card Styling --- */
 .report-card, .report-section {
     background: #fff;
     padding: 20px;
@@ -561,7 +562,7 @@ h2, h3 {
     color: #007bff;
 }
 
-
+/* --- Table Styling --- */
 table {
     width: 100%;
     border-collapse: collapse;
@@ -574,8 +575,9 @@ th, td {
     border-bottom: 1px solid #ddd;
 }
 
+/* **UPDATED RULE:** This selector now uses the desired dark blue background */
 thead th {
-    background-color: #007bff;
+    background-color: #004a99; /* Changed to a dark blue color */
     color: white;
     font-weight: 600;
 }
@@ -588,7 +590,7 @@ tbody tr:hover {
     background-color: #f1f1f1;
 }
 
-
+/* Status Pill Styling (for "Scheduled" etc.) */
 .status-pill {
     padding: 5px 12px;
     border-radius: 20px;
@@ -600,6 +602,54 @@ tbody tr:hover {
     background-color: #e0f7fa;
     color: #00796b;
 }
+
+/* --- Bottom Navigation Styling --- */
+.bottom-nav {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: #fff;
+    box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+    height: 70px;
+    border-top: 1px solid #eee;
+}
+
+.bottom-nav button {
+    background: none;
+    border: none;
+    color: #aaa;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+    padding: 0;
+    flex: 1;
+    transition: color 0.3s;
+}
+
+.bottom-nav button span {
+    font-size: 1.5rem;
+}
+
+.bottom-nav button small {
+    font-size: 0.75rem;
+    margin-top: 4px;
+}
+
+/* Active navigation button for the current page */
+body[data-page="reports"] .bottom-nav button[data-page="reports"] {
+    color: #007bff;
+}
+
+.bottom-nav button:focus {
+    outline: none;
+}
+
+/* --- Mobile Specific Styles (as requested in original HTML) --- */
 @media screen and (max-width: 600px) {
     .container {
         padding: 10px;
@@ -607,10 +657,12 @@ tbody tr:hover {
         box-sizing: border-box;
     }
 
+    /* Hide horizontal table headers on mobile */
     table thead {
         display: none;
     }
 
+    /* Turn each table row into a 'Card' */
     table, tbody, tr, td {
         display: block;
         width: 100%;
@@ -625,7 +677,7 @@ tbody tr:hover {
         box-shadow: 0 2px 4px rgba(0,0,0,0.05);
     }
 
-    
+    /* Make each cell stack vertically with a label */
     td {
         text-align: left;
         padding: 8px 0;
@@ -639,9 +691,9 @@ tbody tr:hover {
         border-bottom: none;
     }
 
+    /* Add labels manually for the data from the table header */
     #medTable td:nth-of-type(1)::before { content: "Medicine"; }
     #medTable td:nth-of-type(2)::before { content: "Status"; }
-
     #vitalsTable td:nth-of-type(1)::before { content: "Date"; }
     #vitalsTable td:nth-of-type(2)::before { content: "BP"; }
     #vitalsTable td:nth-of-type(3)::before { content: "HR"; }
