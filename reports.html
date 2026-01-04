@@ -3,68 +3,123 @@
 <head>
   <meta charset="UTF-8">
   <title>Health Reports</title>
+  <!-- Vital for PWA and Mobile Scaling -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="stylesheet" href="styles.css">
+  
+  <style>
+    /* SIMPLE MOBILE CARD STYLE */
+    @media screen and (max-width: 600px) {
+      /* 1. Reset standard container to prevent horizontal cut-off */
+      .container, .page-container {
+        padding: 10px;
+        width: 100%;
+        box-sizing: border-box;
+      }
+
+      /* 2. Hide horizontal table headers on mobile */
+      table thead {
+        display: none;
+      }
+
+      /* 3. Turn each table row into a 'Card' */
+      table, tbody, tr, td {
+        display: block;
+        width: 100%;
+      }
+
+      tr {
+        margin-bottom: 15px;
+        background: #fff;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        padding: 12px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+      }
+
+      /* 4. Make each cell stack vertically with a label */
+      td {
+        text-align: left;
+        padding: 8px 0;
+        border-bottom: 1px dotted #eee;
+        display: flex;
+        justify-content: space-between;
+      }
+
+      td:last-child {
+        border-bottom: none;
+      }
+
+      /* Optional: Add labels manually if not using data-attributes */
+      td::before {
+        font-weight: bold;
+        color: #666;
+        margin-right: 10px;
+      }
+    }
+  </style>
 </head>
- <nav class="bottom-nav">
-        <button data-page="dashboard"> 
-            <span>🏠</span> 
-            <small>Home</small> 
-        </button> 
-        <button data-page="vitals"> 
-            <span>❤️</span> 
-            <small>Vitals</small> 
-        </button> 
-        <button data-page="medications"> 
-            <span>💊</span> 
-            <small>Meds</small> 
-        </button> 
-        <button data-page="reports"> 
-            <span>📊</span> 
-            <small>Reports</small> 
-        </button> 
-        <button data-page="steps"> 
-            <span>👣</span> 
-            <small>Steps</small> 
-        </button> 
-    </nav>
- <script src="bottom-nav.js"></script>
+
 <body data-page="reports">
+
+  <!-- Nav must be inside body for proper PWA rendering -->
+  <nav class="bottom-nav">
+    <button data-page="dashboard"><span>🏠</span><small>Home</small></button>
+    <button data-page="vitals"><span>❤️</span><small>Vitals</small></button>
+    <button data-page="medications"><span>💊</span><small>Meds</small></button>
+    <button data-page="reports"><span>📊</span><small>Reports</small></button>
+    <button data-page="steps"><span>👣</span><small>Steps</small></button>
+  </nav>
+
   <div class="container">
     <h2>Health Reports</h2>
+    
+    <!-- Summary Section -->
     <div class="report-section">
       <h3>Weekly Summary</h3>
-      <p>Total Steps: <span id="weeklySteps"></span></p>
-      <p>Missed Medicines: <span id="missedMeds"></span></p>
-      <p>Alerts Generated: <span id="alertsCount"></span></p>
+      <p>Total Steps: <span id="weeklySteps">0</span></p>
+      <p>Missed Medicines: <span id="missedMeds">0</span></p>
+      <p>Alerts Generated: <span id="alertsCount">0</span></p>
     </div>
 
+    <!-- Medication Card Table -->
     <div class="report-card">
       <h3>Medication Compliance</h3>
-      <table>
-        <tr>
-          <th>Medicine</th>
-          <th>Status</th>
-        </tr>
-        <tbody id="medTable"></tbody>
+      <table id="medTableContainer">
+        <thead>
+          <tr>
+            <th>Medicine</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody id="medTable">
+          <!-- JS will inject rows here -->
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Vitals Card Table -->
+    <div class="report-card">
+      <h3>Vitals History</h3>
+      <table id="vitalsTable">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>BP</th>
+            <th>HR</th>
+            <th>Temp</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- JS will inject rows here -->
+        </tbody>
       </table>
     </div>
   </div>
-  <table id="vitalsTable">
-  <thead>
-    <tr>
-      <th>Date</th>
-      <th>BP</th>
-      <th>HR</th>
-      <th>Temp</th>
-    </tr>
-  </thead>
-  <tbody></tbody>
-</table>
 
-
+  <!-- Scripts at bottom for performance -->
+  <script src="bottom-nav.js"></script>
+  <script src="reports.js"></script>
+  <script src="vitals.js"></script>
 </body>
-<script src="reports.js"></script>
-<script src="vitals.js"></script>
 </html>
-
