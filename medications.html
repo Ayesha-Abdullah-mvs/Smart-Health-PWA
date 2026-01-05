@@ -6,6 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="stylesheet" href="styles.css">
 </head>
+<body data-page="medications">
 <nav class="bottom-nav">
   <button data-page="dashboard">
     <span>🏠</span>
@@ -28,20 +29,17 @@
     <small>Steps</small>
   </button>
 </nav>
-<script src="bottom-nav.js"></script>
-<body data-page="medications">
-
-
+<div class="page-container">
 <h2>Medication Schedule</h2>
-
 <form id="medForm">
   <input type="text" id="medName" placeholder="Medicine Name" required>
   <input type="time" id="medTime" required>
   <button type="submit">Add Medicine</button>
 </form>
-
 <ul id="medList"></ul>
+<script src="bottom-nav.js"></script>
 <script src="medications.js"></script>
 </body>
 </html>
+
 
