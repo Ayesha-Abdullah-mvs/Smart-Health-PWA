@@ -228,79 +228,88 @@ button {
 
 /*  VITALS PAGE  */
 
-.vitals-page {
-  padding: 20px;
-  max-width: 480px;
-  margin: auto;
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #f5f7fb;
+    margin: 0;
+    padding-bottom: 70px; /* Space for the bottom nav */
+    color: #333;
 }
 
-.page-title {
-  text-align: center;
-  font-size: 28px;
-  font-weight: bold;
-  margin-bottom: 20px;
+.page-container {
+    padding: 20px;
+    max-width: 480px;
+    margin: auto;
 }
 
-.vitals-card {
-  background: #ffffff;
-  padding: 25px;
-  border-radius: 14px;
-  box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+h2 {
+    text-align: center;
+    font-size: 24px;
+    margin-bottom: 25px;
+    color: #1a202c;
 }
 
-.section-title {
-  font-size: 20px;
-  margin-bottom: 15px;
+/* Form Styling */
+#vitalsForm {
+    background: white;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
 }
 
-.form-group {
-  margin-bottom: 18px;
+label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #4a5568;
 }
 
-.form-group label {
-  display: block;
-  font-size: 16px;
-  font-weight: 600;
-  margin-bottom: 6px;
+input[type="text"],
+input[type="number"] {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    border: 1px solid #e2e8f0;
+    box-sizing: border-box; /* Ensures padding doesn't affect width */
+    font-size: 16px;
 }
 
-.form-group input {
-  width: 100%;
-  height: 48px;
-  font-size: 18px;
-  padding: 10px;
-  border-radius: 10px;
-  border: 1.5px solid #ccc;
+input:focus {
+    outline: none;
+    border-color: #4299e1;
+    box-shadow: 0 0 0 1px #4299e1;
 }
 
-.form-group input:focus {
-  outline: none;
-  border-color: #2563eb;
+button[type="submit"] {
+    width: 100%;
+    padding: 14px;
+    background: #2563eb; /* Primary color */
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.3s;
 }
 
-.form-group small {
-  display: block;
-  margin-top: 6px;
-  color: #666;
-  font-size: 13px;
+button[type="submit"]:hover {
+    background: #1d4ed8;
 }
 
-.primary-btn {
-  width: 100%;
-  height: 54px;
-  background: #2563eb;
-  color: white;
-  font-size: 18px;
-  font-weight: bold;
-  border: none;
-  border-radius: 12px;
-  cursor: pointer;
+/* Status Message */
+#statusMsg {
+    text-align: center;
+    margin-top: 15px;
+    font-size: 14px;
+    min-height: 1em; /* Prevents layout shift when message appears */
 }
 
-.primary-btn:hover {
-  background: #1e4fd8;
+.success {
+    color: green;
+    font-weight: bold;
 }
-
 
 /*Pedometer*/
 
@@ -655,4 +664,5 @@ tbody tr:hover {
     #vitalsTable td:nth-of-type(3)::before { content: "HR"; }
     #vitalsTable td:nth-of-type(4)::before { content: "Temp"; }
 }
+
 
