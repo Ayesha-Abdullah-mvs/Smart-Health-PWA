@@ -4,8 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0
     <title>Health Dashboard</title>
-    <h2 id="welcomeText"></h2>
-    <h3 id="dateText"></h3>
     <link rel="stylesheet" href="styles.css">
 </head>
 <nav class="bottom-nav"> 
@@ -34,19 +32,6 @@
 <body data-page="dashboard"> 
 <div class="dashboard">
 
-  <h2 id="welcomeText" class="welcome"></h2>
-  <p class="date-text" id="todayDate"></p>
-
-  <!-- SOS -->
-  <button class="sos-btn" onclick="triggerSOS()">🚨 EMERGENCY SOS</button>
-
-  <!-- Alerts -->
-  <div id="alertsBox" class="card alert-card hidden">
-    <h3>⚠ Active Alerts</h3>
-    <div id="alertsList"></div>
-  </div>
-
-  <!-- Vitals -->
   <div class="card">
     <h3>❤️ Latest Vitals</h3>
     <div class="vitals-grid">
@@ -65,13 +50,11 @@
     </div>
   </div>
 
-  <!-- Medications -->
   <div class="card">
     <h3>💊 Today's Medications</h3>
     <div id="medList"></div>
   </div>
 
-  <!-- Quick Stats -->
   <div class="stats-grid">
     <div class="card center">
       🚶‍♂️
@@ -86,12 +69,6 @@
   </div>
 
 </div>
-
-    <!-- Chatbot Floating Button -->
-<button id="chatbot-toggle" class="chatbot-toggle">
-  💬
-</button>
-<div id="chatbot-container" class="chatbot hidden"></div>
 </body>
 <script src="login.js"></script>
 <script src="medications.js"></script>
@@ -101,3 +78,4 @@
 <script src="chatbot.js"></script>
 <script src="dashboard.js"></script>
 </html>
+
