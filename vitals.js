@@ -1,5 +1,3 @@
-// js/vitals.js
-
 document.addEventListener("DOMContentLoaded", () => {
   const form = document.getElementById("vitalsForm");
   const statusMsg = document.getElementById("statusMsg");
@@ -22,7 +20,7 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    // Create vitals object
+   
     const vitalsEntry = {
       bp,
       hr: Number(hr),
@@ -30,25 +28,24 @@ document.addEventListener("DOMContentLoaded", () => {
       timestamp: new Date().toISOString()
     };
 
-    // Get existing vitals array or new array
-    let vitalsHistory = [];
+   
+    let vitalsHistory;
     try {
-      vitalsHistory = JSON.parse(localStorage.getItem("vitals")) || [];
+        const storedData = JSON.parse(localStorage.getItem("vitals"));
+        vitalsHistory = Array.isArray(storedData) ? storedData : [];
     } catch (err) {
-      vitalsHistory = [];
+        vitalsHistory = [];
     }
 
-    // Add new entry to array
     vitalsHistory.push(vitalsEntry);
 
-    // Save back to localStorage
+   
     localStorage.setItem("vitals", JSON.stringify(vitalsHistory));
 
-    // Confirmation message
+ 
     statusMsg.textContent = "Vitals saved successfully!";
     statusMsg.style.color = "green";
 
-    // Clear the form
     form.reset();
   });
 });
