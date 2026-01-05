@@ -668,92 +668,94 @@ tbody tr:hover {
 
 /* Medications Page*/
 body {
-  font-family: Arial, sans-serif;
-  background: #f5f7fb;
-  margin: 0;
-  color: #333;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #f5f7fb;
+    margin: 0;
+    padding-bottom: 70px; /* Space for the bottom nav */
+    color: #333;
+}
+
+/* Shared Container */
+.page-container, #medList {
+    padding: 20px;
+    max-width: 480px;
+    margin: auto;
 }
 
 h2 {
-  text-align: center;
-  font-size: 28px;
-  margin-top: 20px;
-  margin-bottom: 20px;
-  color: #1e293b;
+    text-align: center;
+    font-size: 24px;
+    margin-bottom: 25px;
+    color: #1a202c;
 }
 
-/* Form Container */
-#medForm {
-  padding: 0 20px;
-  max-width: 480px;
-  margin: 0 auto 30px auto;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
+/* Forms (Vitals & Meds) */
+#vitalsForm, #medForm {
+    background: white;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    margin-bottom: 20px;
 }
 
-#medForm input {
-  width: 100%;
-  padding: 12px;
-  border-radius: 8px;
-  border: 1px solid #ccc;
-  box-sizing: border-box;
-  font-size: 16px;
+/* Labels & Inputs */
+label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #4a5568;
 }
 
-#medForm button {
-  width: 100%;
-  padding: 14px;
-  background: #2563eb;
-  color: white;
-  border: none;
-  border-radius: 10px;
-  font-size: 16px;
-  font-weight: bold;
-  cursor: pointer;
+input[type="text"],
+input[type="number"],
+input[type="time"] {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    border: 1px solid #e2e8f0;
+    box-sizing: border-box; 
+    font-size: 16px;
 }
 
-/* Medication List Styling */
+input:focus {
+    outline: none;
+    border-color: #4299e1;
+    box-shadow: 0 0 0 1px #4299e1;
+}
+
+/* Buttons */
+button[type="submit"] {
+    width: 100%;
+    padding: 14px;
+    background: #2563eb;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+button[type="submit"]:hover {
+    background: #1d4ed8;
+}
+
+/* Medication List (The items added dynamically) */
 #medList {
-  list-style: none;
-  padding: 0 20px;
-  max-width: 480px;
-  margin: 0 auto 80px auto; /* Margin at bottom for Nav */
+    list-style: none;
+    padding-top: 0;
 }
 
-/* Each Medicine Item as a Card */
 #medList li {
-  background: white;
-  padding: 15px 20px;
-  border-radius: 12px;
-  margin-bottom: 12px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-}
-
-/* Medicine Name Style */
-#medList li strong {
-  font-size: 18px;
-  color: #1e293b;
-}
-
-/* Time Style */
-#medList li span {
-  background: #e0ebff;
-  color: #2563eb;
-  padding: 5px 10px;
-  border-radius: 6px;
-  font-size: 14px;
-  font-weight: bold;
-}
-.delete-btn {
-  background: #fee2e2;
-  color: #ef4444;
-  border: none;
-  padding: 8px;
-  border-radius: 6px;
-  margin-left: 10px;
-  cursor: pointer;
+    background: white;
+    padding: 15px 20px;
+    border-radius: 12px;
+    margin-bottom: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    border-left: 4px solid #2563eb; /* Blue accent line */
 }
