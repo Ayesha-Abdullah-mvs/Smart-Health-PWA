@@ -61,8 +61,6 @@
 </head>
 
 <body data-page="reports">
-
-  <!-- Nav must be inside body for proper PWA rendering -->
   <nav class="bottom-nav">
     <button data-page="dashboard"><span>🏠</span><small>Home</small></button>
     <button data-page="vitals"><span>❤️</span><small>Vitals</small></button>
@@ -115,6 +113,8 @@
         </tbody>
       </table>
     </div>
+    <button onclick="exportData()">Export Data</button>
+
   </div>
 
   <!-- Scripts at bottom for performance -->
@@ -123,3 +123,4 @@
   <script src="vitals.js"></script>
 </body>
 </html>
+
