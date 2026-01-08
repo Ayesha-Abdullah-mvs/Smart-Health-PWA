@@ -54,4 +54,20 @@ document.addEventListener("DOMContentLoaded", () => {
     `;
     tbody.appendChild(row);
   });
+    function exportData() {
+  const data = {
+    vitals: JSON.parse(localStorage.getItem("vitals")) || [],
+    medicines: JSON.parse(localStorage.getItem("medicines")) || [],
+    stepsToday: localStorage.getItem("stepsToday") || 0,
+    stepGoal: localStorage.getItem("stepGoal") || 5000
+  };
+
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
+  const link = document.createElement("a");
+  link.href = URL.createObjectURL(blob);
+  link.download = "data.json";
+  link.click();
+}
+
 });
+
