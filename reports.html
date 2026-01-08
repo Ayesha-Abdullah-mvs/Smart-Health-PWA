@@ -7,7 +7,7 @@
   <link rel="stylesheet" href="styles.css">
   
   <!-- Load PyScript to run Python in the browser -->
-  <link rel="stylesheet" href="https://pyscript.net/releases/2025.11.2/core.css">
+  <link rel="stylesheet" href="pyscript.net">
   <script type="module" src="pyscript.net"></script>
 
   <style>
@@ -96,49 +96,60 @@
     </div>
   </div>
 
-  <!-- Scripts -->
-  <script src="bottom-nav.js"></script>
-  <script src="reports.js"></script>
-  <script src="vitals.js"></script>
+<button id="exportBtn" class="export-button">
+    Export Health Report (.txt)
+</button>
 
 <script type="py">
 import json
 from js import localStorage, window, Blob, document
 from pyscript import when
 
+# Links the function to the button click automatically
 @when("click", "#exportBtn")
 def generate_report(event):
-    # Retrieve data from browser storage
-    vitals = json.loads(localStorage.getItem("vitals") or "[]")
-    medicines = json.loads(localStorage.getItem("medicines") or "[]")
-    steps = localStorage.getItem("stepsToday") or "0"
-    goal = localStorage.getItem("stepGoal") or "5000"
+    # 1. Access browser storage (must use JSON as localStorage stores strings)
+    try:
+        vitals = json.loads(localStorage.getItem("vitals") or "[]")
+        meds = json.loads(localStorage.getItem("medicines") or "[]")
+        steps = localStorage.getItem("stepsToday") or "0"
+        goal = localStorage.getItem("stepGoal") or "5000"
+    except Exception as e:
+        print(f"Data Error: {e}")
+        return
 
-    # Processing logic
+    # 2. Python Processing Logic
     total = len(vitals)
     avg_hr = sum(int(v.get("hr", 0)) for v in vitals) // total if total > 0 else 0
 
-    # Build report text
-    report = f"HEALTH REPORT - 2026\n"
-    report += f"Generated: {window.Date.new().toLocaleString()}\n"
-    report += "--------------------------\n"
-    report += f"Steps Today: {steps} / Goal: {goal}\n"
-    report += f"Avg Heart Rate: {avg_hr} bpm\n"
-    report += f"Medications: {len(medicines)} scheduled\n"
-
-    # Trigger .txt download
+    # 3. Create Human-Readable Report
+    report = f"SMART HEALTH REPORT - {window.Date.new().toLocaleDateString()}\n"
+    report += "=================================\n"
+    report += f"Steps Today: {steps} (Goal: {goal})\n"
+    report += f"Average Heart Rate: {avg_hr} bpm\n"
+    report += f"Medications Scheduled: {len(meds)}\n"
+    report += "---------------------------------\n"
+    
+    # 4. Trigger Download (Standard 2026 Web Blob Method)
     blob = Blob.new([report], {type: "text/plain"})
     url = window.URL.createObjectURL(blob)
     link = document.createElement("a")
     link.href = url
-    link.download = "health_summary.txt"
+    link.download = "Health_Summary.txt"
+    document.body.appendChild(link)
     link.click()
+    document.body.removeChild(link)
     window.URL.revokeObjectURL(url)
 </script>
+
+  <script src="bottom-nav.js"></script>
+  <script src="reports.js"></script>
+  <script src="vitals.js"></script>
 
 
 </body>
 </html>
+
 
 
 
