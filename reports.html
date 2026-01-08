@@ -89,10 +89,10 @@
     </div>
     
     <div style="padding: 20px 0 100px;"> 
-        <!-- Updated button to use Python click handler -->
-        <button id="exportBtn" py-click="generate_report" class="export-button">
-            Export Human-Readable Report (Python)
-        </button>
+       <button id="exportBtn" class="export-button">
+    Export Health Report (.txt)
+</button>
+
     </div>
   </div>
 
@@ -106,60 +106,38 @@ import json
 from js import localStorage, window, Blob, document
 from pyscript import when
 
-# The @when decorator links the function to the button click
 @when("click", "#exportBtn")
 def generate_report(event):
-    # 1. Access browser localStorage
-    vitals_raw = localStorage.getItem("vitals") or "[]"
-    meds_raw = localStorage.getItem("medicines") or "[]"
-    
-    vitals = json.loads(vitals_raw)
-    medicines = json.loads(meds_raw)
-    steps_today = int(localStorage.getItem("stepsToday") or 0)
-    step_goal = int(localStorage.getItem("stepGoal") or 5000)
+    # Retrieve data from browser storage
+    vitals = json.loads(localStorage.getItem("vitals") or "[]")
+    medicines = json.loads(localStorage.getItem("medicines") or "[]")
+    steps = localStorage.getItem("stepsToday") or "0"
+    goal = localStorage.getItem("stepGoal") or "5000"
 
-    # 2. Python Processing Logic
-    total_entries = len(vitals)
-    avg_hr = sum(int(v.get("hr", 0)) for v in vitals) // total_entries if total_entries > 0 else 0
+    # Processing logic
+    total = len(vitals)
+    avg_hr = sum(int(v.get("hr", 0)) for v in vitals) // total if total > 0 else 0
 
-    # 3. Create the text report
-    report = f"""SMART HEALTH PWA – REPORT SUMMARY
-=================================
-Generated on: {window.Date.new().toLocaleString()}
+    # Build report text
+    report = f"HEALTH REPORT - 2026\n"
+    report += f"Generated: {window.Date.new().toLocaleString()}\n"
+    report += "--------------------------\n"
+    report += f"Steps Today: {steps} / Goal: {goal}\n"
+    report += f"Avg Heart Rate: {avg_hr} bpm\n"
+    report += f"Medications: {len(medicines)} scheduled\n"
 
-ACTIVITY:
-- Steps Today: {steps_today}
-- Daily Goal: {step_goal}
-- Status: {"✔ Goal Achieved" if steps_today >= step_goal else "✘ Goal Not Met"}
-
-VITALS SUMMARY:
-- Total Entries: {total_entries}
-- Average Heart Rate: {avg_hr} bpm
-
-MEDICATIONS SCHEDULED:
-"""
-    if not medicines:
-        report += "- No medications set.\n"
-    else:
-        for med in medicines:
-            report += f"- {med.get('name')} at {med.get('time')}\n"
-
-    report += "\n--- End of Report ---"
-
-    # 4. Trigger Download
+    # Trigger .txt download
     blob = Blob.new([report], {type: "text/plain"})
     url = window.URL.createObjectURL(blob)
-    
     link = document.createElement("a")
     link.href = url
-    link.download = "My_Health_Report.txt"
-    document.body.appendChild(link) # Required for some browsers to trigger
+    link.download = "health_summary.txt"
     link.click()
-    document.body.removeChild(link)
-    
     window.URL.revokeObjectURL(url)
 </script>
 
+
 </body>
 </html>
+
 
