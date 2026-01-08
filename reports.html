@@ -101,29 +101,29 @@
   <script src="reports.js"></script>
   <script src="vitals.js"></script>
 
-  <!-- Python Logic Section -->
-  <script type="py">
-    import json
-    from js import localStorage, window, Blob, document
+<script type="py">
+import json
+from js import localStorage, window, Blob, document
+from pyscript import when
 
-    def generate_report(event):
-        # 1. Access browser localStorage via Python
-        vitals_raw = localStorage.getItem("vitals") or "[]"
-        meds_raw = localStorage.getItem("medicines") or "[]"
-        
-        vitals = json.loads(vitals_raw)
-        medicines = json.loads(meds_raw)
-        steps_today = int(localStorage.getItem("stepsToday") or 0)
-        step_goal = int(localStorage.getItem("stepGoal") or 5000)
+# The @when decorator links the function to the button click
+@when("click", "#exportBtn")
+def generate_report(event):
+    # 1. Access browser localStorage
+    vitals_raw = localStorage.getItem("vitals") or "[]"
+    meds_raw = localStorage.getItem("medicines") or "[]"
+    
+    vitals = json.loads(vitals_raw)
+    medicines = json.loads(meds_raw)
+    steps_today = int(localStorage.getItem("stepsToday") or 0)
+    step_goal = int(localStorage.getItem("stepGoal") or 5000)
 
-        # 2. Python Processing Logic
-        total_entries = len(vitals)
-        avg_hr = 0
-        if total_entries > 0:
-            avg_hr = sum(int(v.get("hr", 0)) for v in vitals) // total_entries
+    # 2. Python Processing Logic
+    total_entries = len(vitals)
+    avg_hr = sum(int(v.get("hr", 0)) for v in vitals) // total_entries if total_entries > 0 else 0
 
-        # 3. Create the text report
-        report = f"""SMART HEALTH PWA – REPORT SUMMARY
+    # 3. Create the text report
+    report = f"""SMART HEALTH PWA – REPORT SUMMARY
 =================================
 Generated on: {window.Date.new().toLocaleString()}
 
@@ -138,24 +138,28 @@ VITALS SUMMARY:
 
 MEDICATIONS SCHEDULED:
 """
-        if not medicines:
-            report += "- No medications set.\n"
+    if not medicines:
+        report += "- No medications set.\n"
+    else:
         for med in medicines:
             report += f"- {med.get('name')} at {med.get('time')}\n"
 
-        report += "\n--- End of Report ---"
+    report += "\n--- End of Report ---"
 
-        # 4. Create download link for .txt file
-        blob = Blob.new([report], {type: "text/plain"})
-        url = window.URL.createObjectURL(blob)
-        
-        link = document.createElement("a")
-        link.href = url
-        link.download = "My_Health_Report.txt"
-        link.click()
-        
-        # Cleanup
-        window.URL.revokeObjectURL(url)
-  </script>
+    # 4. Trigger Download
+    blob = Blob.new([report], {type: "text/plain"})
+    url = window.URL.createObjectURL(blob)
+    
+    link = document.createElement("a")
+    link.href = url
+    link.download = "My_Health_Report.txt"
+    document.body.appendChild(link) # Required for some browsers to trigger
+    link.click()
+    document.body.removeChild(link)
+    
+    window.URL.revokeObjectURL(url)
+</script>
+
 </body>
 </html>
+
