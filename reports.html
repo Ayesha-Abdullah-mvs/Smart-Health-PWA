@@ -6,27 +6,20 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="stylesheet" href="styles.css">
   
+  <!-- Load PyScript to run Python in the browser -->
+  <link rel="stylesheet" href="pyscript.net">
+  <script type="module" src="pyscript.net"></script>
+
   <style>
     /* SIMPLE MOBILE CARD STYLE */
     @media screen and (max-width: 600px) {
-      /* 1. Reset standard container to prevent horizontal cut-off */
       .container, .page-container {
         padding: 10px;
         width: 100%;
         box-sizing: border-box;
       }
-
-      /* 2. Hide horizontal table headers on mobile */
-      table thead {
-        display: none;
-      }
-
-      /* 3. Turn each table row into a 'Card' */
-      table, tbody, tr, td {
-        display: block;
-        width: 100%;
-      }
-
+      table thead { display: none; }
+      table, tbody, tr, td { display: block; width: 100%; }
       tr {
         margin-bottom: 15px;
         background: #fff;
@@ -35,8 +28,6 @@
         padding: 12px;
         box-shadow: 0 2px 4px rgba(0,0,0,0.05);
       }
-
-      /* 4. Make each cell stack vertically with a label */
       td {
         text-align: left;
         padding: 8px 0;
@@ -44,17 +35,8 @@
         display: flex;
         justify-content: space-between;
       }
-
-      td:last-child {
-        border-bottom: none;
-      }
-
-      /* Optional: Add labels manually if not using data-attributes */
-      td::before {
-        font-weight: bold;
-        color: #666;
-        margin-right: 10px;
-      }
+      td:last-child { border-bottom: none; }
+      td::before { font-weight: bold; color: #666; margin-right: 10px; }
     }
   </style>
 </head>
@@ -71,7 +53,6 @@
   <div class="container">
     <h2>Health Reports</h2>
     
-    <!-- Summary Section -->
     <div class="report-section">
       <h3>Weekly Summary</h3>
       <p>Total Steps: <span id="weeklySteps">0</span></p>
@@ -79,7 +60,6 @@
       <p>Alerts Generated: <span id="alertsCount">0</span></p>
     </div>
 
-    <!-- Medication Card Table -->
     <div class="report-card">
       <h3>Medication Compliance</h3>
       <table id="medTableContainer">
@@ -89,13 +69,10 @@
             <th>Status</th>
           </tr>
         </thead>
-        <tbody id="medTable">
-          <!-- JS will inject rows here -->
-        </tbody>
+        <tbody id="medTable"></tbody>
       </table>
     </div>
 
-    <!-- Vitals Card Table -->
     <div class="report-card">
       <h3>Vitals History</h3>
       <table id="vitalsTable">
@@ -107,27 +84,78 @@
             <th>Temp</th>
           </tr>
         </thead>
-        <tbody>
-          <!-- JS will inject rows here -->
-        </tbody>
+        <tbody></tbody>
       </table>
     </div>
     
     <div style="padding: 20px 0 100px;"> 
-        <button id="exportBtn" onclick="exportData()" class="export-button">
-            Export Data
+        <!-- Updated button to use Python click handler -->
+        <button id="exportBtn" py-click="generate_report" class="export-button">
+            Export Human-Readable Report (Python)
         </button>
     </div>
-</div> <!-- End Container -->
-
   </div>
 
-  <!-- Scripts at bottom for performance -->
+  <!-- Scripts -->
   <script src="bottom-nav.js"></script>
   <script src="reports.js"></script>
   <script src="vitals.js"></script>
-  <script src="data.json"></script>
+
+  <!-- Python Logic Section -->
+  <script type="py">
+    import json
+    from js import localStorage, window, Blob, document
+
+    def generate_report(event):
+        # 1. Access browser localStorage via Python
+        vitals_raw = localStorage.getItem("vitals") or "[]"
+        meds_raw = localStorage.getItem("medicines") or "[]"
+        
+        vitals = json.loads(vitals_raw)
+        medicines = json.loads(meds_raw)
+        steps_today = int(localStorage.getItem("stepsToday") or 0)
+        step_goal = int(localStorage.getItem("stepGoal") or 5000)
+
+        # 2. Python Processing Logic
+        total_entries = len(vitals)
+        avg_hr = 0
+        if total_entries > 0:
+            avg_hr = sum(int(v.get("hr", 0)) for v in vitals) // total_entries
+
+        # 3. Create the text report
+        report = f"""SMART HEALTH PWA – REPORT SUMMARY
+=================================
+Generated on: {window.Date.new().toLocaleString()}
+
+ACTIVITY:
+- Steps Today: {steps_today}
+- Daily Goal: {step_goal}
+- Status: {"✔ Goal Achieved" if steps_today >= step_goal else "✘ Goal Not Met"}
+
+VITALS SUMMARY:
+- Total Entries: {total_entries}
+- Average Heart Rate: {avg_hr} bpm
+
+MEDICATIONS SCHEDULED:
+"""
+        if not medicines:
+            report += "- No medications set.\n"
+        for med in medicines:
+            report += f"- {med.get('name')} at {med.get('time')}\n"
+
+        report += "\n--- End of Report ---"
+
+        # 4. Create download link for .txt file
+        blob = Blob.new([report], {type: "text/plain"})
+        url = window.URL.createObjectURL(blob)
+        
+        link = document.createElement("a")
+        link.href = url
+        link.download = "My_Health_Report.txt"
+        link.click()
+        
+        # Cleanup
+        window.URL.revokeObjectURL(url)
+  </script>
 </body>
 </html>
-
-
