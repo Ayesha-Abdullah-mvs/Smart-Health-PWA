@@ -68,53 +68,7 @@ document.addEventListener("DOMContentLoaded", () => {
   link.download = "data.json";
   link.click();
 }
-function exportData() {
-  // 1. Get data from localStorage
-  const vitals = JSON.parse(localStorage.getItem("vitals")) || [];
-  const medicines = JSON.parse(localStorage.getItem("medicines")) || [];
-  const stepsToday = localStorage.getItem("stepsToday") || 0;
-  const stepGoal = localStorage.getItem("stepGoal") || 5000;
-
-  // 2. Calculate summary logic (similar to your Python script)
-  const totalEntries = vitals.length;
-  let avgHR = 0;
-  if (totalEntries > 0) {
-    const sumHR = vitals.reduce((sum, v) => sum + parseInt(v.hr || 0), 0);
-    avgHR = Math.round(sumHR / totalEntries);
-  }
-
-  // 3. Build a Human-Readable String
-  let report = `SMART HEALTH PWA – REPORT SUMMARY\n`;
-  report += `Generated on: ${new Date().toLocaleString()}\n`;
-  report += `------------------------------------------\n\n`;
-  report += `ACTIVITY:\n`;
-  report += `- Steps Today: ${stepsToday}\n`;
-  report += `- Daily Goal: ${stepGoal}\n`;
-  report += `- Status: ${stepsToday >= stepGoal ? "✅ Goal Achieved" : "❌ Goal Not Met"}\n\n`;
-
-  report += `VITALS SUMMARY:\n`;
-  report += `- Total Entries recorded: ${totalEntries}\n`;
-  report += `- Average Heart Rate: ${avgHR} bpm\n\n`;
-
-  report += `MEDICATIONS:\n`;
-  if (medicines.length > 0) {
-    medicines.forEach(m => {
-      report += `- ${m.name} (Scheduled for: ${m.time})\n`;
-    });
-  } else {
-    report += `- No medications listed.\n`;
-  }
-
-  report += `\n--- End of Report ---`;
-
-  // 4. Download as a .txt file
-  const blob = new Blob([report], { type: "text/plain" });
-  const link = document.createElement("a");
-  link.href = URL.createObjectURL(blob);
-  link.download = `Health_Report_${new Date().toISOString().slice(0,10)}.txt`;
-  link.click();
-}
-
 });
+
 
 
