@@ -3,7 +3,6 @@
 <head>
   <meta charset="UTF-8">
   <title>Health Reports</title>
-  <!-- Vital for PWA and Mobile Scaling -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="stylesheet" href="styles.css">
   
@@ -113,7 +112,13 @@
         </tbody>
       </table>
     </div>
-    <button onclick="exportData()">Export Data</button>
+    
+    <div style="padding: 20px 0 100px;"> 
+        <button id="exportBtn" onclick="exportData()" class="export-button">
+            Export Data
+        </button>
+    </div>
+</div> <!-- End Container -->
 
   </div>
 
@@ -121,6 +126,8 @@
   <script src="bottom-nav.js"></script>
   <script src="reports.js"></script>
   <script src="vitals.js"></script>
+  <script src="data.json"></script>
 </body>
 </html>
+
 
