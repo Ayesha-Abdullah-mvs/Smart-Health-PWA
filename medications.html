@@ -6,40 +6,43 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="stylesheet" href="styles.css">
 </head>
+
 <body data-page="medications">
+
 <nav class="bottom-nav">
-  <button data-page="dashboard">
-    <span>🏠</span>
-    <small>Home</small>
-  </button>
-  <button data-page="vitals">
-    <span>❤️</span>
-    <small>Vitals</small>
-  </button>
-  <button data-page="medications">
-    <span>💊</span>
-    <small>Meds</small>
-  </button>
-  <button data-page="reports">
-    <span>📊</span>
-    <small>Reports</small>
-  </button>
-  <button data-page="steps">
-    <span>👣</span>
-    <small>Steps</small>
-  </button>
+  <button data-page="dashboard"><span>🏠</span><small>Home</small></button>
+  <button data-page="vitals"><span>❤️</span><small>Vitals</small></button>
+  <button data-page="medications" class="active"><span>💊</span><small>Meds</small></button>
+  <button data-page="reports"><span>📊</span><small>Reports</small></button>
+  <button data-page="steps"><span>👣</span><small>Steps</small></button>
 </nav>
+
 <div class="page-container">
-<h2>Medication Schedule</h2>
-<form id="medForm">
-  <input type="text" id="medName" placeholder="Medicine Name" required>
-  <input type="time" id="medTime" required>
-  <button type="submit">Add Medicine</button>
-</form>
-<ul id="medList"></ul>
+
+  <!-- CARD -->
+  <div class="card">
+    <h2>Medication Schedule</h2>
+
+    <form id="medForm">
+      <input type="text" id="medName" placeholder="Medicine Name" required>
+      <input type="time" id="medTime" required>
+      <button type="submit">Add Medicine</button>
+    </form>
+  </div>
+
+  <!-- CARD -->
+  <div class="card">
+    <h3>Today's Medicines</h3>
+    <ul id="medList"></ul>
+  </div>
+
+</div>
+
+<audio id="alarmSound">
+  <source src="alarm.mp3" type="audio/mpeg">
+</audio>
+
 <script src="bottom-nav.js"></script>
 <script src="medications.js"></script>
 </body>
 </html>
-
-
