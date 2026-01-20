@@ -1,82 +1,99 @@
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener("DOMContentLoaded", () => {
 
-    const currentPage = document.body.getAttribute('data-page');
-    const medContainer = document.getElementById('medList');
+  const medForm = document.getElementById("medForm");
+  const medList = document.getElementById("medList");
+  const alarmSound = document.getElementById("alarmSound");
 
+  let medicines = JSON.parse(localStorage.getItem("medicines")) || [];
 
-    let medicines = JSON.parse(localStorage.getItem('medicines')) || [];
-    if (currentPage === 'dashboard') {
-        renderDashboardMeds();
-    }
+  // Ask notification permission once
+  if ("Notification" in window && Notification.permission !== "granted") {
+    Notification.requestPermission();
+  }
 
-   
-    if (currentPage === 'medications') {
-        const medForm = document.getElementById('medForm');
-        renderMedsPage();
+  // Save
+  function saveData() {
+    localStorage.setItem("medicines", JSON.stringify(medicines));
+  }
 
-       
-        medForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            const newMed = {
-                id: Date.now(),
-                name: document.getElementById('medName').value,
-                time: document.getElementById('medTime').value
-            };
-            medicines.push(newMed);
-            saveData();
-            renderMedsPage();
-            medForm.reset();
-        });
-    }
+  // Render
+  function renderMeds() {
+    medList.innerHTML = "";
 
+    medicines.sort((a, b) => a.time.localeCompare(b.time));
 
+    medicines.forEach(med => {
+      const li = document.createElement("li");
+      li.className = "med-item";
 
-    function saveData() {
-        localStorage.setItem('medicines', JSON.stringify(medicines));
-    }
+      li.innerHTML = `
+        <div>
+          <strong>${med.time}</strong> — ${med.name}
+        </div>
+        <div>
+          <label>
+            <input type="checkbox" ${med.taken ? "checked" : ""} 
+              onchange="toggleTaken(${med.id})">
+            Taken
+          </label>
+        </div>
+      `;
 
-    
-    function renderDashboardMeds() {
-        if (!medContainer) return;
-        medicines.sort((a, b) => a.time.localeCompare(b.time));
-        
-        medContainer.innerHTML = medicines.length > 0 
-            ? medicines.map(m => `
-                <div class="med-item" style="padding:10px; border-bottom:1px solid #eee; display:flex; justify-content:space-between;">
-                    <span><strong>${m.time}</strong></span>
-                    <span>${m.name}</span>
-                </div>`).join('')
-            : '<p style="padding:10px; color:gray;">No meds for today.</p>';
-    }
+      medList.appendChild(li);
+    });
+  }
 
-    function renderMedsPage() {
-        if (!medContainer) return;
-        medicines.sort((a, b) => a.time.localeCompare(b.time));
-        
-        medContainer.innerHTML = medicines.map(m => `
-            <li>
-                <span><strong>${m.time}</strong> - ${m.name}</span>
-                <button onclick="editMed(${m.id})">Edit</button>
-                <button onclick="deleteMed(${m.id})" style="color:red">Delete</button>
-            </li>
-        `).join('');
-    }
+  // Add medicine
+  medForm.addEventListener("submit", e => {
+    e.preventDefault();
 
-    window.deleteMed = (id) => {
-        medicines = medicines.filter(m => m.id !== id);
+    const newMed = {
+      id: Date.now(),
+      name: medName.value,
+      time: medTime.value,
+      taken: false,
+      notified: false
+    };
+
+    medicines.push(newMed);
+    saveData();
+    renderMeds();
+    medForm.reset();
+  });
+
+  // Alarm checker (runs every 30 seconds)
+  setInterval(() => {
+    const now = new Date();
+    const currentTime = now.toTimeString().slice(0,5);
+
+    medicines.forEach(med => {
+      if (med.time === currentTime && !med.notified) {
+        triggerAlarm(med);
+        med.notified = true;
         saveData();
-        renderMedsPage();
-    };
+      }
+    });
+  }, 30000);
 
-    window.editMed = (id) => {
-        const med = medicines.find(m => m.id === id);
-        const newName = prompt("Update Name:", med.name);
-        const newTime = prompt("Update Time:", med.time);
-        if (newName && newTime) {
-            med.name = newName;
-            med.time = newTime;
-            saveData();
-            renderMedsPage();
-        }
-    };
+  function triggerAlarm(med) {
+    alarmSound.play();
+
+    if ("Notification" in window && Notification.permission === "granted") {
+      new Notification("Medication Reminder", {
+        body: `Time to take: ${med.name}`,
+        icon: "icon-192.png"
+      });
+    }
+  }
+
+  // Checkbox handler
+  window.toggleTaken = (id) => {
+    const med = medicines.find(m => m.id === id);
+    if (med) {
+      med.taken = !med.taken;
+      saveData();
+    }
+  };
+
+  renderMeds();
 });
