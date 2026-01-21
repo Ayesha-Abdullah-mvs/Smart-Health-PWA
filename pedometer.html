@@ -1,65 +1,61 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Pedometer</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8">
+  <title>Steps Tracker</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="styles.css">
 </head>
-<nav class="bottom-nav"> 
-        <button data-page="dashboard"> 
-            <span>🏠</span> 
-            <small>Home</small> 
-        </button> 
-        <button data-page="vitals"> 
-            <span>❤️</span> 
-            <small>Vitals</small> 
-        </button> 
-        <button data-page="medications"> 
-            <span>💊</span> 
-            <small>Meds</small> 
-        </button> 
-        <button data-page="reports"> 
-            <span>📊</span> 
-            <small>Reports</small> 
-        </button> 
-        <button data-page="steps"> 
-            <span>👣</span> 
-            <small>Steps</small> 
-        </button> 
-    </nav>
-<script src="bottom-nav.js"></script>
+
 <body data-page="steps">
+
+<nav class="bottom-nav">
+  <button data-page="dashboard">🏠<small>Home</small></button>
+  <button data-page="vitals">❤️<small>Vitals</small></button>
+  <button data-page="medications">💊<small>Meds</small></button>
+  <button data-page="reports">📊<small>Reports</small></button>
+  <button data-page="steps" class="active">👣<small>Steps</small></button>
+</nav>
+
 <div class="page-container">
-  <h1 class="page-title">Step Counter</h1>
+  <h2>Daily Steps</h2>
 
-  <div class="card center">
-    <div class="big-number" id="todaySteps">0</div>
-    <p class="muted">Steps Today</p>
-
-    <div class="progress-bar">
-      <div id="progressFill"></div>
+  <!-- CIRCULAR PROGRESS CARD -->
+  <div class="card steps-card">
+    <div class="circle-container">
+      <svg width="200" height="200">
+        <circle cx="100" cy="100" r="90" class="bg-circle"></circle>
+        <circle cx="100" cy="100" r="90" class="progress-circle" id="progressCircle"></circle>
+      </svg>
+      <div class="circle-text">
+        <h3 id="stepsCount">0</h3>
+        <p>Steps</p>
+      </div>
     </div>
 
-    <p id="progressText">0% of daily goal</p>
-    <p id="goalStatus" class="success"></p>
+    <p class="goal-text">
+      Goal: <span id="stepGoalText">5000</span> steps
+    </p>
   </div>
 
+  <!-- ADD STEPS CARD -->
   <div class="card">
-    <h2 class="card-title">Daily Goal</h2>
-
-    <div class="goal-row">
-      <span id="goalText">5000 steps</span>
-      <button class="secondary-btn" onclick="editGoal()">Edit</button>
-    </div>
-
-    <div id="goalEdit" class="hidden">
-      <input type="number" id="newGoal" min="1000" />
-      <button class="primary-btn" onclick="saveGoal()">Save</button>
-    </div>
+    <h3>Add Steps</h3>
+    <input type="number" id="stepsInput" placeholder="Enter steps walked">
+    <button id="addStepsBtn">Add Steps</button>
   </div>
+
+  <!-- GOAL SETTING CARD -->
+  <div class="card">
+    <h3>Update Daily Goal</h3>
+    <input type="number" id="goalInput" placeholder="Enter new goal">
+    <button id="updateGoalBtn">Update Goal</button>
+  </div>
+
 </div>
-</body>
+
+<script src="bottom-nav.js"></script>
 <script src="steps.js"></script>
 
+</body>
 </html>
