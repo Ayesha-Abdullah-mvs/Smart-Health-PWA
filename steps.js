@@ -60,62 +60,63 @@ document.addEventListener("DOMContentLoaded", () => {
   updateUI();
 /* ---------- REALISTIC AUTOMATIC PEDOMETER ---------- */
 
+/* ===== REALISTIC DEMO-FRIENDLY PEDOMETER ===== */
+
 if (currentPage === 'steps') {
 
     let stepsToday = parseInt(localStorage.getItem('stepsToday')) || 0;
     let stepGoal = parseInt(localStorage.getItem('stepGoal')) || 5000;
 
     let lastStepTime = 0;
-    const STEP_INTERVAL = 2000; // 1 step every 2 seconds
-    const MOVEMENT_THRESHOLD = 2.2; // ignore sitting/typing noise
+    let lastMagnitude = 0;
 
-    let lastAccel = { x: 0, y: 0, z: 0 };
+    // Tuned for DEMO (walking required, sitting ignored)
+    const STEP_THRESHOLD = 12;      // higher = ignores noise
+    const STEP_COOLDOWN = 500;      // ms between steps
 
     function requestMotionPermission() {
-        if (typeof DeviceMotionEvent.requestPermission === 'function') {
-            DeviceMotionEvent.requestPermission().then(permission => {
-                if (permission === 'granted') {
-                    window.addEventListener('devicemotion', detectStep);
-                }
-            });
+        if (typeof DeviceMotionEvent?.requestPermission === 'function') {
+            DeviceMotionEvent.requestPermission()
+                .then(state => {
+                    if (state === 'granted') {
+                        window.addEventListener('devicemotion', detectStep);
+                    } else {
+                        alert("Motion permission denied");
+                    }
+                })
+                .catch(console.error);
         } else {
             window.addEventListener('devicemotion', detectStep);
         }
     }
 
     function detectStep(event) {
-        const accel = event.accelerationIncludingGravity;
-        if (!accel) return;
+        const acc = event.accelerationIncludingGravity;
+        if (!acc) return;
 
-        const dx = accel.x - lastAccel.x;
-        const dy = accel.y - lastAccel.y;
-        const dz = accel.z - lastAccel.z;
+        // Vector magnitude
+        const magnitude = Math.sqrt(
+            acc.x * acc.x +
+            acc.y * acc.y +
+            acc.z * acc.z
+        );
 
-        const magnitude = Math.sqrt(dx*dx + dy*dy + dz*dz);
+        const delta = Math.abs(magnitude - lastMagnitude);
         const now = Date.now();
 
+        // STEP CONDITIONS
         if (
-            magnitude > MOVEMENT_THRESHOLD &&
-            (now - lastStepTime) > STEP_INTERVAL
+            delta > STEP_THRESHOLD &&
+            now - lastStepTime > STEP_COOLDOWN
         ) {
-            stepsToday++;
-            lastStepTime = now;
+            stepsToday += 1;
             localStorage.setItem('stepsToday', stepsToday);
             updateUI();
+            lastStepTime = now;
         }
 
-        lastAccel = accel;
-    }
-
-    function updateUI() {
-        const progress = Math.min(stepsToday / stepGoal, 1);
-        const offset = circumference - progress * circumference;
-
-        stepsCountEl.textContent = stepsToday.toLocaleString();
-        goalTextEl.textContent = stepGoal.toLocaleString();
-        progressCircle.style.strokeDashoffset = offset;
+        lastMagnitude = magnitude;
     }
 
     requestMotionPermission();
-    updateUI();
 }
