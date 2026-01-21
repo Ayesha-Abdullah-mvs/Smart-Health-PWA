@@ -74,10 +74,11 @@ input {
 
 /*Dashboard Part */
 .dashboard {
-  padding: 20px 16px; 
-  padding-bottom: 100px; 
-  max-width: 600px; 
-  margin: 0 auto;
+  min-height: 100svh; 
+  padding: 16px;
+  padding-top: calc(env(safe-area-inset-top) + 24px); 
+  padding-bottom: calc(env(safe-area-inset-bottom) + 100px); 
+  box-sizing: border-box;
 }
 
 
@@ -818,6 +819,7 @@ button[type="submit"]:hover {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
     border-left: 4px solid #2563eb; /* Blue accent line */
 }
+
 
 
 
