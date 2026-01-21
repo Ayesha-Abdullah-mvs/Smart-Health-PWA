@@ -74,12 +74,15 @@ input {
 
 /*Dashboard Part */
 .dashboard {
-  min-height: 100svh; 
-  padding: 16px;
-  padding-top: calc(env(safe-area-inset-top) + 24px); 
-  padding-bottom: calc(env(safe-area-inset-bottom) + 100px); 
+  display: flex;
+  flex-direction: column;
+  min-height: 100svh;
+  padding: 20px 16px; 
+  padding-top: max(24px, calc(env(safe-area-inset-top) + 24px));
+  padding-bottom: calc(env(safe-area-inset-bottom) + 100px);
   box-sizing: border-box;
 }
+
 
 
 .title {
@@ -819,6 +822,7 @@ button[type="submit"]:hover {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
     border-left: 4px solid #2563eb; /* Blue accent line */
 }
+
 
 
 
