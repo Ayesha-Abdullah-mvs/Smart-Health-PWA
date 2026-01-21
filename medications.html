@@ -10,16 +10,31 @@
 <body data-page="medications">
 
 <nav class="bottom-nav">
-  <button data-page="dashboard"><span>🏠</span><small>Home</small></button>
-  <button data-page="vitals"><span>❤️</span><small>Vitals</small></button>
-  <button data-page="medications" class="active"><span>💊</span><small>Meds</small></button>
-  <button data-page="reports"><span>📊</span><small>Reports</small></button>
-  <button data-page="steps"><span>👣</span><small>Steps</small></button>
+  <button data-page="dashboard">
+    <span>🏠</span>
+    <small>Home</small>
+  </button>
+  <button data-page="vitals">
+    <span>❤️</span>
+    <small>Vitals</small>
+  </button>
+  <button data-page="medications" class="active">
+    <span>💊</span>
+    <small>Meds</small>
+  </button>
+  <button data-page="reports">
+    <span>📊</span>
+    <small>Reports</small>
+  </button>
+  <button data-page="steps">
+    <span>👣</span>
+    <small>Steps</small>
+  </button>
 </nav>
 
 <div class="page-container">
 
-  <!-- CARD -->
+  <!-- ADD MEDICATION CARD -->
   <div class="card">
     <h2>Medication Schedule</h2>
 
@@ -30,7 +45,7 @@
     </form>
   </div>
 
-  <!-- CARD -->
+  <!-- LIST CARD -->
   <div class="card">
     <h3>Today's Medicines</h3>
     <ul id="medList"></ul>
