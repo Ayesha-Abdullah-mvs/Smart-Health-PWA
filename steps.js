@@ -61,49 +61,66 @@ document.addEventListener("DOMContentLoaded", () => {
 
   updateUI();
 
-  /* ---------- REALISTIC PEDOMETER (DEMO SAFE) ---------- */
-  if (currentPage === "steps") {
-    let lastMagnitude = 0;
-    let lastStepTime = 0;
+  /* ---------- DEMO-SAFE REALISTIC PEDOMETER ---------- */
 
-    const STEP_THRESHOLD = 11;     // ignores hand noise
-    const STEP_INTERVAL = 2000;    // 1 step per 2 sec max
+if (currentPage === 'steps') {
 
-    function requestMotionPermission() {
-      if (typeof DeviceMotionEvent?.requestPermission === "function") {
-        DeviceMotionEvent.requestPermission().then(state => {
-          if (state === "granted") {
-            window.addEventListener("devicemotion", detectStep);
+  let stepsToday = parseInt(localStorage.getItem('stepsToday')) || 0;
+  let stepGoal = parseInt(localStorage.getItem('stepGoal')) || 5000;
+
+  let lastStepTime = 0;
+  let motionBuffer = [];
+  const BUFFER_SIZE = 5;
+
+  // Tuned for OPEN DAY DEMO
+  const STEP_THRESHOLD = 6.5;      // walking-level motion
+  const STEP_COOLDOWN = 2000;      // 1 step per ~2 sec
+
+  function requestMotionPermission() {
+    if (typeof DeviceMotionEvent?.requestPermission === 'function') {
+      DeviceMotionEvent.requestPermission()
+        .then(state => {
+          if (state === 'granted') {
+            window.addEventListener('devicemotion', detectStep);
           }
-        });
-      } else {
-        window.addEventListener("devicemotion", detectStep);
-      }
+        })
+        .catch(console.error);
+    } else {
+      window.addEventListener('devicemotion', detectStep);
     }
-
-    function detectStep(event) {
-      const acc = event.accelerationIncludingGravity;
-      if (!acc) return;
-
-      const magnitude = Math.sqrt(
-        acc.x * acc.x +
-        acc.y * acc.y +
-        acc.z * acc.z
-      );
-
-      const delta = Math.abs(magnitude - lastMagnitude);
-      const now = Date.now();
-
-      if (delta > STEP_THRESHOLD && now - lastStepTime > STEP_INTERVAL) {
-        stepsToday += 1;
-        localStorage.setItem("stepsToday", stepsToday);
-        updateUI();
-        lastStepTime = now;
-      }
-
-      lastMagnitude = magnitude;
-    }
-
-    requestMotionPermission();
   }
-});
+
+  function detectStep(event) {
+    const acc = event.accelerationIncludingGravity;
+    if (!acc) return;
+
+    const magnitude = Math.sqrt(
+      acc.x * acc.x +
+      acc.y * acc.y +
+      acc.z * acc.z
+    );
+
+    // Smooth motion using buffer
+    motionBuffer.push(magnitude);
+    if (motionBuffer.length > BUFFER_SIZE) motionBuffer.shift();
+
+    const avgMotion =
+      motionBuffer.reduce((a, b) => a + b, 0) / motionBuffer.length;
+
+    const now = Date.now();
+
+    // CONDITIONS FOR A STEP
+    if (
+      avgMotion > STEP_THRESHOLD &&
+      now - lastStepTime > STEP_COOLDOWN
+    ) {
+      stepsToday += 1;
+      localStorage.setItem('stepsToday', stepsToday);
+      updateUI();
+      lastStepTime = now;
+    }
+  }
+
+  requestMotionPermission();
+}
+
