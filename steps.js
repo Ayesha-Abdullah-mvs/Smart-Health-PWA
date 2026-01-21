@@ -58,66 +58,64 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   updateUI();
+/* ---------- REALISTIC AUTOMATIC PEDOMETER ---------- */
 
-  if (currentPage === "steps") {
+if (currentPage === 'steps') {
+
+    let stepsToday = parseInt(localStorage.getItem('stepsToday')) || 0;
+    let stepGoal = parseInt(localStorage.getItem('stepGoal')) || 5000;
+
     let lastStepTime = 0;
+    const STEP_INTERVAL = 2000; // 1 step every 2 seconds
+    const MOVEMENT_THRESHOLD = 2.2; // ignore sitting/typing noise
 
-    const MOVEMENT_THRESHOLD = 1.3;   // was ~1.5 (too slow)
-    const STEP_COOLDOWN = 100;         // ms (fast response)
-    const STEP_BOOST = 1;              // 1 motion = +3 steps
+    let lastAccel = { x: 0, y: 0, z: 0 };
 
     function requestMotionPermission() {
-      if (
-        typeof DeviceMotionEvent !== "undefined" &&
-        typeof DeviceMotionEvent.requestPermission === "function"
-      ) {
-        DeviceMotionEvent.requestPermission()
-          .then(permission => {
-            if (permission === "granted") {
-              window.addEventListener("devicemotion", handleMotion);
-            }
-          })
-          .catch(console.error);
-      } else {
-        window.addEventListener("devicemotion", handleMotion);
-      }
+        if (typeof DeviceMotionEvent.requestPermission === 'function') {
+            DeviceMotionEvent.requestPermission().then(permission => {
+                if (permission === 'granted') {
+                    window.addEventListener('devicemotion', detectStep);
+                }
+            });
+        } else {
+            window.addEventListener('devicemotion', detectStep);
+        }
     }
 
-    function handleMotion(event) {
-      const acc = event.accelerationIncludingGravity;
-      if (!acc) return;
+    function detectStep(event) {
+        const accel = event.accelerationIncludingGravity;
+        if (!accel) return;
 
-      const totalMovement =
-        Math.abs(acc.x || 0) +
-        Math.abs(acc.y || 0) +
-        Math.abs(acc.z || 0);
+        const dx = accel.x - lastAccel.x;
+        const dy = accel.y - lastAccel.y;
+        const dz = accel.z - lastAccel.z;
 
-      const now = Date.now();
+        const magnitude = Math.sqrt(dx*dx + dy*dy + dz*dz);
+        const now = Date.now();
 
-      if (
-        totalMovement > MOVEMENT_THRESHOLD &&
-        now - lastStepTime > STEP_COOLDOWN
-      ) {
-        stepsToday += STEP_BOOST; 
-        localStorage.setItem("stepsToday", stepsToday);
-        lastStepTime = now;
-        updateUI();
-      }
+        if (
+            magnitude > MOVEMENT_THRESHOLD &&
+            (now - lastStepTime) > STEP_INTERVAL
+        ) {
+            stepsToday++;
+            lastStepTime = now;
+            localStorage.setItem('stepsToday', stepsToday);
+            updateUI();
+        }
+
+        lastAccel = accel;
+    }
+
+    function updateUI() {
+        const progress = Math.min(stepsToday / stepGoal, 1);
+        const offset = circumference - progress * circumference;
+
+        stepsCountEl.textContent = stepsToday.toLocaleString();
+        goalTextEl.textContent = stepGoal.toLocaleString();
+        progressCircle.style.strokeDashoffset = offset;
     }
 
     requestMotionPermission();
-  }
-
-  if (currentPage === "dashboard") {
-    const s = parseInt(localStorage.getItem("stepsToday")) || 0;
-    const g = parseInt(localStorage.getItem("stepGoal")) || 5000;
-
-    const sEl = document.getElementById("stepsToday");
-    const gEl = document.getElementById("stepGoal");
-
-    if (sEl) sEl.textContent = s.toLocaleString();
-    if (gEl) gEl.textContent = g.toLocaleString();
-  }
-});
-
-
+    updateUI();
+}
