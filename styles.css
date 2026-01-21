@@ -74,9 +74,12 @@ input {
 
 /*Dashboard Part */
 .dashboard {
-  padding: 16px;
-  padding-bottom: 80px;
+  padding: 20px 16px; 
+  padding-bottom: 100px; 
+  max-width: 600px; 
+  margin: 0 auto;
 }
+
 
 .title {
   text-align: center;
@@ -90,22 +93,6 @@ input {
   margin-bottom: 12px;
 }
 
-.sos-btn {
-  width: 100%;
-  height: 70px;
-  background: red;
-  color: white;
-  font-size: 20px;
-  border-radius: 12px;
-  border: none;
-  margin-bottom: 16px;
-}
-
-.alert-card {
-  background: #fee2e2;
-  color: #991b1b;
-}
-
 body {
   font-family: Arial, sans-serif;
   margin: 0;
@@ -116,8 +103,21 @@ body {
 .vitals-grid {
   display: flex;
   justify-content: space-around;
+  flex-wrap: wrap; 
+  gap: 10px;
   margin-top: 12px;
   font-size: 18px;
+  text-align: center;
+}
+
+.vitals-grid div {
+  flex: 1; /* Distributes width evenly */
+  min-width: 80px; /* Prevents squishing */
+}
+
+.vitals-grid small {
+  display: block; /* Puts label under the number */
+  font-size: 12px;
 }
 
 .stats-grid {
@@ -818,6 +818,7 @@ button[type="submit"]:hover {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
     border-left: 4px solid #2563eb; /* Blue accent line */
 }
+
 
 
 
