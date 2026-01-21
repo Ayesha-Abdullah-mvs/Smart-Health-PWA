@@ -11,12 +11,10 @@ document.addEventListener("DOMContentLoaded", () => {
     Notification.requestPermission();
   }
 
-  // Save
   function saveData() {
     localStorage.setItem("medicines", JSON.stringify(medicines));
   }
 
-  // Render
   function renderMeds() {
     medList.innerHTML = "";
 
@@ -30,12 +28,19 @@ document.addEventListener("DOMContentLoaded", () => {
         <div>
           <strong>${med.time}</strong> — ${med.name}
         </div>
-        <div>
+
+        <div style="display:flex; gap:10px; align-items:center;">
           <label>
             <input type="checkbox" ${med.taken ? "checked" : ""} 
               onchange="toggleTaken(${med.id})">
             Taken
           </label>
+
+          <button 
+            onclick="deleteMed(${med.id})" 
+            style="background:#ffe6e6; color:#b00000; border:none; padding:4px 8px; border-radius:6px;">
+            Delete
+          </button>
         </div>
       `;
 
@@ -43,13 +48,12 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // Add medicine
   medForm.addEventListener("submit", e => {
     e.preventDefault();
 
     const newMed = {
       id: Date.now(),
-      name: medName.value,
+      name: medName.value.trim(),
       time: medTime.value,
       taken: false,
       notified: false
@@ -61,10 +65,10 @@ document.addEventListener("DOMContentLoaded", () => {
     medForm.reset();
   });
 
-  // Alarm checker (runs every 30 seconds)
+  // Alarm checker (every 30 seconds)
   setInterval(() => {
     const now = new Date();
-    const currentTime = now.toTimeString().slice(0,5);
+    const currentTime = now.toTimeString().slice(0, 5);
 
     medicines.forEach(med => {
       if (med.time === currentTime && !med.notified) {
@@ -86,13 +90,23 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  // Checkbox handler
+  // Toggle taken
   window.toggleTaken = (id) => {
     const med = medicines.find(m => m.id === id);
     if (med) {
       med.taken = !med.taken;
       saveData();
     }
+  };
+
+  // DELETE MEDICINE ✅
+  window.deleteMed = (id) => {
+    const confirmDelete = confirm("Remove this medicine?");
+    if (!confirmDelete) return;
+
+    medicines = medicines.filter(m => m.id !== id);
+    saveData();
+    renderMeds();
   };
 
   renderMeds();
