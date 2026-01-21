@@ -72,22 +72,23 @@ input {
 /* End Of Login */
 
 
+
 /* ====== Global Body & HTML ====== */
 html, body {
-  height: 100%;
   margin: 0;
   padding: 0;
   font-family: Arial, sans-serif;
   background: #f9fafb;
-  overflow-y: auto;
-  -webkit-overflow-scrolling: touch; /* smooth scroll on mobile */
+  overflow-y: auto; /* let it scroll naturally */
+  -webkit-overflow-scrolling: touch;
   box-sizing: border-box;
 }
 
 /* ====== Dashboard Container ====== */
 .dashboard {
   padding: 16px;           /* space around content */
-  padding-bottom: 90px;    /* space for bottom nav */
+  padding-top: 16px;       /* enough space from top */
+  padding-bottom: 100px;   /* space for bottom nav */
 }
 
 /* ====== Cards ====== */
@@ -849,6 +850,7 @@ button[type="submit"]:hover {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
     border-left: 4px solid #2563eb; /* Blue accent line */
 }
+
 
 
 
