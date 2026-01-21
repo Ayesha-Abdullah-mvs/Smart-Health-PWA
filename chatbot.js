@@ -1,34 +1,59 @@
-const toggleBtn = document.getElementById("chatbot-toggle");
-const chatbot = document.getElementById("chatbot-container");
-const closeBtn = document.getElementById("chatbot-close");
-const options = document.querySelectorAll(".chat-option");
+document.addEventListener("DOMContentLoaded", () => {
 
-toggleBtn.addEventListener("click", () => {
-  chatbot.classList.toggle("hidden");
-});
+  const chatbotBtn = document.getElementById("chatbot-button");
+  const chatbotCard = document.getElementById("chatbot-card");
+  const closeBtn = document.getElementById("closeChatbot");
+  const content = document.getElementById("chatbot-content");
 
-closeBtn.addEventListener("click", () => {
-  chatbot.classList.add("hidden");
-});
+  chatbotBtn.onclick = () => chatbotCard.classList.toggle("hidden");
+  closeBtn.onclick = () => chatbotCard.classList.add("hidden");
 
-options.forEach(btn => {
-  btn.addEventListener("click", () => {
-    const q = btn.dataset.question;
-    let reply = "";
-
-    if (q === "meds") {
-      reply = "You have 2 medications scheduled today.";
-    }
-    if (q === "steps") {
-      reply = "You have walked 3,200 steps today.";
-    }
-    if (q === "weekly") {
-      reply = "Your weekly health report looks stable.";
-    }
-    if (q === "monthly") {
-      reply = "Monthly report will be generated soon.";
-    }
-
-    alert(reply); // temporary (can improve later)
+  document.querySelectorAll(".chatbot-actions button").forEach(btn => {
+    btn.addEventListener("click", () => handleAction(btn.dataset.action));
   });
+
+  function handleAction(action) {
+    const steps = parseInt(localStorage.getItem("stepsToday")) || 0;
+    const goal = parseInt(localStorage.getItem("stepGoal")) || 5000;
+    const vitals = JSON.parse(localStorage.getItem("vitals")) || [];
+    const meds = JSON.parse(localStorage.getItem("medicines")) || [];
+
+    let message = "";
+
+    switch (action) {
+
+      case "todaySummary":
+        message = `
+        📊 <b>Today's Summary</b><br>
+        Steps: ${steps} / ${goal}<br>
+        Medications scheduled: ${meds.length}<br>
+        Vitals records: ${vitals.length}
+        `;
+        break;
+
+      case "stepsAdvice":
+        message = steps >= goal
+          ? `🎉 Great job! You completed ${steps} steps today. Keep moving!`
+          : `👣 You walked ${steps} steps today. Try a short walk to reach ${goal}.`;
+        break;
+
+      case "vitalsCheck":
+        message = vitals.length > 0
+          ? `❤️ Your vitals are recorded today. Everything looks stable.`
+          : `⚠️ No vitals recorded today. Please enter them for better tracking.`;
+        break;
+
+      case "medicationCheck":
+        message = meds.length > 0
+          ? `💊 You have ${meds.length} medicines scheduled today. Don’t forget them!`
+          : `ℹ️ No medications scheduled.`;
+        break;
+
+      case "motivation":
+        message = `🌟 You're doing great! Small steps every day lead to big health improvements.`;
+        break;
+    }
+
+    content.innerHTML = `<p>${message}</p>`;
+  }
 });
