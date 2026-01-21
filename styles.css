@@ -72,29 +72,25 @@ input {
 /* End Of Login */
 
 
-/*Dashboard Part */
-.dashboard {
-  padding: 16px;
-  padding-top: calc(env(safe-area-inset-top) + 16px);
-  padding-bottom: calc(env(safe-area-inset-bottom) + 90px); /* space for bottom nav */
-  box-sizing: border-box;
-}
-body {
-  -webkit-overflow-scrolling: touch;
-}
-
-
-
+/* ====== Global Body & HTML ====== */
 html, body {
   height: 100%;
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+  background: #f9fafb;
   overflow-y: auto;
+  -webkit-overflow-scrolling: touch; /* smooth scroll on mobile */
+  box-sizing: border-box;
 }
 
-.title {
-  text-align: center;
-  margin-bottom: 12px;
+/* ====== Dashboard Container ====== */
+.dashboard {
+  padding: 16px;           /* space around content */
+  padding-bottom: 90px;    /* space for bottom nav */
 }
 
+/* ====== Cards ====== */
 .card {
   background: white;
   border-radius: 12px;
@@ -102,17 +98,16 @@ html, body {
   margin-bottom: 12px;
 }
 
-body {
-  font-family: Arial, sans-serif;
-  margin: 0;
-  background: #f9fafb;
+/* Ensure first card is fully visible */
+.card:first-child {
+  margin-top: 16px;
 }
 
-
+/* ====== Vitals Grid ====== */
 .vitals-grid {
   display: flex;
   justify-content: space-around;
-  flex-wrap: wrap; 
+  flex-wrap: wrap;
   gap: 10px;
   margin-top: 12px;
   font-size: 18px;
@@ -120,15 +115,16 @@ body {
 }
 
 .vitals-grid div {
-  flex: 1; /* Distributes width evenly */
-  min-width: 80px; /* Prevents squishing */
+  flex: 1;          /* distributes width evenly */
+  min-width: 80px;  /* prevents squishing */
 }
 
 .vitals-grid small {
-  display: block; /* Puts label under the number */
+  display: block;
   font-size: 12px;
 }
 
+/* ====== Stats Grid ====== */
 .stats-grid {
   display: flex;
   justify-content: space-between;
@@ -136,11 +132,17 @@ body {
   margin-top: 16px;
 }
 
+.stats-grid .card.center {
+  text-align: center;
+}
+
+/* ====== Medications List ====== */
 .med-item {
   padding: 8px 0;
   border-bottom: 1px solid #ddd;
 }
 
+/* ====== Alerts ====== */
 .alert {
   padding: 10px;
   border-radius: 8px;
@@ -148,27 +150,18 @@ body {
   color: white;
 }
 
-.alert.emergency {
-  background-color: #dc2626;
-}
-.alert.warning {
-  background-color: #f59e0b;
-}
-.alert.info {
-  background-color: #3b82f6;
-}
+.alert.emergency { background-color: #dc2626; }
+.alert.warning { background-color: #f59e0b; }
+.alert.info    { background-color: #3b82f6; }
 
-
+/* ====== Info Text ====== */
 .info {
-    margin-top: 15px;
-    font-size: 14px;
-    color: #666;
+  margin-top: 15px;
+  font-size: 14px;
+  color: #666;
 }
 
-/* Dasboard Tamam*/
-
-
-/*Bottom Navigation*/
+/* ====== Bottom Navigation ====== */
 .bottom-nav {
   position: fixed;
   bottom: 0;
@@ -204,6 +197,35 @@ body {
 
 .bottom-nav button.active span {
   transform: scale(1.1);
+}
+
+/* ====== Reports Table ====== */
+.report-card {
+  background: #f4f6f8;
+  padding: 15px;
+  margin: 15px 0;
+  border-radius: 8px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th, td {
+  border: 1px solid #ccc;
+  padding: 8px;
+  text-align: center;
+}
+
+/* ====== Buttons ====== */
+button {
+  padding: 10px 15px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
 }
 
 
@@ -827,6 +849,7 @@ button[type="submit"]:hover {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
     border-left: 4px solid #2563eb; /* Blue accent line */
 }
+
 
 
 
