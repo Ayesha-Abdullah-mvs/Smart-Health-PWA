@@ -73,34 +73,22 @@ input {
 
 
 /*Dashboard Part */
-/* Update your Dashboard CSS to this */
 .dashboard {
-  /* Using display flex helps manage internal spacing better */
-  display: flex;
-  flex-direction: column;
-  
-  /* Use 100% instead of 100vh to prevent "pushing" content off-screen */
-  width: 100%;
-  min-height: 100%; 
-  
-  /* padding-top: Ensure a minimum 20px for PC, and more for notches on mobile */
-  padding-top: max(20px, env(safe-area-inset-top));
-  
-  /* padding-bottom: Must be larger than your nav height (70px) */
-  padding-bottom: calc(70px + env(safe-area-inset-bottom) + 20px);
-  
+  padding: 16px;
+  padding-top: calc(env(safe-area-inset-top) + 16px);
+  padding-bottom: calc(env(safe-area-inset-bottom) + 90px); /* space for bottom nav */
   box-sizing: border-box;
-  overflow-y: auto; /* Ensures scrolling happens inside the dashboard */
+}
+body {
+  -webkit-overflow-scrolling: touch;
 }
 
-/* Ensure the body and html don't have hidden overflows that cut content */
+
+
 html, body {
   height: 100%;
-  margin: 0;
-  padding: 0;
-  overflow-x: hidden;
+  overflow-y: auto;
 }
-
 
 .title {
   text-align: center;
@@ -839,6 +827,7 @@ button[type="submit"]:hover {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
     border-left: 4px solid #2563eb; /* Blue accent line */
 }
+
 
 
 
