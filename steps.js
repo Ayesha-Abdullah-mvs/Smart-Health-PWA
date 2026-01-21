@@ -62,9 +62,9 @@ document.addEventListener("DOMContentLoaded", () => {
   if (currentPage === "steps") {
     let lastStepTime = 0;
 
-    const MOVEMENT_THRESHOLD = 0.6;   // was ~1.5 (too slow)
-    const STEP_COOLDOWN = 250;         // ms (fast response)
-    const STEP_BOOST = 3;              // 1 motion = +3 steps
+    const MOVEMENT_THRESHOLD = 1.0;   // was ~1.5 (too slow)
+    const STEP_COOLDOWN = 150;         // ms (fast response)
+    const STEP_BOOST = 1;              // 1 motion = +3 steps
 
     function requestMotionPermission() {
       if (
@@ -98,7 +98,7 @@ document.addEventListener("DOMContentLoaded", () => {
         totalMovement > MOVEMENT_THRESHOLD &&
         now - lastStepTime > STEP_COOLDOWN
       ) {
-        stepsToday += STEP_BOOST; // 🚀 BOOSTED STEPS
+        stepsToday += STEP_BOOST; 
         localStorage.setItem("stepsToday", stepsToday);
         lastStepTime = now;
         updateUI();
@@ -119,3 +119,4 @@ document.addEventListener("DOMContentLoaded", () => {
     if (gEl) gEl.textContent = g.toLocaleString();
   }
 });
+
