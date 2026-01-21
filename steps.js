@@ -52,67 +52,94 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 /* --- Automatic Pedometer Logic --- */
 /* --- Improved Automatic Pedometer Logic --- */
-let stepsToday = parseInt(localStorage.getItem("stepsToday")) || 0;
-let lastStepTime = 0;
-// Higher minimum threshold to avoid noise, lower maximum to catch steps
-let stepThreshold = 10; 
-const minStepInterval = 350; // ms (limits steps to ~170 steps/minute)
+if (currentPage === 'steps') {
+    let currentSteps = parseInt(localStorage.getItem('stepsToday')) || 0;
+    let stepGoal = parseInt(localStorage.getItem('stepGoal')) || 5000;
+    let lastAcceleration = { x: 0, y: 0, z: 0 };
+    let movementThreshold = 1.5;
+    let stepDetected = false;
 
-// Smoothing: Average acceleration over last few readings
-let accelQueue = [];
-const queueSize = 5;
+    function requestMotionPermission() {
+        if (typeof DeviceMotionEvent.requestPermission === 'function') {
+            DeviceMotionEvent.requestPermission()
+                .then(permissionState => {
+                    if (permissionState === 'granted') {
+                        window.addEventListener('devicemotion', handleDeviceMotion);
+                    } else {
+                        alert("Motion sensor access denied.");
+                    }
+                })
+                .catch(console.error);
+        } else {
+            window.addEventListener('devicemotion', handleDeviceMotion);
+        }
+    }
 
-// Initialize UI
-updateUI();
+    function handleDeviceMotion(event) {
+        const acceleration = event.accelerationIncludingGravity;
+        if (!acceleration) return;
 
-// Request permission for iOS devices (required for Chrome/Safari on iPhone)
-if (typeof DeviceMotionEvent.requestPermission === 'function') {
-    document.body.addEventListener('click', () => {
-        DeviceMotionEvent.requestPermission()
-            .then(response => {
-                if (response === 'granted') { 
-                    window.addEventListener('devicemotion', handleMotion); 
-                }
-            }).catch(console.error);
-    }, { once: true });
-} else {
-    // Non-iOS or older devices (Android)
-    window.addEventListener('devicemotion', handleMotion);
+        const deltaX = acceleration.x - lastAcceleration.x;
+        const deltaY = acceleration.y - lastAcceleration.y;
+        const deltaZ = acceleration.z - lastAcceleration.z;
+        const movement = Math.sqrt(deltaX * deltaX + deltaY * deltaY + deltaZ * deltaZ);
+
+        if (movement > movementThreshold && !stepDetected) {
+            currentSteps++;
+            localStorage.setItem('stepsToday', currentSteps);
+            updateStepUI();
+            stepDetected = true;
+            setTimeout(() => { stepDetected = false; }, 300);
+        }
+        lastAcceleration = acceleration;
+    }
+
+    function updateStepUI() {
+        const progress = Math.min((currentSteps / stepGoal) * 100, 100);
+        document.getElementById('todaySteps').textContent = currentSteps.toLocaleString();
+        document.getElementById('goalText').textContent = `${stepGoal.toLocaleString()} steps`;
+        document.getElementById('progressFill').style.width = `${progress}%`;
+        document.getElementById('progressText').textContent = `${Math.round(progress)}% of daily goal`;
+        
+        const status = document.getElementById('goalStatus');
+        if (progress >= 100) status.textContent = "🎉 Goal Achieved!";
+    }
+
+    window.saveGoal = () => {
+        const newGoal = parseInt(document.getElementById('newGoal').value);
+        if (newGoal > 0) {
+            stepGoal = newGoal;
+            localStorage.setItem('stepGoal', stepGoal);
+            updateStepUI();
+            document.getElementById('goalEdit').classList.add('hidden');
+        }
+    };
+
+    requestMotionPermission();
+    updateStepUI();
 }
 
-function handleMotion(event) {
-    // Use accelerationIncludingGravity if linear acceleration is not available
-    const acc = event.acceleration || event.accelerationIncludingGravity;
-    if (!acc) return;
-
-    // 1. Calculate magnitude (using raw data initially)
-    let magnitude = Math.sqrt(acc.x ** 2 + acc.y ** 2 + acc.z ** 2);
-
-    // 2. Smooth the signal (reduce noise)
-    accelQueue.push(magnitude);
-    if (accelQueue.length > queueSize) accelQueue.shift();
-    const avgMagnitude = accelQueue.reduce((a, b) => a + b) / accelQueue.length;
-
-    const now = Date.now();
-    
-    // 3. Improved Peak Detection
-    // We look for a significant movement (avgMagnitude > threshold) 
-    // AND ensure we aren't counting the same step twice too quickly
-    if (avgMagnitude > stepThreshold && (now - lastStepTime) > minStepInterval) {
-        stepsToday++;
-        localStorage.setItem("stepsToday", stepsToday);
-        
-        // Use requestAnimationFrame to avoid blocking UI thread
-        requestAnimationFrame(updateUI);
-        
-        lastStepTime = now;
+if (currentPage === 'dashboard') {
+    const stepsToday = localStorage.getItem('stepsToday') || "0";
+    const stepGoal = localStorage.getItem('stepGoal') || "5000";
+    if (document.getElementById('stepsToday')) {
+        document.getElementById('stepsToday').textContent = parseInt(stepsToday).toLocaleString();
+    }
+    if (document.getElementById('stepGoal')) {
+        document.getElementById('stepGoal').textContent = parseInt(stepGoal).toLocaleString();
     }
 }
 
-function updateUI() {
-    // Re-uses your existing UI function
-    if (document.getElementById('steps')) {
-        document.getElementById('steps').innerText = stepsToday;
+async function registerPeriodicSync() {
+    try {
+        const registration = await navigator.serviceWorker.ready;
+        await registration.periodicSync.register('get-latest-steps', {
+            minInterval: 60 * 60 * 1000,
+        });
+    } catch (err) {
+        console.error("Periodic Sync failed:", err);
     }
 }
-/* ------------------------------------------ */
+
+document.body.addEventListener('click', registerPeriodicSync, { once: true });
+
