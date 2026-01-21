@@ -450,58 +450,70 @@ body {
 }
 
 
-/* Chatbot Styles */
-.chatbot-toggle {
+/* Chatbot Button */
+#chatbot-button {
   position: fixed;
   bottom: 90px;
   right: 20px;
-  background: #0d47a1; 
-  color: white;
-  border: none;
-  border-radius: 50%;
   width: 55px;
   height: 55px;
+  background: #4da6ff;
+  color: white;
   font-size: 24px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   cursor: pointer;
-  z-index: 999;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+  z-index: 1000;
 }
 
-.chatbot {
+/* Chatbot Card */
+#chatbot-card {
   position: fixed;
-  bottom: 160px;
+  bottom: 150px;
   right: 20px;
   width: 300px;
-  background: #333333; /* Dark background for the chat window */
-  border-radius: 12px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.4); /* Slightly darker shadow */
-  z-index: 999;
+  background: #ffffff;
+  border-radius: 14px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+  padding: 10px;
+  z-index: 1000;
 }
 
+/* Hidden state */
 .hidden {
   display: none;
 }
 
+/* Header */
 .chatbot-header {
-  background: #1a237e; /* Darker header color */
-  color: white;
+  font-weight: bold;
   padding: 10px;
   display: flex;
   justify-content: space-between;
-  border-radius: 12px 12px 0 0;
+  border-bottom: 1px solid #eee;
 }
 
-.chatbot-body {
-  padding: 12px;
+/* Content */
+#chatbot-content {
+  padding: 10px;
+  font-size: 14px;
+  min-height: 80px;
 }
 
-.chat-option {
+/* Buttons */
+.chatbot-actions button {
   width: 100%;
-  margin-top: 8px;
+  margin: 5px 0;
   padding: 8px;
-  background: #444444; /* Darker option background */
-  color: white; /* Added color for readability on dark background */
-
-
+  border: none;
+  border-radius: 8px;
+  background: #f0f6ff;
+  cursor: pointer;
+  font-size: 14px;
+}
 
 
 /*Reports updated ui*/
@@ -805,4 +817,5 @@ button[type="submit"]:hover {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
     border-left: 4px solid #2563eb; /* Blue accent line */
 }
+
 
