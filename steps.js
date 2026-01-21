@@ -1,91 +1,52 @@
 document.addEventListener("DOMContentLoaded", () => {
-    // ... (Keep your existing UI element selectors and circumference logic)
 
-    let stepsToday = parseInt(localStorage.getItem("stepsToday")) || 0;
-    let stepGoal = parseInt(localStorage.getItem("stepGoal")) || 5000;
+  const stepsCountEl = document.getElementById("stepsCount");
+  const goalTextEl = document.getElementById("stepGoalText");
+  const progressCircle = document.getElementById("progressCircle");
 
-    // STEP DETECTION VARIABLES
-    let lastMag = 0;
-    const threshold = 12; // Sensitivity: adjust based on testing (usually 10-14)
-    let isStepBelowThreshold = true;
+  const stepsInput = document.getElementById("stepsInput");
+  const goalInput = document.getElementById("goalInput");
 
-    // 1. START AUTOMATIC TRACKING
-    async function startPedometer() {
-        if ('LinearAccelerationSensor' in window) {
-            try {
-                // Request permission
-                const permissions = await Promise.all([
-                    navigator.permissions.query({ name: "accelerometer" })
-                ]);
+  const addStepsBtn = document.getElementById("addStepsBtn");
+  const updateGoalBtn = document.getElementById("updateGoalBtn");
 
-                if (permissions[0].state === "denied") {
-                    alert("Step tracking requires accelerometer access.");
-                    return;
-                }
+  const radius = 90;
+  const circumference = 2 * Math.PI * radius;
 
-                const sensor = new LinearAccelerationSensor({ frequency: 60 });
-                
-                sensor.addEventListener('reading', () => {
-                    // Calculate Magnitude: sqrt(x^2 + y^2 + z^2)
-                    const mag = Math.sqrt(sensor.x ** 2 + sensor.y ** 2 + sensor.z ** 2);
+  progressCircle.style.strokeDasharray = circumference;
+  progressCircle.style.strokeDashoffset = circumference;
 
-                    // Peak detection logic
-                    if (mag > threshold && isStepBelowThreshold) {
-                        stepsToday++;
-                        saveAndSync();
-                        isStepBelowThreshold = false;
-                    }
-                    if (mag < threshold - 2) {
-                        isStepBelowThreshold = true;
-                    }
-                });
+  let stepsToday = parseInt(localStorage.getItem("stepsToday")) || 0;
+  let stepGoal = parseInt(localStorage.getItem("stepGoal")) || 5000;
 
-                sensor.start();
-                keepAppAlive(); // Attempt to keep tracking in background
-            } catch (err) {
-                console.error("Sensor error:", err);
-                fallbackToMotionEvents();
-            }
-        } else {
-            fallbackToMotionEvents();
-        }
-    }
+  function updateUI() {
+    stepsCountEl.textContent = stepsToday;
+    goalTextEl.textContent = stepGoal;
 
-    // 2. FALLBACK FOR OLDER BROWSERS (DeviceMotionEvent)
-    function fallbackToMotionEvents() {
-        window.addEventListener('devicemotion', (event) => {
-            const acc = event.acceleration;
-            if (!acc) return;
-            const mag = Math.sqrt(acc.x ** 2 + acc.y ** 2 + acc.z ** 2);
-            
-            if (mag > threshold && isStepBelowThreshold) {
-                stepsToday++;
-                saveAndSync();
-                isStepBelowThreshold = false;
-            }
-            if (mag < threshold - 2) {
-                isStepBelowThreshold = true;
-            }
-        });
-    }
+    const progress = Math.min(stepsToday / stepGoal, 1);
+    const offset = circumference - progress * circumference;
+    progressCircle.style.strokeDashoffset = offset;
+  }
 
-    // 3. BACKGROUND PERSISTENCE (Wake Lock)
-    async function keepAppAlive() {
-        if ('wakeLock' in navigator) {
-            try {
-                await navigator.wakeLock.request('screen');
-            } catch (err) {
-                console.log("Wake Lock failed. Background tracking may be limited.");
-            }
-        }
-    }
+  addStepsBtn.addEventListener("click", () => {
+    const addedSteps = parseInt(stepsInput.value);
+    if (!addedSteps || addedSteps <= 0) return;
 
-    function saveAndSync() {
-        localStorage.setItem("stepsToday", stepsToday);
-        updateUI();
-    }
-
-    // Initialize
-    startPedometer();
+    stepsToday += addedSteps;
+    localStorage.setItem("stepsToday", stepsToday);
+    stepsInput.value = "";
     updateUI();
+  });
+
+  updateGoalBtn.addEventListener("click", () => {
+    const newGoal = parseInt(goalInput.value);
+    if (!newGoal || newGoal <= 0) return;
+
+    stepGoal = newGoal;
+    localStorage.setItem("stepGoal", stepGoal);
+    goalInput.value = "";
+    updateUI();
+  });
+
+  updateUI();
 });
