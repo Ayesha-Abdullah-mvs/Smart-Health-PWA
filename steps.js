@@ -62,8 +62,8 @@ document.addEventListener("DOMContentLoaded", () => {
   if (currentPage === "steps") {
     let lastStepTime = 0;
 
-    const MOVEMENT_THRESHOLD = 1.0;   // was ~1.5 (too slow)
-    const STEP_COOLDOWN = 150;         // ms (fast response)
+    const MOVEMENT_THRESHOLD = 1.3;   // was ~1.5 (too slow)
+    const STEP_COOLDOWN = 100;         // ms (fast response)
     const STEP_BOOST = 1;              // 1 motion = +3 steps
 
     function requestMotionPermission() {
@@ -119,4 +119,5 @@ document.addEventListener("DOMContentLoaded", () => {
     if (gEl) gEl.textContent = g.toLocaleString();
   }
 });
+
 
