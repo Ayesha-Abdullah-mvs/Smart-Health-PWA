@@ -505,15 +505,15 @@ body {
 
 /* Buttons */
 .chatbot-actions button {
-  color: blue;
-  width: 100%;
-  margin: 5px 0;
-  padding: 8px;
-  border: none;
-  border-radius: 8px;
-  background: #f0f6ff;
-  cursor: pointer;
-  font-size: 14px;
+    width: 100%;
+    margin: 5px 0;
+    padding: 8px;
+    border: none;
+    border-radius: 8px;
+    background: #f0f6ff;
+    cursor: pointer;
+    font-size: 14px;
+    color: #00008B; 
 }
 
 
@@ -818,6 +818,7 @@ button[type="submit"]:hover {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
     border-left: 4px solid #2563eb; /* Blue accent line */
 }
+
 
 
 
