@@ -136,3 +136,52 @@ body {
   margin-top: 10px;
   color: #555;
 }
+/* --- Cards --- */
+.card {
+    background: white;
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 12px;
+}
+
+/* Ensure first card is fully visible */
+.card:first-child {
+    margin-top: 16px;
+}
+
+/* --- Bottom nav --- */
+.bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 70px;
+    background: #ffffff;
+    border-top: 1px solid #ddd;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    z-index: 1000;
+}
+.bottom-nav button {
+  background: none;
+  border: none;
+  text-align: center;
+  font-size: 12px;
+  color: #666;
+  cursor: pointer;
+}
+
+.bottom-nav button span {
+  font-size: 22px;
+  display: block;
+}
+
+.bottom-nav button.active {
+  color: #2563eb;
+  font-weight: bold;
+}
+
+.bottom-nav button.active span {
+  transform: scale(1.1);
+}
