@@ -113,15 +113,18 @@ button[type="submit"]:hover {
 }
 /* --- Bottom nav --- */
 .bottom-nav {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 70px;
-  background: #ffffff;
-  z-index: 9999; /* 🔑 force visibility */
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 70px;
+    background: #ffffff;
+    border-top: 1px solid #ddd;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    z-index: 1000;
 }
-
 .bottom-nav button {
   background: none;
   border: none;
