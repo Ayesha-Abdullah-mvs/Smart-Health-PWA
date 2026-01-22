@@ -3,16 +3,24 @@ body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background: #f5f7fb;
     margin: 0;
-    padding-bottom: 70px; /* Space for the bottom nav */
     color: #333;
+    min-height: 100vh;
 }
 
-/* Shared Container */
-.page-container, #medList {
+.page-container {
     padding: 20px;
+    padding-bottom: 120px; /* 🔑 space for bottom nav */
     max-width: 480px;
     margin: auto;
+    box-sizing: border-box;
+    min-height: 100vh;
 }
+
+#medList {
+    padding: 20px;
+    padding-bottom: 120px; /* 🔑 same protection */
+}
+
 
 h2 {
     text-align: center;
@@ -105,18 +113,15 @@ button[type="submit"]:hover {
 }
 /* --- Bottom nav --- */
 .bottom-nav {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 70px;
-    background: #ffffff;
-    border-top: 1px solid #ddd;
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    z-index: 1000;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 70px;
+  background: #ffffff;
+  z-index: 9999; /* 🔑 force visibility */
 }
+
 .bottom-nav button {
   background: none;
   border: none;
