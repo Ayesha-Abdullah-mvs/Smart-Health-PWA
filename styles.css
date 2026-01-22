@@ -73,35 +73,35 @@ input {
 
 
 
-/* ====== Global Body & HTML ====== */
+/* --- Body / HTML --- */
 html, body {
-  margin: 0;
-  padding: 0;
-  font-family: Arial, sans-serif;
-  background: #f9fafb;
-  overflow-y: auto; /* let it scroll naturally */
-  -webkit-overflow-scrolling: touch;
-  box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    background: #f9fafb;
+    overflow-x: hidden;
 }
 
-/* ====== Dashboard Container ====== */
+/* --- Dashboard container --- */
 .dashboard {
-  padding: 16px;           /* space around content */
-  padding-top: 16px;       /* enough space from top */
-  padding-bottom: 100px;   /* space for bottom nav */
+    padding: 16px;           /* space around content */
+    padding-bottom: 100px;   /* space for bottom nav */
+    max-width: 480px;        /* optional, for phone-like layout */
+    margin: auto;            /* center on PC */
+    box-sizing: border-box;
 }
 
-/* ====== Cards ====== */
+/* --- Cards --- */
 .card {
-  background: white;
-  border-radius: 12px;
-  padding: 16px;
-  margin-bottom: 12px;
+    background: white;
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 12px;
 }
 
 /* Ensure first card is fully visible */
 .card:first-child {
-  margin-top: 16px;
+    margin-top: 16px;
 }
 
 /* ====== Vitals Grid ====== */
@@ -143,40 +143,20 @@ html, body {
   border-bottom: 1px solid #ddd;
 }
 
-/* ====== Alerts ====== */
-.alert {
-  padding: 10px;
-  border-radius: 8px;
-  margin-bottom: 10px;
-  color: white;
-}
-
-.alert.emergency { background-color: #dc2626; }
-.alert.warning { background-color: #f59e0b; }
-.alert.info    { background-color: #3b82f6; }
-
-/* ====== Info Text ====== */
-.info {
-  margin-top: 15px;
-  font-size: 14px;
-  color: #666;
-}
-
-/* ====== Bottom Navigation ====== */
+/* --- Bottom nav --- */
 .bottom-nav {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 70px;
-  background: #ffffff;
-  border-top: 1px solid #ddd;
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-  z-index: 1000;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 70px;
+    background: #ffffff;
+    border-top: 1px solid #ddd;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    z-index: 1000;
 }
-
 .bottom-nav button {
   background: none;
   border: none;
@@ -850,6 +830,7 @@ button[type="submit"]:hover {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
     border-left: 4px solid #2563eb; /* Blue accent line */
 }
+
 
 
 
