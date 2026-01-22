@@ -65,7 +65,7 @@ input:focus {
 }
 
 /* Buttons */
-button[type="submit"] {
+form button[type="submit"] {
     width: 100%;
     padding: 14px;
     background: #2563eb;
