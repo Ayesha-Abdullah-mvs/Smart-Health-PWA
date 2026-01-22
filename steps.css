@@ -38,24 +38,34 @@ body {
   margin-bottom: 15px;
 }
 
+/* 1. Add this reset to ensure all elements calculate width the same way */
+* {
+  box-sizing: border-box;
+}
+
+
 .form input {
-  width: 100%;
+  width: 100%;       /* Now includes padding in the calculation */
   padding: 12px;
   margin-top: 6px;
   margin-bottom: 12px;
   border-radius: 8px;
   border: 1px solid #ccc;
+  display: block;    /* Ensures it takes up the full line */
 }
 
+/* 3. Update your primary button style */
 .primary-btn {
-  width: 100%;
+  width: 100%;       /* Now matches the input exactly */
   padding: 14px;
   background: #2563eb;
   color: white;
   border: none;
   border-radius: 10px;
   font-size: 16px;
+  cursor: pointer;
 }
+
 .secondary-btn {
   padding: 10px 16px;
   background: #f0f0f0;
@@ -195,9 +205,14 @@ body {
 .record-card {
   display: flex;
   flex-direction: column;
-  gap: 10px; /* space between buttons */
-  align-items: flex-start;
+  gap: 10px;
+  align-items: stretch; /* This stretches buttons to full card width */
 }
+
+.record-card .secondary-btn {
+  margin-right: 0; /* Remove the margin since they are now stacked */
+}
+
 /* --- Bottom nav --- */
 .bottom-nav {
     position: fixed;
