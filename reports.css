@@ -250,3 +250,39 @@ tbody tr:hover {
     #vitalsTable td:nth-of-type(3)::before { content: "HR"; }
     #vitalsTable td:nth-of-type(4)::before { content: "Temp"; }
 }
+/* --- Bottom nav --- */
+.bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 70px;
+    background: #ffffff;
+    border-top: 1px solid #ddd;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    z-index: 1000;
+}
+.bottom-nav button {
+  background: none;
+  border: none;
+  text-align: center;
+  font-size: 12px;
+  color: #666;
+  cursor: pointer;
+}
+
+.bottom-nav button span {
+  font-size: 22px;
+  display: block;
+}
+
+.bottom-nav button.active {
+  color: #2563eb;
+  font-weight: bold;
+}
+
+.bottom-nav button.active span {
+  transform: scale(1.1);
+}
