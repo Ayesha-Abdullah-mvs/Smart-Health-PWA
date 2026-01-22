@@ -56,9 +56,18 @@ body {
   border-radius: 10px;
   font-size: 16px;
 }
-
 .secondary-btn {
-  padding: 8px 12px;
+  padding: 10px 16px;
+  background: #f0f0f0;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 16px;
+  margin-right: 10px;
+}
+
+.secondary-btn:hover {
+  background: #e0e0e0;
 }
 
 .info-box {
@@ -183,7 +192,12 @@ body {
   padding: 8px 0;
   border-bottom: 1px solid #eee;
 }
-
+.record-card {
+  display: flex;
+  flex-direction: column;
+  gap: 10px; /* space between buttons */
+  align-items: flex-start;
+}
 /* --- Bottom nav --- */
 .bottom-nav {
     position: fixed;
