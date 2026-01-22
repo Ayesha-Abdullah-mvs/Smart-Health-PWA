@@ -1,0 +1,84 @@
+/*  VITALS PAGE  */
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #f5f7fb;
+    margin: 0;
+    padding-bottom: 70px; /* Space for the bottom nav */
+    color: #333;
+}
+
+.page-container {
+    padding: 20px;
+    max-width: 480px;
+    margin: auto;
+}
+
+h2 {
+    text-align: center;
+    font-size: 24px;
+    margin-bottom: 25px;
+    color: #1a202c;
+}
+
+/* Form Styling */
+#vitalsForm {
+    background: white;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #4a5568;
+}
+
+input[type="text"],
+input[type="number"] {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    border: 1px solid #e2e8f0;
+    box-sizing: border-box; /* Ensures padding doesn't affect width */
+    font-size: 16px;
+}
+
+input:focus {
+    outline: none;
+    border-color: #4299e1;
+    box-shadow: 0 0 0 1px #4299e1;
+}
+
+button[type="submit"] {
+    width: 100%;
+    padding: 14px;
+    background: #2563eb; /* Primary color */
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+button[type="submit"]:hover {
+    background: #1d4ed8;
+}
+
+/* Status Message */
+#statusMsg {
+    text-align: center;
+    margin-top: 15px;
+    font-size: 14px;
+    min-height: 1em; /* Prevents layout shift when message appears */
+}
+
+.success {
+    color: green;
+    font-weight: bold;
+}
