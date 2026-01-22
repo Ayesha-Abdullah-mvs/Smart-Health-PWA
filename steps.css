@@ -9,8 +9,11 @@ body {
 
 .page-container {
   padding: 20px;
+  padding-bottom: 120px; 
   max-width: 480px;
   margin: auto;
+  box-sizing: border-box;
+  min-height: 100vh;
 }
 
 .page-title {
@@ -136,17 +139,49 @@ body {
   margin-top: 10px;
   color: #555;
 }
-/* --- Cards --- */
-.card {
-    background: white;
-    border-radius: 12px;
-    padding: 16px;
-    margin-bottom: 12px;
-}
+
 
 /* Ensure first card is fully visible */
 .card:first-child {
     margin-top: 16px;
+}
+
+/* ===== Steps Page Card UI Fix ===== */
+
+.card-title {
+  font-weight: bold;
+  color: #111;
+}
+
+.card:not(.steps-card) {
+  box-shadow: 0 4px 10px rgba(0,0,0,0.06);
+}
+
+/* Add Steps Card */
+.add-steps-card input {
+  font-size: 16px;
+}
+
+.add-steps-card .primary-btn {
+  margin-top: 10px;
+}
+
+/* Update Goal Card */
+.goal-card {
+  background: #f0f6ff;
+  border: 1px solid #dbeafe;
+}
+
+.goal-card .big-number {
+  color: #2563eb;
+}
+
+/* Record Steps Card */
+.record-card .record-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 0;
+  border-bottom: 1px solid #eee;
 }
 
 /* --- Bottom nav --- */
