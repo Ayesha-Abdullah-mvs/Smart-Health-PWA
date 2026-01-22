@@ -181,6 +181,92 @@ html, body {
 }
 
 
+/* Chatbot Button */
+#chatbot-button {
+  position: fixed;
+  bottom: 90px;
+  right: 20px;
+  width: 55px;
+  height: 55px;
+  background: #4da6ff;
+  color: white;
+  font-size: 24px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+  z-index: 1000;
+}
+
+/* Chatbot Card */
+#chatbot-card {
+  position: fixed;
+  bottom: 150px;
+  right: 20px;
+  width: 300px;
+  background: #ffffff;
+  border-radius: 14px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+  padding: 10px;
+  z-index: 1000;
+}
+
+/* Hidden state */
+.hidden {
+  display: none;
+}
+
+/* Header */
+.chatbot-header {
+  font-weight: bold;
+  padding: 10px;
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px solid #eee;
+}
+
+/* Content */
+#chatbot-content {
+  padding: 10px;
+  font-size: 14px;
+  min-height: 80px;
+}
+
+/* Buttons */
+.chatbot-actions button {
+    width: 100%;
+    margin: 5px 0;
+    padding: 8px;
+    border: none;
+    border-radius: 8px;
+    background: #f0f6ff;
+    cursor: pointer;
+    font-size: 14px;
+    color: #00008B; 
+}
+
+
+/*Reports updated ui*/
+    
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.chat-option:hover {
+  background: #555555; /* Darker option hover state */
+}
+
+.bot-msg {
+  font-size: 14px;
+  margin-bottom: 10px;
+  color: #eeeeee; 
+}
+/* End of Chatbot */
+
+
 
 
 
