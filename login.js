@@ -1,29 +1,38 @@
-const form = document.getElementById("loginForm");
-const msg = document.getElementById("msg");
+document.addEventListener('DOMContentLoaded', () => {
+    const roleSelect = document.getElementById('role');
+    const passwordContainer = document.getElementById('passwordContainer');
+    const passwordInput = document.getElementById('password');
+    const form = document.getElementById('loginForm');
+    const errorBox = document.getElementById('errorBox');
 
-form.addEventListener("submit", function(e){
-  e.preventDefault();
+    // Handle Role Change to show/hide password
+    roleSelect.addEventListener('change', (e) => {
+        if (e.target.value === 'senior') {
+            passwordContainer.classList.add('hidden');
+            passwordInput.required = false;
+        } else {
+            passwordContainer.classList.remove('hidden');
+            passwordInput.required = true;
+        }
+    });
 
-  const email = document.getElementById("email").value.trim();
-  const password = document.getElementById("password").value.trim();
+    // Handle Form Submit
+    form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        errorBox.classList.add('hidden');
 
-  if(email === "" || password === "") {
-    msg.style.color = "red";
-    msg.innerText = "Please fill all fields";
-    return;
-  }
+        const seniorId = document.getElementById('seniorId').value.toUpperCase();
+        const role = roleSelect.value;
+        const password = passwordInput.value;
 
-  if(email === "admin@seniors.com" && password === "12345") {
-    msg.style.color = "green";
-    msg.innerText = "Login Successful 🎉";
-    
+        const result = validateCredentials(seniorId, role, password);
 
-    setTimeout(() => {
-      window.location.href = "dashboard.html";
-    }, 800);
-
-  } else {
-    msg.style.color = "red";
-    msg.innerText = "Invalid email or password";
-  }
+        if (result.valid) {
+            setSession({ seniorId, role });
+            window.location.href = 'dashboard.html';
+        } else {
+            errorBox.textContent = result.error || 'Login failed';
+            errorBox.classList.remove('hidden');
+        }
+    });
 });
