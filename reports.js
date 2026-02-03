@@ -55,6 +55,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         </div>
                         <div class="vitals-data-points">
                             <span>BP: ${v.bp}</span>
+                            <span>Sl: ${v.sl}</span>
                             <span>HR: ${v.hr} bpm</span>
                             <span>Temp: ${v.temp}°C</span>
                         </div>
@@ -83,3 +84,4 @@ function exportData() {
     link.download = "health_report.json";
     link.click();
 }
+
