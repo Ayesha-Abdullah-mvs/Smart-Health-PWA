@@ -1,251 +1,174 @@
 
 /*Pedometer*/
 
+/* --- Use Styles.css Variables --- */
+:root {
+    --border-width: 4px;
+    --border-color: #000;
+    --font-main: system-ui, -apple-system, sans-serif;
+    --color-bg: #f9fafb;
+    --color-white: #ffffff;
+    /* New Vibrant Purple Palette */
+    --color-purple-bg: #e9d5ff; /* Rich Lavender Background */
+    --color-purple-vibrant: #a855f7; /* Deep Grape Purple */
+    --color-yellow-shadow: #facc15;
+}
+
+* {
+    box-sizing: border-box;
+}
+
 body {
-  font-family: Arial, sans-serif;
-  background: #f5f7fb;
-  margin: 0;
+    font-family: var(--font-main);
+    background-color: var(--color-bg);
+    margin: 0;
+    color: var(--border-color);
 }
 
 .page-container {
-  padding: 20px;
-  padding-bottom: 120px; 
-  max-width: 480px;
-  margin: auto;
-  box-sizing: border-box;
-  min-height: 100vh;
+    padding: 20px;
+    padding-bottom: 120px;
+    max-width: 480px;
+    margin: auto;
 }
 
-.page-title {
-  text-align: center;
-  font-size: 28px;
-  margin-bottom: 20px;
+/* --- Brutalist Card/Form Styling (Purple Theme) --- */
+.card, .form-container {
+    background: var(--color-purple-bg); 
+    padding: 25px;
+    border: var(--border-width) solid var(--border-color);
+    border-radius: 0px; 
+    box-shadow: 10px 10px 0px 0px rgba(0,0,0,1);
+    margin-bottom: 25px;
 }
 
-.card {
-  background: white;
-  padding: 20px;
-  border-radius: 12px;
-  margin-bottom: 20px;
+/* --- Header inside the box (With the Yellow Shadow) --- */
+.card h2, .page-title {
+    text-align: center;
+    font-size: 2.25rem;
+    font-weight: 900;
+    margin-bottom: 1.5rem;
+    color: #000;
+    text-transform: uppercase;
+    text-shadow: 4px 4px 0px var(--color-yellow-shadow);
+    letter-spacing: -1px;
 }
 
-.center {
-  text-align: center;
+label, .card-title {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 800;
+    font-size: 1.1rem;
+    text-transform: uppercase;
 }
 
-.card-title {
-  font-size: 20px;
-  margin-bottom: 15px;
+input[type="text"],
+input[type="number"] {
+    width: 100%;
+    height: 3.5rem;
+    padding: 12px;
+    margin-bottom: 15px;
+    border: var(--border-width) solid var(--border-color);
+    border-radius: 0px; 
+    font-size: 1.25rem;
+    font-weight: 700;
+    background: var(--color-white);
 }
 
-/* 1. Add this reset to ensure all elements calculate width the same way */
-* {
-  box-sizing: border-box;
+input:focus {
+    outline: none;
+    background-color: #faf5ff; /* Very light purple tint on focus */
+    box-shadow: 4px 4px 0px 0px var(--border-color);
 }
 
-
-.form input {
-  width: 100%;       /* Now includes padding in the calculation */
-  padding: 12px;
-  margin-top: 6px;
-  margin-bottom: 12px;
-  border-radius: 8px;
-  border: 1px solid #ccc;
-  display: block;    /* Ensures it takes up the full line */
-}
-
-/* 3. Update your primary button style */
+/* --- Vibrant Purple Primary Button --- */
 .primary-btn {
-  width: 100%;       /* Now matches the input exactly */
-  padding: 14px;
-  background: #2563eb;
-  color: white;
-  border: none;
-  border-radius: 10px;
-  font-size: 16px;
-  cursor: pointer;
+    width: 100%;
+    height: 4rem;
+    background: var(--color-purple-vibrant);
+    color: white;
+    border: var(--border-width) solid var(--border-color);
+    border-radius: 0px;
+    font-size: 1.5rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    cursor: pointer;
+    box-shadow: 4px 4px 0px 0px var(--border-color);
+    transition: all 0.1s ease;
 }
 
-.secondary-btn {
-  padding: 10px 16px;
-  background: #f0f0f0;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 16px;
-  margin-right: 10px;
+.primary-btn:hover {
+    background: #9333ea;
+    transform: translate(-2px, -2px);
+    box-shadow: 6px 6px 0px 0px var(--border-color);
 }
 
-.secondary-btn:hover {
-  background: #e0e0e0;
+.primary-btn:active {
+    transform: translate(2px, 2px);
+    box-shadow: 0px 0px 0px 0px var(--border-color);
 }
 
-.info-box {
-  background: #e0ebff;
-  padding: 15px;
-  border-radius: 10px;
-}
-
-.big-number {
-  font-size: 48px;
-  font-weight: bold;
-}
-
-.progress-bar {
-  background: #ddd;
-  border-radius: 10px;
-  height: 12px;
-  margin: 10px 0;
-}
-
-#progressFill {
-  background: #2563eb;
-  height: 12px;
-  width: 0%;
-  border-radius: 10px;
-}
-
-.hidden {
-  display: none;
-}
-
-.success {
-  color: green;
-  font-weight: bold;
-}
+/* --- Pedometer Progress Circle --- */
 .steps-card {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.circle-container {
-  position: relative;
-  width: 200px;
-  height: 200px;
-}
-
-.bg-circle {
-  fill: none;
-  stroke: #e6e6e6;
-  stroke-width: 14;
+    background: var(--color-white);
 }
 
 .progress-circle {
-  fill: none;
-  stroke: #4CAF50;
-  stroke-width: 14;
-  stroke-linecap: round;
-  transform: rotate(-90deg);
-  transform-origin: center;
-  transition: stroke-dashoffset 0.6s ease;
+    stroke: var(--color-purple-vibrant);
+    stroke-width: 16;
 }
 
-.circle-text {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  text-align: center;
-}
-
-.circle-text h3 {
-  margin: 0;
-  font-size: 28px;
-}
-
-.goal-text {
-  margin-top: 10px;
-  color: #555;
-}
-
-
-/* Ensure first card is fully visible */
-.card:first-child {
-    margin-top: 16px;
-}
-
-/* ===== Steps Page Card UI Fix ===== */
-
-.card-title {
-  font-weight: bold;
-  color: #111;
-}
-
-.card:not(.steps-card) {
-  box-shadow: 0 4px 10px rgba(0,0,0,0.06);
-}
-
-/* Add Steps Card */
-.add-steps-card input {
-  font-size: 16px;
-}
-
-.add-steps-card .primary-btn {
-  margin-top: 10px;
-}
-
-/* Update Goal Card */
-.goal-card {
-  background: #f0f6ff;
-  border: 1px solid #dbeafe;
-}
-
-.goal-card .big-number {
-  color: #2563eb;
-}
-
-/* Record Steps Card */
+/* --- Record List --- */
 .record-card .record-item {
-  display: flex;
-  justify-content: space-between;
-  padding: 8px 0;
-  border-bottom: 1px solid #eee;
-}
-.record-card {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  align-items: stretch; /* This stretches buttons to full card width */
+    display: flex;
+    justify-content: space-between;
+    padding: 12px 0;
+    border-bottom: 2px solid var(--border-color);
+    font-weight: 700;
 }
 
-.record-card .secondary-btn {
-  margin-right: 0; /* Remove the margin since they are now stacked */
-}
-
+/* --- Bottom nav --- */
 /* --- Bottom nav --- */
 .bottom-nav {
     position: fixed;
     bottom: 0;
     left: 0;
     right: 0;
-    height: 70px;
-    background: #ffffff;
-    border-top: 1px solid #ddd;
+    height: 75px;
+    background: var(--color-white);
+    /* Thick top border to match brutalist style */
+    border-top: var(--border-width) solid var(--border-color); 
     display: flex;
     justify-content: space-around;
     align-items: center;
     z-index: 1000;
 }
+
 .bottom-nav button {
-  background: none;
-  border: none;
-  text-align: center;
-  font-size: 12px;
-  color: #666;
-  cursor: pointer;
+    background: none;
+    border: none;
+    text-align: center;
+    font-family: var(--font-main);
+    font-size: 13px;
+    font-weight: 700; /* Heavier font weight */
+    color: var(--border-color);
+    cursor: pointer;
+    transition: transform 0.1s;
+    padding: 10px;
 }
 
 .bottom-nav button span {
-  font-size: 22px;
-  display: block;
+    font-size: 24px;
+    display: block;
+    margin-bottom: 2px;
 }
 
+/* Active State: Brutalist Highlight */
 .bottom-nav button.active {
-  color: #2563eb;
-  font-weight: bold;
+    color: #000;
+    background: var(--color-blue-50); /* Subtle fill when active */
+    border: 2px solid var(--border-color);
+    box-shadow: 3px 3px 0px 0px rgba(0,0,0,1);
+    transform: translate(-2px, -2px);
 }
-
-.bottom-nav button.active span {
-  transform: scale(1.1);
-}
+/* Chatbot Button */
