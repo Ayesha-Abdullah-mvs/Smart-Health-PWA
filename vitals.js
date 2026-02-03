@@ -2,10 +2,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const form = document.getElementById("vitalsForm");
   const statusMsg = document.getElementById("statusMsg");
 
-  if (!form) {
-    console.error("Vitals form not found!");
-    return;
-  }
+  if (!form) return;
 
   form.addEventListener("submit", (e) => {
     e.preventDefault();
@@ -17,38 +14,36 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (!bp || !hr || !temp || !sl) {
       statusMsg.textContent = "Please fill all fields!";
+      statusMsg.className = "error"; // Using class for styling
       statusMsg.style.color = "red";
       return;
     }
 
-   
     const vitalsEntry = {
-      bp,
+      bp: bp,
       hr: Number(hr),
       temp: Number(temp),
-      hr: Number(sl)
+      sl: Number(sl),
       timestamp: new Date().toISOString()
     };
 
-   
     let vitalsHistory;
     try {
-        const storedData = JSON.parse(localStorage.getItem("vitals"));
-        vitalsHistory = Array.isArray(storedData) ? storedData : [];
+        const storedData = localStorage.getItem("vitals");
+        vitalsHistory = storedData ? JSON.parse(storedData) : [];
+        if (!Array.isArray(vitalsHistory)) vitalsHistory = [];
     } catch (err) {
         vitalsHistory = [];
     }
 
     vitalsHistory.push(vitalsEntry);
-
-   
     localStorage.setItem("vitals", JSON.stringify(vitalsHistory));
 
- 
     statusMsg.textContent = "Vitals saved successfully!";
     statusMsg.style.color = "green";
 
     form.reset();
   });
 });
+
 
