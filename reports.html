@@ -5,36 +5,6 @@
   <title>Health Reports</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="stylesheet" href="reports.css">
-
-  <style>
-    /* SIMPLE MOBILE CARD STYLE */
-    @media screen and (max-width: 600px) {
-      .container, .page-container {
-        padding: 10px;
-        width: 100%;
-        box-sizing: border-box;
-      }
-      table thead { display: none; }
-      table, tbody, tr, td { display: block; width: 100%; }
-      tr {
-        margin-bottom: 15px;
-        background: #fff;
-        border: 1px solid #ddd;
-        border-radius: 8px;
-        padding: 12px;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-      }
-      td {
-        text-align: left;
-        padding: 8px 0;
-        border-bottom: 1px dotted #eee;
-        display: flex;
-        justify-content: space-between;
-      }
-      td:last-child { border-bottom: none; }
-      td::before { font-weight: bold; color: #666; margin-right: 10px; }
-    }
-  </style>
 </head>
 
 <body data-page="reports">
@@ -46,57 +16,35 @@
     <button data-page="steps"><span>👣</span><small>Steps</small></button>
   </nav>
 
-  <div class="container">
+  <div class="page-container">
     
-    <div class="report-section">
+    <div class="card">
       <h2>Health Reports</h2>
-      <h3>Weekly Summary</h3>
-      <p>Total Steps: <span id="weeklySteps">0</span></p>
-      <p>Missed Medicines: <span id="missedMeds">0</span></p>
-      <p>Alerts Generated: <span id="alertsCount">0</span></p>
+      <h3 class="card-title">Weekly Summary</h3>
+      <div class="summary-row">
+        <p>Total Steps</p>
+        <span id="weeklySteps">0</span>
+      </div>
+      <div class="summary-row">
+        <p>Missed Medicines</p>
+        <span id="missedMeds">0</span>
+      </div>
+      
+
+    <div class="card">
+      <h3 class="card-title">Medication Compliance</h3>
+      <div id="medTable" class="report-list">
+        </div>
     </div>
 
-    <div class="report-card">
-      <h3>Medication Compliance</h3>
-      <table id="medTableContainer">
-        <thead>
-          <tr>
-            <th>Medicine</th>
-            <th>Status</th>
-          </tr>
-        </thead>
-        <tbody id="medTable"></tbody>
-      </table>
-    </div>
-
-    <div class="report-card">
-      <h3>Vitals History</h3>
-      <table id="vitalsTable">
-        <thead>
-          <tr>
-            <th>Date</th>
-            <th>BP</th>
-            <th>HR</th>
-            <th>Temp</th>
-          </tr>
-        </thead>
-        <tbody></tbody>
-      </table>
+    <div class="card">
+      <h3 class="card-title">Vitals History</h3>
+      <div id="vitalsTable" class="report-list vitals-history">
+        </div>
     </div>
   </div>
+
   <script src="bottom-nav.js"></script>
   <script src="reports.js"></script>
-  <script src="vitals.js"></script>
-
-
 </body>
 </html>
-
-
-
-
-
-
-
-
-
