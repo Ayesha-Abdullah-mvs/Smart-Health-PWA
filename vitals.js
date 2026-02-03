@@ -13,8 +13,9 @@ document.addEventListener("DOMContentLoaded", () => {
     const bp = document.getElementById("bp").value.trim();
     const hr = document.getElementById("hr").value.trim();
     const temp = document.getElementById("temp").value.trim();
+    const sl = document.getElementById("sl").value.trim();
 
-    if (!bp || !hr || !temp) {
+    if (!bp || !hr || !temp || !sl) {
       statusMsg.textContent = "Please fill all fields!";
       statusMsg.style.color = "red";
       return;
@@ -25,6 +26,7 @@ document.addEventListener("DOMContentLoaded", () => {
       bp,
       hr: Number(hr),
       temp: Number(temp),
+      hr: Number(sl)
       timestamp: new Date().toISOString()
     };
 
@@ -49,3 +51,4 @@ document.addEventListener("DOMContentLoaded", () => {
     form.reset();
   });
 });
+
