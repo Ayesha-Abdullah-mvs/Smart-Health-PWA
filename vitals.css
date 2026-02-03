@@ -1,120 +1,158 @@
-/*  VITALS PAGE  */
+/* --- Use Styles.css Variables --- */
+:root {
+    --border-width: 4px;
+    --border-color: #000;
+    --font-main: system-ui, -apple-system, sans-serif;
+    --color-bg: #f9fafb;
+    --color-white: #ffffff;
+    --color-blue-50: #eff6ff;
+    --color-blue-500: #3b82f6;
+    --color-green-500: #22c55e;
+    --color-green-50: #f0fdf4;
+}
 
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: #f5f7fb;
+    font-family: var(--font-main);
+    background-color: var(--color-bg);
     margin: 0;
-    padding-bottom: 70px; /* Space for the bottom nav */
-    color: #333;
+    padding-bottom: 90px; /* Increased for thicker nav border */
+    color: var(--border-color);
 }
 
 .page-container {
-    padding: 20px;
+    padding: 1.5rem;
     max-width: 480px;
     margin: auto;
 }
 
 h2 {
     text-align: center;
-    font-size: 24px;
-    margin-bottom: 25px;
-    color: #1a202c;
+    font-size: 1.875rem; /* text-3xl */
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    color: var(--border-color);
+    text-transform: uppercase;
+    letter-spacing: -0.02em;
 }
 
-/* Form Styling */
+/* --- Neobrutalist Form Styling --- */
 #vitalsForm {
-    background: white;
+    background: var(--color-blue-50); /* Light Blue background */
     padding: 25px;
-    border-radius: 12px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    border: var(--border-width) solid var(--border-color);
+    border-radius: 0px; 
+    box-shadow: 8px 8px 0px 0px rgba(0,0,0,1);
 }
 
 label {
     display: block;
     margin-bottom: 8px;
-    font-weight: 600;
-    color: #4a5568;
+    font-weight: 700;
+    font-size: 1.125rem;
+    color: var(--border-color);
 }
 
 input[type="text"],
 input[type="number"] {
     width: 100%;
+    height: 3.5rem;
     padding: 12px;
     margin-bottom: 20px;
-    border-radius: 8px;
-    border: 1px solid #e2e8f0;
-    box-sizing: border-box; /* Ensures padding doesn't affect width */
-    font-size: 16px;
+    border: var(--border-width) solid var(--border-color);
+    border-radius: 0px; 
+    box-sizing: border-box;
+    font-size: 1.25rem;
+    font-weight: 600;
+    background: var(--color-white);
 }
 
 input:focus {
     outline: none;
-    border-color: #4299e1;
-    box-shadow: 0 0 0 1px #4299e1;
+    box-shadow: 4px 4px 0px 0px var(--border-color);
 }
 
+/* --- Submit Button --- */
 button[type="submit"] {
     width: 100%;
-    padding: 14px;
-    background: #2563eb; /* Primary color */
+    height: 4rem;
+    background: var(--color-blue-500); /* Vibrant Blue */
     color: white;
-    border: none;
-    border-radius: 10px;
-    font-size: 16px;
-    font-weight: bold;
+    border: var(--border-width) solid var(--border-color);
+    border-radius: 0px;
+    font-size: 1.5rem;
+    font-weight: 900;
     cursor: pointer;
-    transition: background 0.3s;
+    transition: all 0.1s;
+    box-shadow: 4px 4px 0px 0px var(--border-color);
 }
 
 button[type="submit"]:hover {
-    background: #1d4ed8;
+    background: #2563eb;
+    transform: translate(-2px, -2px);
+    box-shadow: 6px 6px 0px 0px var(--border-color);
 }
 
-/* Status Message */
+button[type="submit"]:active {
+    transform: translate(2px, 2px);
+    box-shadow: 0px 0px 0px 0px var(--border-color);
+}
+
+/* --- Status Message --- */
 #statusMsg {
     text-align: center;
-    margin-top: 15px;
-    font-size: 14px;
-    min-height: 1em; /* Prevents layout shift when message appears */
+    margin-top: 20px;
+    font-size: 1.125rem;
+    font-weight: 700;
+    padding: 10px;
 }
 
 .success {
-    color: green;
-    font-weight: bold;
+    background: var(--color-green-50);
+    border: 2px solid var(--color-green-500);
+    color: #166534;
 }
+
 /* --- Bottom nav --- */
 .bottom-nav {
     position: fixed;
     bottom: 0;
     left: 0;
     right: 0;
-    height: 70px;
-    background: #ffffff;
-    border-top: 1px solid #ddd;
+    height: 75px;
+    background: var(--color-white);
+    /* Thick top border to match brutalist style */
+    border-top: var(--border-width) solid var(--border-color); 
     display: flex;
     justify-content: space-around;
     align-items: center;
     z-index: 1000;
 }
+
 .bottom-nav button {
-  background: none;
-  border: none;
-  text-align: center;
-  font-size: 12px;
-  color: #666;
-  cursor: pointer;
+    background: none;
+    border: none;
+    text-align: center;
+    font-family: var(--font-main);
+    font-size: 13px;
+    font-weight: 700; /* Heavier font weight */
+    color: var(--border-color);
+    cursor: pointer;
+    transition: transform 0.1s;
+    padding: 10px;
 }
 
 .bottom-nav button span {
-  font-size: 22px;
-  display: block;
+    font-size: 24px;
+    display: block;
+    margin-bottom: 2px;
 }
 
+/* Active State: Brutalist Highlight */
 .bottom-nav button.active {
-  color: #2563eb;
-  font-weight: bold;
+    color: #000;
+    background: var(--color-blue-50); /* Subtle fill when active */
+    border: 2px solid var(--border-color);
+    box-shadow: 3px 3px 0px 0px rgba(0,0,0,1);
+    transform: translate(-2px, -2px);
 }
-
-.bottom-nav button.active span {
-  transform: scale(1.1);
-}
+/* Chatbot Button */
