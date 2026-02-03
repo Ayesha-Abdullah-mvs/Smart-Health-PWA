@@ -245,89 +245,122 @@ html, body {
 
 
 /* Chatbot Button */
+
+/* --- Brutalist Chatbot Theme --- */
+
+/* Chatbot Toggle Button */
 #chatbot-button {
   position: fixed;
-  bottom: 90px;
-  right: 20px;
-  width: 55px;
-  height: 55px;
-  background: #4da6ff;
-  color: white;
-  font-size: 24px;
-  border-radius: 50%;
+  bottom: 30px; /* Adjusted for better spacing */
+  right: 30px;
+  width: 65px;
+  height: 65px;
+  background: var(--color-yellow-400); /* Pop of color like your stat boxes */
+  color: #000;
+  font-size: 30px;
+  font-weight: bold;
+  border: var(--border-width) solid var(--border-color);
+  border-radius: 0; /* Square edges to match the card style */
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+  box-shadow: 4px 4px 0px 0px rgba(0,0,0,1);
   z-index: 1000;
+  transition: transform 0.1s;
+}
+
+#chatbot-button:active {
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0px 0px rgba(0,0,0,1);
 }
 
 /* Chatbot Card */
 #chatbot-card {
   position: fixed;
-  bottom: 150px;
-  right: 20px;
-  width: 300px;
-  background: #ffffff;
-  border-radius: 14px;
-  box-shadow: 0 6px 20px rgba(0,0,0,0.2);
-  padding: 10px;
+  bottom: 110px;
+  right: 30px;
+  width: 320px;
+  background: var(--color-white);
+  border: var(--border-width) solid var(--border-color);
+  border-radius: 0px; /* Removed rounding to match .card */
+  box-shadow: 8px 8px 0px 0px rgba(0,0,0,1);
+  padding: 0; /* Padding handled by internal sections */
   z-index: 1000;
-}
-
-/* Hidden state */
-.hidden {
-  display: none;
+  overflow: hidden;
 }
 
 /* Header */
 .chatbot-header {
-  font-weight: bold;
-  padding: 10px;
+  background-color: var(--border-color);
+  color: var(--color-white);
+  font-weight: 700;
+  font-size: 1.25rem;
+  padding: 1rem;
   display: flex;
   justify-content: space-between;
-  border-bottom: 1px solid #eee;
+  align-items: center;
 }
 
-/* Content */
+/* Content Area */
 #chatbot-content {
-  padding: 10px;
-  font-size: 14px;
-  min-height: 80px;
+  padding: 1.5rem;
+  font-size: 1rem;
+  min-height: 100px;
+  background-color: var(--color-bg);
+  border-bottom: var(--border-width) solid var(--border-color);
 }
 
-/* Buttons */
-.chatbot-actions button {
-    width: 100%;
-    margin: 5px 0;
-    padding: 8px;
-    border: none;
-    border-radius: 8px;
-    background: #f0f6ff;
-    cursor: pointer;
-    font-size: 14px;
-    color: #00008B; 
-}
-
-
-/*Reports updated ui*/
-    
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-}
-
-.chat-option:hover {
-  background: #555555; /* Darker option hover state */
-}
-
+/* Message Styles */
 .bot-msg {
-  font-size: 14px;
+  font-family: var(--font-main);
+  font-weight: 500;
+  color: #000;
+  margin-bottom: 15px;
+  padding: 10px;
+  background: var(--color-blue-50);
+  border: 2px solid var(--border-color);
+}
+
+/* Actions/Buttons Container */
+.chatbot-actions {
+  padding: 1rem;
+  background: var(--color-white);
+}
+
+/* Choice Buttons */
+.chatbot-actions button, .chat-option {
+  width: 100%;
   margin-bottom: 10px;
-  color: #eeeeee; 
+  padding: 12px;
+  border: 3px solid var(--border-color);
+  border-radius: 4px;
+  background: var(--color-white);
+  cursor: pointer;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #000;
+  text-align: left;
+  transition: all 0.1s;
+}
+
+.chatbot-actions button:hover, .chat-option:hover {
+  background: var(--color-yellow-100);
+  transform: translate(-2px, -2px);
+  box-shadow: 4px 4px 0px 0px rgba(0,0,0,1);
+}
+
+.chatbot-actions button:active {
+  transform: translate(0, 0);
+  box-shadow: none;
+}
+
+/* Utility */
+.hidden {
+  display: none !important;
 }
 /* End of Chatbot */
+
 
 
 
