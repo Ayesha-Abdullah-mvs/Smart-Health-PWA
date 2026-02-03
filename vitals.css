@@ -4,10 +4,9 @@
     --font-main: system-ui, -apple-system, sans-serif;
     --color-bg: #f9fafb;
     --color-white: #ffffff;
-    /* Darker, more vibrant blue theme */
-    --color-blue-darker: #bfdbfe;  /* Darkened background blue */
-    --color-blue-button: #2563eb;  /* Stronger primary blue */
-    --color-yellow-shadow: #facc15;
+    /* Darker, flatter blue theme */
+    --color-blue-dark: #93c5fd;  /* Darker background blue */
+    --color-blue-button: #2563eb; 
 }
 
 body {
@@ -25,14 +24,14 @@ body {
 
 /* --- Neobrutalist Form Container --- */
 #vitalsForm {
-    background: var(--color-blue-darker);
+    background: var(--color-blue-dark);
     padding: 25px;
     border: var(--border-width) solid var(--border-color);
     border-radius: 0px; 
-    box-shadow: 10px 10px 0px 0px rgba(0,0,0,1);
+    box-shadow: 10px 10px 0px 0px #000;
 }
 
-/* --- H2 inside the box with Yellow Shadow --- */
+/* --- H2 inside the box (No Shading) --- */
 #vitalsForm h2 {
     text-align: center;
     font-size: 2rem;
@@ -40,24 +39,30 @@ body {
     margin-bottom: 2rem;
     color: #000;
     text-transform: uppercase;
-    text-shadow: 4px 4px 0px var(--color-yellow-shadow);
+    text-shadow: none; /* Removed all shading */
     letter-spacing: -1px;
 }
 
 /* --- 2x2 Grid Layout --- */
 .grid-container {
     display: grid;
-    grid-template-columns: 1fr 1fr; /* Two equal columns */
-    gap: 15px; /* Space between the boxes */
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
     margin-bottom: 20px;
+}
+
+.input-group {
+    display: flex;
+    flex-direction: column;
 }
 
 label {
     display: block;
     margin-bottom: 6px;
     font-weight: 800;
-    font-size: 0.9rem; /* Slightly smaller to fit 2x2 nicely */
+    font-size: 0.9rem;
     text-transform: uppercase;
+    color: #000;
 }
 
 input[type="text"],
@@ -75,7 +80,7 @@ input[type="number"] {
 
 input:focus {
     outline: none;
-    background-color: #eff6ff;
+    background-color: #fff;
     box-shadow: 4px 4px 0px 0px var(--border-color);
 }
 
@@ -91,19 +96,24 @@ button[type="submit"] {
     font-weight: 900;
     text-transform: uppercase;
     cursor: pointer;
-    box-shadow: 4px 4px 0px 0px var(--border-color);
+    box-shadow: 4px 4px 0px 0px #000;
     transition: all 0.1s;
 }
 
 button[type="submit"]:hover {
-    background: #1d4ed8; /* Darker blue on hover */
+    background: #1d4ed8;
     transform: translate(-2px, -2px);
-    box-shadow: 6px 6px 0px 0px var(--border-color);
+    box-shadow: 6px 6px 0px 0px #000;
 }
 
 button[type="submit"]:active {
     transform: translate(2px, 2px);
-    box-shadow: 0px 0px 0px 0px var(--border-color);
+    box-shadow: 0px 0px 0px 0px #000;
 }
 
-/* Keep your existing bottom-nav CSS below this */
+#statusMsg {
+    text-align: center;
+    margin-top: 15px;
+    font-weight: 800;
+    text-transform: uppercase;
+}
