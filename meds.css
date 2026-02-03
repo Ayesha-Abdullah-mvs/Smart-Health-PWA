@@ -1,14 +1,18 @@
 /* --- Use Styles.css Variables --- */
+/* --- Use Styles.css Variables --- */
 :root {
     --border-width: 4px;
     --border-color: #000;
     --font-main: system-ui, -apple-system, sans-serif;
     --color-bg: #f9fafb;
     --color-white: #ffffff;
-    /* New Vibrant Yellow Palette */
+    /* Vibrant Palette */
     --color-yellow-100: #fef9c3;
     --color-yellow-400: #facc15;
     --color-blue-50: #eff6ff;
+    --color-blue-200: #bfdbfe;
+    --color-purple-500: #a855f7;
+    --color-purple-600: #9333ea;
 }
 
 body {
@@ -29,28 +33,31 @@ body {
 
 h2 {
     text-align: center;
-    font-size: 1.875rem;
-    font-weight: 700;
+    font-size: 2.25rem; /* text-4xl style */
+    font-weight: 900;
     margin-bottom: 1.5rem;
     color: var(--border-color);
     text-transform: uppercase;
+    /* Adding a slight brutalist text shadow */
+    text-shadow: 3px 3px 0px var(--color-yellow-400);
 }
 
-/* --- Form Styling --- */
+/* --- Form Styling (Now Yellow & Vibrant) --- */
 #medForm {
-    background: var(--color-white);
+    background: var(--color-yellow-100); /* Matches the list items */
     padding: 1.5rem;
     border: var(--border-width) solid var(--border-color);
     border-radius: 0px; 
     box-shadow: 8px 8px 0px 0px rgba(0,0,0,1);
-    margin-bottom: 2rem;
+    margin-bottom: 2.5rem;
 }
 
 label {
     display: block;
     margin-bottom: 0.5rem;
-    font-weight: 700;
-    font-size: 1.125rem;
+    font-weight: 800;
+    font-size: 1.25rem;
+    text-transform: uppercase;
 }
 
 input[type="text"],
@@ -60,34 +67,48 @@ input[type="time"] {
     padding: 0.5rem 1rem;
     margin-bottom: 1.25rem;
     border: var(--border-width) solid var(--border-color);
-    border-radius: 0px; /* Sharp corners */
+    border-radius: 0px; 
     box-sizing: border-box; 
-    font-size: 1.125rem;
-    font-family: var(--font-main);
+    font-size: 1.25rem;
+    font-weight: 700;
+    background: var(--color-blue-50); /* Contrast color for inputs */
+    transition: all 0.2s;
 }
 
 input:focus {
     outline: none;
-    background-color: var(--color-yellow-100);
+    background-color: var(--color-white);
+    box-shadow: 4px 4px 0px 0px var(--border-color);
+    transform: translate(-2px, -2px);
 }
 
+/* --- Vibrant Submit Button --- */
 form button[type="submit"] {
     width: 100%;
-    height: 4rem;
-    background: var(--border-color);
+    height: 4.5rem;
+    background: var(--color-purple-500); /* Bold Purple */
     color: white;
-    border: none;
-    font-size: 1.25rem;
+    border: var(--border-width) solid var(--border-color);
+    font-size: 1.5rem;
     font-weight: 900;
+    text-transform: uppercase;
     cursor: pointer;
-    transition: transform 0.1s;
+    box-shadow: 4px 4px 0px 0px var(--border-color);
+    transition: all 0.1s;
+}
+
+form button[type="submit"]:hover {
+    background: var(--color-purple-600);
+    transform: translate(-2px, -2px);
+    box-shadow: 6px 6px 0px 0px var(--border-color);
 }
 
 form button[type="submit"]:active {
-    transform: translate(3px, 3px);
+    transform: translate(2px, 2px);
+    box-shadow: 0px 0px 0px 0px var(--border-color);
 }
 
-/* --- Simplified Medication List (No Nested Boxes) --- */
+/* --- Medication List Items --- */
 #medList {
     list-style: none;
     padding: 0;
@@ -95,7 +116,7 @@ form button[type="submit"]:active {
 }
 
 #medList li {
-    background: var(--color-yellow-100); /* Light Yellow Background */
+    background: var(--color-yellow-100);
     padding: 1.25rem;
     border: var(--border-width) solid var(--border-color);
     border-radius: 0px;
@@ -104,14 +125,12 @@ form button[type="submit"]:active {
     justify-content: space-between;
     align-items: center;
     box-shadow: 6px 6px 0px 0px rgba(0,0,0,1);
-    /* Vibrant Yellow Accent */
     border-left: 15px solid var(--color-yellow-400); 
 }
 
-/* Med Name and Time Styling */
 #medList li span {
     font-weight: 800;
-    font-size: 1.25rem;
+    font-size: 1.3rem;
     color: var(--border-color);
 }
 /* --- Bottom nav --- */
