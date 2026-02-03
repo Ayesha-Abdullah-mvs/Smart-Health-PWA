@@ -35,8 +35,6 @@ h2 {
     margin-bottom: 2rem;
     color: #000; 
     text-transform: uppercase;
-    /* Hard Shadow to match Meds theme */
-    text-shadow: 4px 4px 0px var(--color-red-vibrant); 
     letter-spacing: -1px;
 }
 
