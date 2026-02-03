@@ -6,13 +6,10 @@
     --font-main: system-ui, -apple-system, sans-serif;
     --color-bg: #f9fafb;
     --color-white: #ffffff;
-    /* Vibrant Palette */
-    --color-yellow-100: #fef9c3;
-    --color-yellow-400: #facc15;
-    --color-blue-50: #eff6ff;
-    --color-blue-200: #bfdbfe;
-    --color-purple-500: #a855f7;
-    --color-purple-600: #9333ea;
+    /* Darkened the Light Yellow for better contrast */
+    --color-yellow-bg: #fef08a; 
+    --color-yellow-vibrant: #facc15;
+    --color-blue-input: #dbeafe;
 }
 
 body {
@@ -28,35 +25,36 @@ body {
     padding-bottom: 120px;
     max-width: 480px;
     margin: auto;
-    box-sizing: border-box;
 }
 
-h2 {
-    text-align: center;
-    font-size: 2.25rem; /* text-4xl style */
-    font-weight: 900;
-    margin-bottom: 1.5rem;
-    color: var(--border-color);
-    text-transform: uppercase;
-    /* Adding a slight brutalist text shadow */
-    text-shadow: 3px 3px 0px var(--color-yellow-400);
-}
-
-/* --- Form Styling (Now Yellow & Vibrant) --- */
+/* --- Form Styling (Title now inside) --- */
 #medForm {
-    background: var(--color-yellow-100); /* Matches the list items */
+    background: var(--color-yellow-bg); 
     padding: 1.5rem;
     border: var(--border-width) solid var(--border-color);
     border-radius: 0px; 
-    box-shadow: 8px 8px 0px 0px rgba(0,0,0,1);
+    box-shadow: 10px 10px 0px 0px rgba(0,0,0,1);
     margin-bottom: 2.5rem;
+}
+
+/* Title inside the box */
+#medForm h2 {
+    text-align: left;
+    font-size: 1.75rem;
+    font-weight: 900;
+    margin: -1.5rem -1.5rem 1.5rem -1.5rem; /* Extends to edges of padding */
+    padding: 1rem;
+    background: var(--color-yellow-vibrant);
+    border-bottom: var(--border-width) solid var(--border-color);
+    text-transform: uppercase;
+    letter-spacing: -1px;
 }
 
 label {
     display: block;
     margin-bottom: 0.5rem;
     font-weight: 800;
-    font-size: 1.25rem;
+    font-size: 1.1rem;
     text-transform: uppercase;
 }
 
@@ -71,34 +69,32 @@ input[type="time"] {
     box-sizing: border-box; 
     font-size: 1.25rem;
     font-weight: 700;
-    background: var(--color-blue-50); /* Contrast color for inputs */
-    transition: all 0.2s;
+    background: var(--color-white); /* Pure white for input clarity */
 }
 
 input:focus {
     outline: none;
-    background-color: var(--color-white);
+    background-color: var(--color-blue-input);
     box-shadow: 4px 4px 0px 0px var(--border-color);
-    transform: translate(-2px, -2px);
 }
 
-/* --- Vibrant Submit Button --- */
+/* --- Yellow Submit Button --- */
 form button[type="submit"] {
     width: 100%;
-    height: 4.5rem;
-    background: var(--color-purple-500); /* Bold Purple */
-    color: white;
+    height: 4rem;
+    background: var(--color-yellow-vibrant); 
+    color: var(--border-color);
     border: var(--border-width) solid var(--border-color);
     font-size: 1.5rem;
     font-weight: 900;
     text-transform: uppercase;
     cursor: pointer;
     box-shadow: 4px 4px 0px 0px var(--border-color);
-    transition: all 0.1s;
+    transition: all 0.1s ease;
 }
 
 form button[type="submit"]:hover {
-    background: var(--color-purple-600);
+    background: #eab308; /* Slightly darker gold on hover */
     transform: translate(-2px, -2px);
     box-shadow: 6px 6px 0px 0px var(--border-color);
 }
@@ -112,11 +108,10 @@ form button[type="submit"]:active {
 #medList {
     list-style: none;
     padding: 0;
-    margin-top: 1rem;
 }
 
 #medList li {
-    background: var(--color-yellow-100);
+    background: var(--color-yellow-bg);
     padding: 1.25rem;
     border: var(--border-width) solid var(--border-color);
     border-radius: 0px;
@@ -125,13 +120,12 @@ form button[type="submit"]:active {
     justify-content: space-between;
     align-items: center;
     box-shadow: 6px 6px 0px 0px rgba(0,0,0,1);
-    border-left: 15px solid var(--color-yellow-400); 
+    border-left: 15px solid var(--color-yellow-vibrant); 
 }
 
 #medList li span {
-    font-weight: 800;
-    font-size: 1.3rem;
-    color: var(--border-color);
+    font-weight: 900;
+    font-size: 1.25rem;
 }
 /* --- Bottom nav --- */
 .bottom-nav {
