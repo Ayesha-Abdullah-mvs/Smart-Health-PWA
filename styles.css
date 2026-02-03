@@ -164,41 +164,61 @@ html, body {
 .card:first-child {
     margin-top: 16px;
 }
-
-
-
 /* ====== Vitals Grid ====== */
 .vitals-grid {
-  display: flex;
-  justify-content: space-around;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin-top: 12px;
-  font-size: 18px;
-  text-align: center;
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 1.5rem;
+    text-align: center;
 }
 
 .vitals-grid div {
-  flex: 1;          /* distributes width evenly */
-  min-width: 80px;  /* prevents squishing */
+    flex: 1;
+    min-width: 90px;
+    padding: 0.75rem;
+    /* Neobrutalist styling to match styles.css */
+    background: var(--color-white);
+    border: var(--border-width) solid var(--border-color);
+    box-shadow: 4px 4px 0px 0px var(--border-color);
+    border-radius: 0px; 
+}
+
+.vitals-grid strong {
+    display: block;
+    font-size: 1.25rem; /* Matches .text-xl */
+    font-weight: 800;
 }
 
 .vitals-grid small {
-  display: block;
-  font-size: 12px;
+    display: block;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    font-weight: 700;
+    margin-top: 4px;
+    color: var(--gray-600);
 }
 
-/* ====== Stats Grid ====== */
+/* ====== Stats Grid (Container for Cards) ====== */
 .stats-grid {
-  display: flex;
-  justify-content: space-between;
-  gap: 16px;
-  margin-top: 16px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1rem;
+    margin-top: 1.5rem;
 }
 
+/* Reusing your card logic for consistency */
 .stats-grid .card.center {
-  text-align: center;
+    text-align: center;
+    padding: 1.5rem;
+    margin-bottom: 0; /* Override default card margin for grid use */
 }
+
+/* Specific Vitals Colors (Optional: adds the colored theme) */
+.vitals-grid .vital-red { background-color: var(--color-red-50); }
+.vitals-grid .vital-blue { background-color: var(--color-blue-50); }
+.vitals-grid .vital-green { background-color: var(--color-green-50); }
 
 /* ====== Medications List ====== */
 .med-item {
@@ -360,6 +380,7 @@ html, body {
   display: none !important;
 }
 /* End of Chatbot */
+
 
 
 
