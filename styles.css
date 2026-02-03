@@ -134,7 +134,36 @@ h1, h2, h3 { margin: 0; font-weight: 700; color: var(--border-color); }
 .border-black {
     border-color: #000000 !important;
 }
+/* --- Body / HTML --- */
+html, body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    background: #f9fafb;
+    overflow-x: hidden;
+}
 
+/* --- Dashboard container --- */
+.dashboard {
+    padding: 16px;           /* space around content */
+    padding-bottom: 100px;   /* space for bottom nav */
+    max-width: 480px;        /* optional, for phone-like layout */
+    margin: auto;            /* center on PC */
+    box-sizing: border-box;
+}
+
+/* --- Cards --- */
+.card {
+    background: white;
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 12px;
+}
+
+/* Ensure first card is fully visible */
+.card:first-child {
+    margin-top: 16px;
+}
 
 
 
@@ -299,6 +328,7 @@ h1, h2, h3 { margin: 0; font-weight: 700; color: var(--border-color); }
   color: #eeeeee; 
 }
 /* End of Chatbot */
+
 
 
 
