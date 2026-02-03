@@ -165,41 +165,47 @@ html, body {
     margin-top: 16px;
 }
 /* ====== Vitals Grid ====== */
+/* ====== Vitals Grid ====== */
 .vitals-grid {
     display: flex;
-    justify-content: space-around;
-    flex-wrap: wrap;
-    gap: 12px;
-    margin-top: 1.5rem;
+    justify-content: space-between; /* Spreads them out evenly */
+    align-items: center;
+    gap: 0; /* Remove gap so they feel like one unit */
+    margin-top: 1rem;
     text-align: center;
+    /* Optional: Add a subtle top border to separate from header text */
+    border-top: 2px solid #eee; 
+    padding-top: 1rem;
 }
 
 .vitals-grid div {
     flex: 1;
-    min-width: 90px;
-    padding: 0.75rem;
-    /* Neobrutalist styling to match styles.css */
-    background: var(--color-white);
-    border: var(--border-width) solid var(--border-color);
-    box-shadow: 4px 4px 0px 0px var(--border-color);
-    border-radius: 0px; 
+    padding: 0.5rem;
+    /* Remove the individual boxes */
+    background: transparent;
+    border: none;
+    box-shadow: none;
+}
+
+/* Add a vertical line between items (optional, but looks cleaner) */
+.vitals-grid div:not(:last-child) {
+    border-right: 2px solid #eee;
 }
 
 .vitals-grid strong {
     display: block;
-    font-size: 1.25rem; /* Matches .text-xl */
+    font-size: 1.25rem;
     font-weight: 800;
+    color: var(--border-color);
 }
 
 .vitals-grid small {
     display: block;
-    font-size: 0.75rem;
+    font-size: 0.7rem;
     text-transform: uppercase;
     font-weight: 700;
-    margin-top: 4px;
     color: var(--gray-600);
 }
-
 /* ====== Stats Grid (Container for Cards) ====== */
 .stats-grid {
     display: grid;
@@ -380,6 +386,7 @@ html, body {
   display: none !important;
 }
 /* End of Chatbot */
+
 
 
 
