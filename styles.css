@@ -238,62 +238,68 @@ html, body {
     bottom: 0;
     left: 0;
     right: 0;
-    height: 70px;
-    background: #ffffff;
-    border-top: 1px solid #ddd;
+    height: 75px;
+    background: var(--color-white);
+    /* Thick top border to match brutalist style */
+    border-top: var(--border-width) solid var(--border-color); 
     display: flex;
     justify-content: space-around;
     align-items: center;
     z-index: 1000;
 }
+
 .bottom-nav button {
-  background: none;
-  border: none;
-  text-align: center;
-  font-size: 12px;
-  color: #666;
-  cursor: pointer;
+    background: none;
+    border: none;
+    text-align: center;
+    font-family: var(--font-main);
+    font-size: 13px;
+    font-weight: 700; /* Heavier font weight */
+    color: var(--border-color);
+    cursor: pointer;
+    transition: transform 0.1s;
+    padding: 10px;
 }
 
 .bottom-nav button span {
-  font-size: 22px;
-  display: block;
+    font-size: 24px;
+    display: block;
+    margin-bottom: 2px;
 }
 
+/* Active State: Brutalist Highlight */
 .bottom-nav button.active {
-  color: #2563eb;
-  font-weight: bold;
+    color: #000;
+    background: var(--color-blue-50); /* Subtle fill when active */
+    border: 2px solid var(--border-color);
+    box-shadow: 3px 3px 0px 0px rgba(0,0,0,1);
+    transform: translate(-2px, -2px);
 }
-
-.bottom-nav button.active span {
-  transform: scale(1.1);
-}
-
-
 /* Chatbot Button */
 
 /* --- Brutalist Chatbot Theme --- */
 
 /* Chatbot Toggle Button */
 #chatbot-button {
-  position: fixed;
-  bottom: 30px; /* Adjusted for better spacing */
-  right: 30px;
-  width: 65px;
-  height: 65px;
-  background: var(--color-yellow-400); /* Pop of color like your stat boxes */
-  color: #000;
-  font-size: 30px;
-  font-weight: bold;
-  border: var(--border-width) solid var(--border-color);
-  border-radius: 0; /* Square edges to match the card style */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  box-shadow: 4px 4px 0px 0px rgba(0,0,0,1);
-  z-index: 1000;
-  transition: transform 0.1s;
+    position: fixed;
+    bottom: 95px; /* Moved up slightly to sit above the new bottom nav */
+    right: 25px;
+    width: 65px;
+    height: 65px;
+    /* Changed from yellow to a vibrant purple/indigo */
+    background: #8b5cf6; 
+    color: #ffffff;
+    font-size: 30px;
+    font-weight: bold;
+    border: var(--border-width) solid var(--border-color);
+    border-radius: 0; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 4px 4px 0px 0px rgba(0,0,0,1);
+    z-index: 1001;
+    transition: all 0.1s;
 }
 
 #chatbot-button:active {
@@ -386,6 +392,7 @@ html, body {
   display: none !important;
 }
 /* End of Chatbot */
+
 
 
 
