@@ -5,11 +5,13 @@
     --font-main: system-ui, -apple-system, sans-serif;
     --color-bg: #f9fafb;
     --color-white: #ffffff;
-    
-    /* Maroon/Red Palette */
-    --color-red-bg: #fee2e2;      /* Light Red for card backgrounds */
-    --color-red-maroon: #991b1b;  /* Deep Maroon for accents */
-    --color-red-vibrant: #ef4444; /* Bright Red for highlights */
+    --color-red-bg: #fee2e2;      /* Light Red Card */
+    --color-red-maroon: #991b1b;  /* Text/Accents */
+    --color-red-vibrant: #ef4444; /* Highlights */
+}
+
+* {
+    box-sizing: border-box;
 }
 
 body {
@@ -17,106 +19,88 @@ body {
     background-color: var(--color-bg);
     margin: 0;
     color: var(--border-color);
-    min-height: 100vh;
 }
 
-.container {
-    padding: 1.5rem;
+.page-container {
+    padding: 20px;
     padding-bottom: 120px;
     max-width: 480px;
     margin: auto;
 }
 
-/* --- Page Header Style --- */
+/* --- The Card Theme (Matches Meds/Steps) --- */
+.card {
+    background: var(--color-red-bg); 
+    padding: 25px;
+    border: var(--border-width) solid var(--border-color);
+    border-radius: 0px; 
+    box-shadow: 10px 10px 0px 0px rgba(0,0,0,1);
+    margin-bottom: 25px;
+}
+
 h2 {
     text-align: center;
-    font-size: 2.25rem; 
+    font-size: 2.25rem;
     font-weight: 900;
-    margin-bottom: 2rem;
-    color: #000; 
+    margin-bottom: 1.5rem;
     text-transform: uppercase;
     letter-spacing: -1px;
 }
 
-/* --- Report Sections (The Main Cards) --- */
-.report-section, .report-card {
-    background: var(--color-red-bg); 
-    padding: 1.5rem;
-    border: var(--border-width) solid var(--border-color);
-    border-radius: 0px; 
-    box-shadow: 10px 10px 0px 0px rgba(0,0,0,1);
-    margin-bottom: 2.5rem;
-}
-
-.report-section h3, .report-card h3 {
-    font-size: 1.5rem;
+.card-title {
+    font-size: 1.25rem;
     font-weight: 800;
     text-transform: uppercase;
-    margin-top: 0;
-    margin-bottom: 1.25rem;
+    margin-bottom: 15px;
     border-bottom: 3px solid var(--border-color);
     padding-bottom: 5px;
-    color: var(--color-red-maroon);
 }
 
-/* --- Summary Text --- */
-.report-section p {
-    font-weight: 700;
-    font-size: 1.1rem;
-    margin: 10px 0;
+/* --- Row Styling --- */
+.summary-row, .report-row {
     display: flex;
     justify-content: space-between;
-}
-
-.report-section span {
+    align-items: center;
     background: var(--color-white);
-    padding: 2px 8px;
-    border: 2px solid var(--border-color);
-    font-weight: 900;
-}
-
-/* --- Table to Card Conversion --- */
-/* This makes the table look like the Meds List items */
-table {
-    width: 100%;
-    border-collapse: collapse;
-}
-
-thead {
-    display: none; /* Hide table headers for the card look */
-}
-
-tr {
-    display: block;
-    background: var(--color-white);
-    padding: 1rem;
-    border: var(--border-width) solid var(--border-color);
-    margin-bottom: 1rem;
+    border: 3px solid var(--border-color);
+    padding: 12px;
+    margin-bottom: 10px;
     box-shadow: 4px 4px 0px 0px #000;
-    border-left: 12px solid var(--color-red-maroon); /* Similar to meds li */
 }
 
-td {
+.summary-row p, .report-row p {
+    margin: 0;
+    font-weight: 800;
+    font-size: 1rem;
+    text-transform: uppercase;
+}
+
+.summary-row span, .status-pill {
+    background: var(--color-red-maroon);
+    color: white;
+    padding: 4px 10px;
+    font-weight: 900;
+    font-size: 0.9rem;
+}
+
+/* --- Special handling for Vitals History (Multi-line) --- */
+.vitals-history .report-row {
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.vitals-data-points {
     display: flex;
-    justify-content: space-between;
-    padding: 5px 0;
+    gap: 15px;
+    margin-top: 5px;
+    font-size: 0.85rem;
     font-weight: 700;
 }
 
-/* Labeling for Table Data */
-/* Note: You can add data-label in HTML or let the flex layout handle it */
-td:first-child {
-    font-weight: 900;
-    font-size: 1.1rem;
-    color: var(--color-red-maroon);
-}
-
-/* --- Bottom Nav (Consistent with Site) --- */
+/* --- Bottom Nav Fix --- */
 .bottom-nav {
     position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
+    bottom: 0; left: 0; right: 0;
     height: 75px;
     background: var(--color-white);
     border-top: var(--border-width) solid var(--border-color); 
@@ -127,19 +111,10 @@ td:first-child {
 }
 
 .bottom-nav button {
-    background: none;
-    border: none;
-    text-align: center;
+    background: none; border: none;
     font-family: var(--font-main);
-    font-size: 13px;
-    font-weight: 700;
+    font-size: 13px; font-weight: 700;
     color: var(--border-color);
-    cursor: pointer;
-}
-
-.bottom-nav button span {
-    font-size: 24px;
-    display: block;
 }
 
 .bottom-nav button.active {
@@ -147,5 +122,4 @@ td:first-child {
     border: 2px solid var(--border-color);
     box-shadow: 3px 3px 0px 0px #000;
     transform: translate(-2px, -2px);
-    padding: 5px 10px;
 }
