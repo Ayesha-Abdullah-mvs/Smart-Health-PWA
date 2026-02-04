@@ -23,6 +23,20 @@ body {
     color: var(--border-color);
 }
 
+.hidden {
+    display: none !important;
+}
+
+.read-only-banner {
+    background: #ede9fe;
+    border: var(--border-width) solid var(--border-color);
+    box-shadow: 6px 6px 0px 0px rgba(0,0,0,1);
+    font-weight: 800;
+    margin-bottom: 1.5rem;
+    padding: 1rem;
+    text-align: center;
+}
+
 .page-container {
     padding: 20px;
     padding-bottom: 120px;

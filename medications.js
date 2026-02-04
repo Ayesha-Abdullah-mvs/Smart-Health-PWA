@@ -2,11 +2,21 @@ document.addEventListener("DOMContentLoaded", () => {
   const medForm = document.getElementById("medForm");
   const medList = document.getElementById("medList");
   const alarmSound = document.getElementById("alarmSound");
+  const isEditable = typeof canEdit === "function" ? canEdit() : true;
+  const pageContainer = document.querySelector(".page-container");
 
   let medicines = JSON.parse(localStorage.getItem("medicines")) || [];
 
   function saveData() {
     localStorage.setItem("medicines", JSON.stringify(medicines));
+  }
+
+  function renderReadOnlyNotice() {
+    if (!pageContainer) return;
+    const notice = document.createElement("div");
+    notice.className = "read-only-banner";
+    notice.textContent = "Family view: medications are read-only.";
+    pageContainer.prepend(notice);
   }
 
   function renderMeds() {
@@ -22,7 +32,7 @@ document.addEventListener("DOMContentLoaded", () => {
       // Determine if we are on the dashboard or medications page
       const isDashboard = document.body.dataset.page === "dashboard";
 
-      if (isDashboard) {
+      if (isDashboard || !isEditable) {
         // Simpler layout for the Dashboard
         li.innerHTML = `
           <div style="display:flex; justify-content:space-between; width:100%; padding: 5px 0;">
@@ -45,7 +55,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // Only attach form listener if the form exists (Prevents errors on dashboard)
-  if (medForm) {
+  if (medForm && isEditable) {
     medForm.addEventListener("submit", e => {
       e.preventDefault();
       const medName = document.getElementById("medName");
@@ -64,10 +74,14 @@ document.addEventListener("DOMContentLoaded", () => {
       renderMeds();
       medForm.reset();
     });
+  } else if (medForm && !isEditable) {
+    medForm.classList.add("hidden");
+    renderReadOnlyNotice();
   }
 
   // Global functions for the buttons
   window.toggleTaken = (id) => {
+    if (!isEditable) return;
     const med = medicines.find(m => m.id === id);
     if (med) {
       med.taken = !med.taken;
@@ -77,6 +91,7 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   window.deleteMed = (id) => {
+    if (!isEditable) return;
     medicines = medicines.filter(m => m.id !== id);
     saveData();
     renderMeds();
