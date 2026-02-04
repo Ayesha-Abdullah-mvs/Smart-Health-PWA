@@ -26,7 +26,6 @@ document.addEventListener('DOMContentLoaded', () => {
         // Show results
         document.getElementById('resSeniorId').textContent = data.seniorId;
         document.getElementById('resFamilyPass').textContent = data.familyPassword;
-        document.getElementById('resDoctorCode').textContent = data.doctorCode;
         document.getElementById('resDoctorPass').textContent = data.doctorPassword;
 
         signupStep.classList.add('hidden');
