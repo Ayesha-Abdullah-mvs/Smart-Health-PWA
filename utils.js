@@ -2,16 +2,18 @@
 function createSenior(data) {
     const seniorId = 'SC-' + Math.floor(100000 + Math.random() * 900000);
     const familyPassword = Math.floor(100000 + Math.random() * 900000).toString();
+    const doctorCode = Math.floor(100000 + Math.random() * 900000).toString();
     const doctorPassword = Math.floor(100000 + Math.random() * 900000).toString();
 
     const seniorData = {
         ...data,
         familyPassword,
+        doctorCode,
         doctorPassword,
     };
 
     localStorage.setItem(seniorId, JSON.stringify(seniorData));
-    return { seniorId, familyPassword, doctorPassword };
+    return { seniorId, familyPassword, doctorCode, doctorPassword };
 }
 
 function getSeniorData(seniorId) {
@@ -54,7 +56,7 @@ function canEdit() {
     return session?.role === 'senior';
 }
 
-function validateCredentials(seniorId, role, password) {
+function validateCredentials(seniorId, role, password, doctorCode) {
     const data = getSeniorData(seniorId);
     if (!data) {
         return { valid: false, error: 'Invalid Senior ID' };
@@ -70,6 +72,9 @@ function validateCredentials(seniorId, role, password) {
     }
 
     if (role === 'doctor') {
+        if (data.doctorCode && data.doctorCode !== doctorCode) {
+            return { valid: false, error: 'Invalid Doctor Code' };
+        }
         if (data.doctorPassword === password) return { valid: true };
         return { valid: false, error: 'Invalid Doctor Password' };
     }
