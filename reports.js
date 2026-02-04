@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!isEditable && pageContainer) {
             const notice = document.createElement("div");
             notice.className = "read-only-banner";
-            notice.textContent = "Family/Doctor view: reports are read-only.";
+            notice.textContent = "Family view: reports are read-only.";
             pageContainer.prepend(notice);
         }
         renderReports();
