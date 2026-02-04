@@ -1,8 +1,23 @@
 document.addEventListener("DOMContentLoaded", () => {
   const form = document.getElementById("vitalsForm");
   const statusMsg = document.getElementById("statusMsg");
+  const session = typeof getSession === "function" ? getSession() : null;
+  const isEditable = typeof canEdit === "function" ? canEdit() : true;
+  const pageContainer = document.querySelector(".page-container");
 
   if (!form) return;
+
+  if (!isEditable) {
+    form.classList.add("hidden");
+    if (pageContainer) {
+      const notice = document.createElement("div");
+      notice.className = "read-only-banner";
+      const roleLabel = session?.role === "doctor" ? "Doctor" : session?.role === "family" ? "Family" : "Viewer";
+      notice.textContent = `${roleLabel} view: vitals are read-only.`;
+      pageContainer.prepend(notice);
+    }
+    return;
+  }
 
   form.addEventListener("submit", (e) => {
     e.preventDefault();

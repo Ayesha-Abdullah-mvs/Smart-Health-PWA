@@ -1,4 +1,8 @@
 document.addEventListener("DOMContentLoaded", () => {
+    const session = typeof getSession === "function" ? getSession() : null;
+    const isEditable = typeof canEdit === "function" ? canEdit() : true;
+    const pageContainer = document.querySelector(".page-container");
+
     // --- Common Data ---
     let stepsToday = parseInt(localStorage.getItem("stepsToday")) || 0;
     let stepGoal = parseInt(localStorage.getItem("stepGoal")) || 5000;
@@ -36,6 +40,23 @@ document.addEventListener("DOMContentLoaded", () => {
             const offset = circumference - (progress * circumference);
             progressCircle.style.strokeDashoffset = offset;
         }
+    }
+
+    if (!isEditable) {
+        if (pageContainer) {
+            const notice = document.createElement("div");
+            notice.className = "read-only-banner";
+            const roleLabel = session?.role === "doctor" ? "Doctor" : session?.role === "family" ? "Family" : "Viewer";
+            notice.textContent = `${roleLabel} view: steps are read-only.`;
+            pageContainer.prepend(notice);
+        }
+
+        document.querySelectorAll(".edit-only").forEach(card => {
+            card.classList.add("hidden");
+        });
+
+        updateUI();
+        return;
     }
 
     // --- Event Listeners (Only if elements exist) ---
