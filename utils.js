@@ -198,6 +198,77 @@ function renderFamilyBanner() {
     }
 }
 
+function ensureLogoutStyles() {
+    if (document.getElementById('logout-style')) return;
+    const style = document.createElement('style');
+    style.id = 'logout-style';
+    style.textContent = `
+        .logout-bar {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 10px 16px;
+            background: #ffffff;
+            border-bottom: 2px solid #000;
+        }
+        .logout-bar__role {
+            font-weight: 700;
+            letter-spacing: 0.3px;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+        }
+        .logout-button {
+            border: 2px solid #000;
+            background: #fef3c7;
+            color: #000;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+        .logout-button:hover {
+            background: #fde68a;
+        }
+    `;
+    document.head.appendChild(style);
+}
+
+function renderLogoutButton(session) {
+    if (document.querySelector('.logout-bar')) return;
+    ensureLogoutStyles();
+
+    const bar = document.createElement('div');
+    bar.className = 'logout-bar';
+    const roleLabel = session?.role ? `${session.role} view` : 'Session';
+    bar.innerHTML = `
+        <span class="logout-bar__role">${roleLabel}</span>
+        <button class="logout-button" type="button">Log out</button>
+    `;
+
+    bar.querySelector('.logout-button').addEventListener('click', () => {
+        clearSession();
+        window.location.href = 'index.html';
+    });
+
+    document.body.prepend(bar);
+}
+
+function initSessionControls() {
+    if (!document.body?.dataset?.page) return;
+    const session = getSession();
+    if (!session) {
+        window.location.href = 'index.html';
+        return;
+    }
+    renderLogoutButton(session);
+}
+
+document.addEventListener('DOMContentLoaded', initSessionControls);
+
 function renderDoctorBanner() {
     if (!isDoctorRole()) return;
     if (document.querySelector('.doctor-banner')) return;
