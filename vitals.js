@@ -1,10 +1,16 @@
 document.addEventListener("DOMContentLoaded", () => {
   const form = document.getElementById("vitalsForm");
   const statusMsg = document.getElementById("statusMsg");
-  const isEditable = typeof canEdit === "function" ? canEdit() : true;
+  const isEditable = typeof canEditMedsVitals === "function"
+    ? canEditMedsVitals()
+    : (typeof canEdit === "function" ? canEdit() : true);
+  const isFamily = typeof isFamilyRole === "function" ? isFamilyRole() : false;
   const pageContainer = document.querySelector(".page-container");
   const vitalsList = document.getElementById("vitalsList");
   const vitalsEmpty = document.getElementById("vitalsEmpty");
+  const submitButton = form.querySelector("button[type='submit']");
+
+  let editingTimestamp = null;
 
   if (!form) return;
 
@@ -40,9 +46,16 @@ document.addEventListener("DOMContentLoaded", () => {
       return bTime - aTime;
     });
 
+    const latestTimestamp = sortedHistory[0]?.timestamp;
+
     sortedHistory.forEach((entry) => {
       const listItem = document.createElement("li");
       listItem.className = "vitals-item";
+      const isLatest = entry.timestamp === latestTimestamp;
+      const isLocked = isFamily && !isLatest;
+      if (isLocked) {
+        listItem.classList.add("locked-entry");
+      }
 
       const header = document.createElement("div");
       header.className = "vitals-item-header";
@@ -51,6 +64,31 @@ document.addEventListener("DOMContentLoaded", () => {
       timeStamp.className = "vitals-time";
       timeStamp.textContent = formatTimestamp(entry.timestamp);
       header.appendChild(timeStamp);
+
+      if (isEditable) {
+        const actionWrapper = document.createElement("div");
+        if (isLocked) {
+          const lockBadge = document.createElement("span");
+          lockBadge.className = "lock-badge";
+          lockBadge.textContent = "🔒 Locked";
+          actionWrapper.appendChild(lockBadge);
+        } else {
+          const editButton = document.createElement("button");
+          editButton.type = "button";
+          editButton.className = "action-button";
+          editButton.textContent = "Edit";
+          editButton.addEventListener("click", () => {
+            editingTimestamp = entry.timestamp;
+            document.getElementById("bp").value = entry.bp || "";
+            document.getElementById("hr").value = entry.hr || "";
+            document.getElementById("temp").value = entry.temp || "";
+            document.getElementById("sl").value = entry.sl || "";
+            submitButton.textContent = "Update Vitals";
+          });
+          actionWrapper.appendChild(editButton);
+        }
+        header.appendChild(actionWrapper);
+      }
 
       const grid = document.createElement("div");
       grid.className = "vitals-item-grid";
@@ -90,7 +128,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (pageContainer) {
       const notice = document.createElement("div");
       notice.className = "read-only-banner";
-      notice.textContent = "Family view: vitals are read-only.";
+      notice.textContent = "Vitals are read-only for this role.";
       pageContainer.prepend(notice);
     }
   }
@@ -110,23 +148,42 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    const vitalsEntry = {
+    const vitalsHistory = getVitalsHistory();
+    const entryPayload = {
       bp: bp,
       hr: Number(hr),
       temp: Number(temp),
-      sl: Number(sl),
-      timestamp: new Date().toISOString()
+      sl: Number(sl)
     };
 
-    const vitalsHistory = getVitalsHistory();
+    if (editingTimestamp) {
+      const entry = vitalsHistory.find(item => item.timestamp === editingTimestamp);
+      if (entry) {
+        entry.bp = entryPayload.bp;
+        entry.hr = entryPayload.hr;
+        entry.temp = entryPayload.temp;
+        entry.sl = entryPayload.sl;
+        if (isFamily) {
+          entry.enteredBy = "family";
+        }
+      }
+    } else {
+      const vitalsEntry = {
+        ...entryPayload,
+        timestamp: new Date().toISOString(),
+        enteredBy: isFamily ? "family" : undefined
+      };
+      vitalsHistory.push(vitalsEntry);
+    }
 
-    vitalsHistory.push(vitalsEntry);
     localStorage.setItem("vitals", JSON.stringify(vitalsHistory));
 
     statusMsg.textContent = "Vitals saved successfully!";
     statusMsg.style.color = "green";
 
     form.reset();
+    editingTimestamp = null;
+    submitButton.textContent = "Save Vitals";
     renderVitals();
   });
 

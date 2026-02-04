@@ -1,5 +1,7 @@
 document.addEventListener("DOMContentLoaded", () => {
-    const isEditable = typeof canEdit === "function" ? canEdit() : true;
+    const isEditable = typeof canEditSteps === "function"
+        ? canEditSteps()
+        : (typeof canEdit === "function" ? canEdit() : true);
     const pageContainer = document.querySelector(".page-container");
 
     // --- Common Data ---
