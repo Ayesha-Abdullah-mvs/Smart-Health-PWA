@@ -50,9 +50,12 @@
     <p class="goal-text">
       Goal: <span id="stepGoalText">5000</span> steps
     </p>
+    <div class="goal-source">
+      <span id="stepGoalSource" class="source-badge source-patient">Patient Entered</span>
+    </div>
   </div>
 
-<div class="card add-steps-card edit-only">
+<div class="card add-steps-card edit-only" id="addStepsCard">
   <h3 class="card-title">Add Steps Manually</h3>
   <div class="form">
     <input type="number" id="stepsInput" placeholder="Enter steps walked">
@@ -61,14 +64,14 @@
 </div>
 
 <div class="card goal-card edit-only">
-  <h3 class="card-title">Update Daily Goal</h3>
+  <h3 class="card-title" id="goalCardTitle">Update Daily Goal</h3>
   <div class="form">
     <input type="number" id="goalInput" placeholder="Enter new goal">
     <button id="updateGoalBtn" class="primary-btn">Update Goal</button>
   </div>
 </div>
   
-<div class="card record-card edit-only">
+<div class="card record-card edit-only" id="recordStepsCard">
   <h3 class="card-title">Record Steps</h3>
   <button id="startWalkBtn" class="secondary-btn">🚶 Start Walking</button>
   <button id="stopWalkBtn" class="secondary-btn">⏹ Stop</button>

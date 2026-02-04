@@ -171,6 +171,10 @@ input:focus {
     text-transform: uppercase;
 }
 
+.goal-source {
+    margin-top: 6px;
+}
+
 /* --- Record List --- */
 .record-card .record-item {
     display: flex;

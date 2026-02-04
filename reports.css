@@ -93,6 +93,14 @@ h2 {
     font-size: 0.9rem;
 }
 
+.report-meta {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+}
+
 /* --- Special handling for Vitals History (Multi-line) --- */
 .vitals-history .report-row {
     flex-direction: column;

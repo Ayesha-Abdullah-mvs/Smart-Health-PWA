@@ -4,16 +4,30 @@ document.addEventListener('DOMContentLoaded', () => {
     console.log("Current Page detected:", currentPage);
     const isEditable = typeof canEdit === "function" ? canEdit() : true;
     const pageContainer = document.querySelector(".page-container");
+    const currentRole = typeof getCurrentRole === "function" ? getCurrentRole() : null;
+    const isDoctor = currentRole === "doctor";
 
     if (currentPage === 'reports') {
         if (!isEditable && pageContainer) {
             const notice = document.createElement("div");
             notice.className = "read-only-banner";
-            notice.textContent = "Family view: reports are read-only.";
+            notice.textContent = isDoctor
+                ? "Doctor view: reports are read-only."
+                : "Family view: reports are read-only.";
             pageContainer.prepend(notice);
         }
         renderReports();
         renderVitalsHistory();
+    }
+
+    function getSourceMeta(entry) {
+        if (entry?.enteredBy === "doctor") {
+            return { label: "Doctor Prescribed", className: "source-doctor" };
+        }
+        if (entry?.enteredBy === "family") {
+            return { label: "Family Assisted", className: "source-family" };
+        }
+        return { label: "Patient Entered", className: "source-patient" };
     }
 
     function renderReports() {
@@ -21,6 +35,22 @@ document.addEventListener('DOMContentLoaded', () => {
         const medicines = JSON.parse(localStorage.getItem('medicines')) || [];
         const stepsToday = parseInt(localStorage.getItem('stepsToday')) || 0;
         const stepGoal = parseInt(localStorage.getItem('stepGoal')) || 5000;
+        const stepGoalMeta = (() => {
+            try {
+                const stored = localStorage.getItem("stepGoalMeta");
+                return stored ? JSON.parse(stored) : null;
+            } catch (err) {
+                return null;
+            }
+        })();
+        const vitalsTargets = (() => {
+            try {
+                const stored = localStorage.getItem("vitalsTargets");
+                return stored ? JSON.parse(stored) : null;
+            } catch (err) {
+                return null;
+            }
+        })();
 
         console.log("Medicines found:", medicines);
 
@@ -37,17 +67,46 @@ document.addEventListener('DOMContentLoaded', () => {
         if (alertsCountEl) {
             alertsCountEl.textContent = stepsToday < (stepGoal / 2) ? "1" : "0";
         }
-        
+
+        const clinicalTargets = document.getElementById("clinicalTargets");
+        if (clinicalTargets) {
+            const stepSource = getSourceMeta(stepGoalMeta);
+            const stepLabel = stepGoalMeta?.value || stepGoal;
+            const vitalsSource = vitalsTargets ? getSourceMeta(vitalsTargets) : { label: "Not Set", className: "source-neutral" };
+            clinicalTargets.innerHTML = `
+                <div class="report-row">
+                    <p>Step Goal</p>
+                    <div class="report-meta">
+                        <span>${stepLabel.toLocaleString()} steps</span>
+                        <span class="source-badge ${stepSource.className}">${stepSource.label}</span>
+                    </div>
+                </div>
+                <div class="report-row">
+                    <p>Vitals Targets</p>
+                    <div class="report-meta">
+                        <span>${vitalsTargets ? `BP ${vitalsTargets.bp || "--"}, HR ${vitalsTargets.hr || "--"} bpm` : "Not set"}</span>
+                        <span class="source-badge ${vitalsSource.className}">${vitalsSource.label}</span>
+                    </div>
+                </div>
+            `;
+        }
+
         // Update Medication List
         const medTable = document.getElementById('medTable');
         if (medTable) {
             if (medicines.length > 0) {
-                medTable.innerHTML = medicines.map(med => `
-                    <div class="report-row">
-                        <p>${med.name} <small>(${med.time || 'No Time'})</small></p>
-                        <span class="status-pill">Scheduled</span>
-                    </div>
-                `).join('');
+                medTable.innerHTML = medicines.map(med => {
+                    const sourceMeta = getSourceMeta(med);
+                    return `
+                        <div class="report-row">
+                            <p>${med.name} <small>(${med.time || 'No Time'})</small></p>
+                            <div class="report-meta">
+                                <span class="status-pill">Scheduled</span>
+                                <span class="source-badge ${sourceMeta.className}">${sourceMeta.label}</span>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
             } else {
                 medTable.innerHTML = '<div class="report-row"><p>No medications found.</p></div>';
             }
@@ -68,6 +127,7 @@ document.addEventListener('DOMContentLoaded', () => {
             vitals.forEach(v => {
                 // Ensure date is valid
                 const dateStr = v.timestamp ? new Date(v.timestamp).toLocaleDateString([], { month: 'short', day: 'numeric' }) : "N/A";
+                const sourceMeta = getSourceMeta(v);
                 
                 const row = document.createElement("div");
                 row.className = "report-row";
@@ -75,7 +135,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     <div style="display:flex; flex-direction:column; width:100%;">
                         <div style="display:flex; justify-content:space-between; width:100%; border-bottom:1px solid #eee; margin-bottom:5px;">
                             <p style="color:var(--color-red-maroon)">${dateStr}</p>
-                            <span class="status-pill">Log</span>
+                            <div class="report-meta">
+                                <span class="status-pill">Log</span>
+                                <span class="source-badge ${sourceMeta.className}">${sourceMeta.label}</span>
+                            </div>
                         </div>
                         <div class="vitals-data-points">
                             <span>BP: ${v.bp || '--'}</span>

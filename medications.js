@@ -2,15 +2,18 @@ document.addEventListener("DOMContentLoaded", () => {
   const medForm = document.getElementById("medForm");
   const medList = document.getElementById("medList");
   const alarmSound = document.getElementById("alarmSound");
-  const isEditable = typeof canEditMedsVitals === "function"
+  const currentRole = typeof getCurrentRole === "function" ? getCurrentRole() : null;
+  const isDoctor = currentRole === "doctor";
+  const isEditable = (typeof canEditMedsVitals === "function"
     ? canEditMedsVitals()
-    : (typeof canEdit === "function" ? canEdit() : true);
+    : (typeof canEdit === "function" ? canEdit() : true)) || isDoctor;
   const isFamily = typeof isFamilyRole === "function" ? isFamilyRole() : false;
   const pageContainer = document.querySelector(".page-container");
   const medName = document.getElementById("medName");
   const medDosage = document.getElementById("medDosage");
   const medTime = document.getElementById("medTime");
   const submitButton = medForm ? medForm.querySelector("button[type='submit']") : null;
+  const formTitle = medForm ? medForm.querySelector("h2") : null;
 
   let medicines = JSON.parse(localStorage.getItem("medicines")) || [];
   let editingMedId = null;
@@ -37,10 +40,20 @@ document.addEventListener("DOMContentLoaded", () => {
   function setFormState(med) {
     if (!medForm || !submitButton) return;
     if (med) {
-      submitButton.textContent = "Update Medicine";
+      submitButton.textContent = isDoctor ? "Update Prescription" : "Update Medicine";
     } else {
-      submitButton.textContent = "Add Medicine";
+      submitButton.textContent = isDoctor ? "Add Prescription" : "Add Medicine";
     }
+  }
+
+  function getSourceMeta(entry) {
+    if (entry.enteredBy === "doctor") {
+      return { label: "Doctor Prescribed", className: "source-doctor" };
+    }
+    if (entry.enteredBy === "family") {
+      return { label: "Family Assisted", className: "source-family" };
+    }
+    return { label: "Patient Entered", className: "source-patient" };
   }
 
   function renderMeds() {
@@ -52,10 +65,12 @@ document.addEventListener("DOMContentLoaded", () => {
     medicines.forEach(med => {
       const li = document.createElement("li");
       li.className = "med-item";
-      const isLocked = isFamily && isPastTime(med.time);
+      const isLocked = (isFamily || isDoctor) && isPastTime(med.time);
       if (isLocked) {
         li.classList.add("locked-entry");
       }
+      const sourceMeta = getSourceMeta(med);
+      const sourceBadge = `<span class="source-badge ${sourceMeta.className}">${sourceMeta.label}</span>`;
 
       // Determine if we are on the dashboard or medications page
       const isDashboard = document.body.dataset.page === "dashboard";
@@ -64,7 +79,7 @@ document.addEventListener("DOMContentLoaded", () => {
         // Simpler layout for the Dashboard
         li.innerHTML = `
           <div style="display:flex; justify-content:space-between; width:100%; padding: 5px 0;">
-            <span><strong>${med.time}</strong> - ${med.name}</span>
+            <span><strong>${med.time}</strong> - ${med.name} ${sourceBadge}</span>
             <span>${med.taken ? "✅" : "⏳"}</span>
           </div>
         `;
@@ -72,21 +87,27 @@ document.addEventListener("DOMContentLoaded", () => {
         const dosageText = med.dosage ? `Dose: ${med.dosage}` : "Dose: --";
         const lockBadge = isLocked ? `<span class="lock-badge">🔒 Locked</span>` : "";
         const editButton = !isLocked ? `<button class="action-button" onclick="editMed(${med.id})">Edit</button>` : "";
-        const deleteButton = !isFamily
+        const deleteButton = (!isFamily && !isDoctor)
           ? `<button onclick="deleteMed(${med.id})" class="action-button" style="background:#ffe6e6;">Delete</button>`
           : "";
+        const takenControl = isDoctor
+          ? `<span class="lock-badge">Plan Only</span>`
+          : `
+            <label>
+              <input type="checkbox" ${med.taken ? "checked" : ""} onchange="toggleTaken(${med.id})" ${isLocked ? "disabled" : ""}>
+              Taken
+            </label>
+          `;
         // Full layout with buttons for the Medications page
         li.innerHTML = `
           <div class="med-details">
             <div class="med-main"><strong>${med.time}</strong> — ${med.name}</div>
             <div class="med-sub">${dosageText}</div>
+            <div class="med-sub">${sourceBadge}</div>
           </div>
           <div class="med-actions">
             ${lockBadge}
-            <label>
-              <input type="checkbox" ${med.taken ? "checked" : ""} onchange="toggleTaken(${med.id})" ${isLocked ? "disabled" : ""}>
-              Taken
-            </label>
+            ${takenControl}
             ${editButton}
             ${deleteButton}
           </div>
@@ -98,6 +119,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Only attach form listener if the form exists (Prevents errors on dashboard)
   if (medForm && isEditable) {
+    if (isDoctor && formTitle) {
+      formTitle.textContent = "Prescribed by Doctor";
+    }
     medForm.addEventListener("submit", e => {
       e.preventDefault();
       
@@ -111,8 +135,8 @@ document.addEventListener("DOMContentLoaded", () => {
           med.name = medNameValue;
           med.dosage = medDosageValue;
           med.time = medTimeValue;
-          if (isFamily) {
-            med.enteredBy = "family";
+          if (isFamily || isDoctor) {
+            med.enteredBy = isDoctor ? "doctor" : "family";
           }
         }
       } else {
@@ -123,7 +147,7 @@ document.addEventListener("DOMContentLoaded", () => {
           time: medTimeValue,
           taken: false,
           notified: false,
-          enteredBy: isFamily ? "family" : undefined
+          enteredBy: isDoctor ? "doctor" : (isFamily ? "family" : undefined)
         };
 
         medicines.push(newMed);
@@ -141,7 +165,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Global functions for the buttons
   window.toggleTaken = (id) => {
-    if (!isEditable) return;
+    if (!isEditable || isDoctor) return;
     const med = medicines.find(m => m.id === id);
     if (med && !(isFamily && isPastTime(med.time))) {
       med.taken = !med.taken;
@@ -151,7 +175,7 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   window.deleteMed = (id) => {
-    if (!isEditable || isFamily) return;
+    if (!isEditable || isFamily || isDoctor) return;
     medicines = medicines.filter(m => m.id !== id);
     saveData();
     renderMeds();
@@ -161,7 +185,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!isEditable) return;
     const med = medicines.find(m => m.id === id);
     if (!med) return;
-    if (isFamily && isPastTime(med.time)) return;
+    if ((isFamily || isDoctor) && isPastTime(med.time)) return;
     editingMedId = id;
     medName.value = med.name || "";
     medDosage.value = med.dosage || "";
