@@ -7,30 +7,33 @@ document.addEventListener('DOMContentLoaded', () => {
     const form = document.getElementById('loginForm');
     const errorBox = document.getElementById('errorBox');
 
-    // Handle Role Change to show/hide password
-    roleSelect.addEventListener('change', (e) => {
-        if (e.target.value === 'senior') {
+    const updateRoleFields = (role) => {
+        if (role === 'senior') {
             passwordContainer.classList.add('hidden');
             passwordInput.required = false;
-        } else {
-            passwordContainer.classList.remove('hidden');
-            passwordInput.required = true;
             doctorCodeContainer.classList.add('hidden');
             doctorCodeInput.required = false;
-        } else {
-            passwordContainer.classList.remove('hidden');
-            passwordInput.required = true;
-            if (e.target.value === 'doctor') {
-                doctorCodeContainer.classList.remove('hidden');
-                doctorCodeInput.required = true;
-            } else {
-                doctorCodeContainer.classList.add('hidden');
-                doctorCodeInput.required = false;
-            }
+            return;
         }
+
+        passwordContainer.classList.remove('hidden');
+        passwordInput.required = true;
+
+        if (role === 'doctor') {
+            doctorCodeContainer.classList.remove('hidden');
+            doctorCodeInput.required = true;
+        } else {
+            doctorCodeContainer.classList.add('hidden');
+            doctorCodeInput.required = false;
+        }
+    };
+
+    updateRoleFields(roleSelect.value);
+
+    roleSelect.addEventListener('change', (e) => {
+        updateRoleFields(e.target.value);
     });
 
-    // Handle Form Submit
     form.addEventListener('submit', (e) => {
         e.preventDefault();
         errorBox.classList.add('hidden');
@@ -38,10 +41,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const seniorId = document.getElementById('seniorId').value.toUpperCase();
         const role = roleSelect.value;
         const password = passwordInput.value;
-
-        const result = validateCredentials(seniorId, role, password);
         const doctorCode = doctorCodeInput.value;
-        const password = passwordInput.value;
 
         const result = validateCredentials(seniorId, role, password, doctorCode);
 
