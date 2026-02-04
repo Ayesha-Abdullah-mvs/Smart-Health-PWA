@@ -1,5 +1,4 @@
 document.addEventListener("DOMContentLoaded", () => {
-    const session = typeof getSession === "function" ? getSession() : null;
     const isEditable = typeof canEdit === "function" ? canEdit() : true;
     const pageContainer = document.querySelector(".page-container");
 
@@ -46,8 +45,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (pageContainer) {
             const notice = document.createElement("div");
             notice.className = "read-only-banner";
-            const roleLabel = session?.role === "doctor" ? "Doctor" : session?.role === "family" ? "Family" : "Viewer";
-            notice.textContent = `${roleLabel} view: steps are read-only.`;
+            notice.textContent = "Family view: steps are read-only.";
             pageContainer.prepend(notice);
         }
 

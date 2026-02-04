@@ -2,17 +2,10 @@ document.addEventListener("DOMContentLoaded", () => {
   const medForm = document.getElementById("medForm");
   const medList = document.getElementById("medList");
   const alarmSound = document.getElementById("alarmSound");
-  const session = typeof getSession === "function" ? getSession() : null;
   const isEditable = typeof canEdit === "function" ? canEdit() : true;
   const pageContainer = document.querySelector(".page-container");
 
   let medicines = JSON.parse(localStorage.getItem("medicines")) || [];
-
-  function getViewerLabel() {
-    if (session?.role === "doctor") return "Doctor";
-    if (session?.role === "family") return "Family";
-    return "Viewer";
-  }
 
   function saveData() {
     localStorage.setItem("medicines", JSON.stringify(medicines));
@@ -22,7 +15,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!pageContainer) return;
     const notice = document.createElement("div");
     notice.className = "read-only-banner";
-    notice.textContent = `${getViewerLabel()} view: medications are read-only.`;
+    notice.textContent = "Family view: medications are read-only.";
     pageContainer.prepend(notice);
   }
 

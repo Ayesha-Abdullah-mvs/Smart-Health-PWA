@@ -2,7 +2,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // 1. Ensure the data-page check is correct
     const currentPage = document.body.getAttribute('data-page');
     console.log("Current Page detected:", currentPage);
-    const session = typeof getSession === "function" ? getSession() : null;
     const isEditable = typeof canEdit === "function" ? canEdit() : true;
     const pageContainer = document.querySelector(".page-container");
 
@@ -10,8 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!isEditable && pageContainer) {
             const notice = document.createElement("div");
             notice.className = "read-only-banner";
-            const roleLabel = session?.role === "doctor" ? "Doctor" : session?.role === "family" ? "Family" : "Viewer";
-            notice.textContent = `${roleLabel} view: reports are read-only.`;
+            notice.textContent = "Family view: reports are read-only.";
             pageContainer.prepend(notice);
         }
         renderReports();
