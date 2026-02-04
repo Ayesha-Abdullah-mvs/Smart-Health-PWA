@@ -2,6 +2,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const roleSelect = document.getElementById('role');
     const passwordContainer = document.getElementById('passwordContainer');
     const passwordInput = document.getElementById('password');
+    const doctorCodeContainer = document.getElementById('doctorCodeContainer');
+    const doctorCodeInput = document.getElementById('doctorCode');
     const form = document.getElementById('loginForm');
     const errorBox = document.getElementById('errorBox');
 
@@ -13,6 +15,18 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
             passwordContainer.classList.remove('hidden');
             passwordInput.required = true;
+            doctorCodeContainer.classList.add('hidden');
+            doctorCodeInput.required = false;
+        } else {
+            passwordContainer.classList.remove('hidden');
+            passwordInput.required = true;
+            if (e.target.value === 'doctor') {
+                doctorCodeContainer.classList.remove('hidden');
+                doctorCodeInput.required = true;
+            } else {
+                doctorCodeContainer.classList.add('hidden');
+                doctorCodeInput.required = false;
+            }
         }
     });
 
@@ -26,6 +40,10 @@ document.addEventListener('DOMContentLoaded', () => {
         const password = passwordInput.value;
 
         const result = validateCredentials(seniorId, role, password);
+        const doctorCode = doctorCodeInput.value;
+        const password = passwordInput.value;
+
+        const result = validateCredentials(seniorId, role, password, doctorCode);
 
         if (result.valid) {
             setSession({ seniorId, role });
