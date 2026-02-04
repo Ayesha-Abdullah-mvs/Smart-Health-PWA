@@ -12,6 +12,9 @@ document.addEventListener('DOMContentLoaded', () => {
         if (e.target.value === 'senior') {
             passwordContainer.classList.add('hidden');
             passwordInput.required = false;
+        } else {
+            passwordContainer.classList.remove('hidden');
+            passwordInput.required = true;
             doctorCodeContainer.classList.add('hidden');
             doctorCodeInput.required = false;
         } else {
@@ -34,6 +37,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const seniorId = document.getElementById('seniorId').value.toUpperCase();
         const role = roleSelect.value;
+        const password = passwordInput.value;
+
+        const result = validateCredentials(seniorId, role, password);
         const doctorCode = doctorCodeInput.value;
         const password = passwordInput.value;
 
