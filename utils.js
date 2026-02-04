@@ -72,12 +72,17 @@ function isFamilyRole() {
     return getCurrentRole() === 'family';
 }
 
+function isDoctorRole() {
+    return getCurrentRole() === 'doctor';
+}
+
 function ensureFamilyBannerStyles() {
     if (document.getElementById('family-banner-style')) return;
     const style = document.createElement('style');
     style.id = 'family-banner-style';
     style.textContent = `
-        .family-banner {
+        .family-banner,
+        .doctor-banner {
             display: flex;
             align-items: center;
             gap: 8px;
@@ -96,6 +101,22 @@ function ensureFamilyBannerStyles() {
             justify-content: center;
             padding: 2px 8px;
             background: #2b6cb0;
+            color: #fff;
+            border-radius: 999px;
+            font-size: 0.75rem;
+            font-weight: 800;
+        }
+        .doctor-banner {
+            background: #fff7ed;
+            color: #7c2d12;
+            border-left: 4px solid #ea580c;
+        }
+        .doctor-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2px 8px;
+            background: #ea580c;
             color: #fff;
             border-radius: 999px;
             font-size: 0.75rem;
@@ -124,6 +145,35 @@ function ensureFamilyBannerStyles() {
             font-weight: 700;
             cursor: pointer;
         }
+        .source-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 0.7rem;
+            padding: 2px 8px;
+            border-radius: 999px;
+            border: 2px solid #000;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            background: #fff;
+        }
+        .source-patient {
+            background: #dcfce7;
+            color: #14532d;
+        }
+        .source-family {
+            background: #dbeafe;
+            color: #1e3a8a;
+        }
+        .source-doctor {
+            background: #ffedd5;
+            color: #7c2d12;
+        }
+        .source-neutral {
+            background: #e2e8f0;
+            color: #334155;
+        }
     `;
     document.head.appendChild(style);
 }
@@ -148,7 +198,29 @@ function renderFamilyBanner() {
     }
 }
 
+function renderDoctorBanner() {
+    if (!isDoctorRole()) return;
+    if (document.querySelector('.doctor-banner')) return;
+    ensureFamilyBannerStyles();
+
+    const banner = document.createElement('div');
+    banner.className = 'doctor-banner';
+    banner.innerHTML = `
+        <span class="doctor-badge">🩺</span>
+        <span>Doctor View – Clinical Access</span>
+    `;
+
+    const nav = document.querySelector('nav');
+    if (nav && nav.parentElement) {
+        nav.insertAdjacentElement('afterend', banner);
+    } else {
+        document.body.prepend(banner);
+    }
+}
+
+document.addEventListener('DOMContentLoaded', ensureFamilyBannerStyles);
 document.addEventListener('DOMContentLoaded', renderFamilyBanner);
+document.addEventListener('DOMContentLoaded', renderDoctorBanner);
 
 function validateCredentials(seniorId, role, password) {
     const data = getSeniorData(seniorId);
