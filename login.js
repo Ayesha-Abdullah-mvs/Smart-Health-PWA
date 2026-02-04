@@ -2,22 +2,30 @@ document.addEventListener('DOMContentLoaded', () => {
     const roleSelect = document.getElementById('role');
     const passwordContainer = document.getElementById('passwordContainer');
     const passwordInput = document.getElementById('password');
+    const doctorCodeContainer = document.getElementById('doctorCodeContainer');
+    const doctorCodeInput = document.getElementById('doctorCode');
     const form = document.getElementById('loginForm');
     const errorBox = document.getElementById('errorBox');
-
-    if (!roleSelect || !passwordContainer || !passwordInput || !form || !errorBox) {
-        return;
-    }
 
     const updateRoleFields = (role) => {
         if (role === 'senior') {
             passwordContainer.classList.add('hidden');
             passwordInput.required = false;
+            doctorCodeContainer.classList.add('hidden');
+            doctorCodeInput.required = false;
             return;
         }
 
         passwordContainer.classList.remove('hidden');
         passwordInput.required = true;
+
+        if (role === 'doctor') {
+            doctorCodeContainer.classList.remove('hidden');
+            doctorCodeInput.required = true;
+        } else {
+            doctorCodeContainer.classList.add('hidden');
+            doctorCodeInput.required = false;
+        }
     };
 
     updateRoleFields(roleSelect.value);
@@ -33,8 +41,9 @@ document.addEventListener('DOMContentLoaded', () => {
         const seniorId = document.getElementById('seniorId').value.toUpperCase();
         const role = roleSelect.value;
         const password = passwordInput.value;
+        const doctorCode = doctorCodeInput.value;
 
-        const result = validateCredentials(seniorId, role, password);
+        const result = validateCredentials(seniorId, role, password, doctorCode);
 
         if (result.valid) {
             setSession({ seniorId, role });
