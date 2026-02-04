@@ -1,4 +1,7 @@
 document.addEventListener("DOMContentLoaded", () => {
+    const isEditable = typeof canEdit === "function" ? canEdit() : true;
+    const pageContainer = document.querySelector(".page-container");
+
     // --- Common Data ---
     let stepsToday = parseInt(localStorage.getItem("stepsToday")) || 0;
     let stepGoal = parseInt(localStorage.getItem("stepGoal")) || 5000;
@@ -36,6 +39,22 @@ document.addEventListener("DOMContentLoaded", () => {
             const offset = circumference - (progress * circumference);
             progressCircle.style.strokeDashoffset = offset;
         }
+    }
+
+    if (!isEditable) {
+        if (pageContainer) {
+            const notice = document.createElement("div");
+            notice.className = "read-only-banner";
+            notice.textContent = "Family view: steps are read-only.";
+            pageContainer.prepend(notice);
+        }
+
+        document.querySelectorAll(".edit-only").forEach(card => {
+            card.classList.add("hidden");
+        });
+
+        updateUI();
+        return;
     }
 
     // --- Event Listeners (Only if elements exist) ---

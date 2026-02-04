@@ -20,6 +20,20 @@ body {
     min-height: 100vh;
 }
 
+.hidden {
+    display: none !important;
+}
+
+.read-only-banner {
+    background: var(--color-blue-input);
+    border: var(--border-width) solid var(--border-color);
+    box-shadow: 6px 6px 0px 0px rgba(0,0,0,1);
+    font-weight: 800;
+    margin-bottom: 1.5rem;
+    padding: 1rem;
+    text-align: center;
+}
+
 .page-container {
     padding: 1.5rem;
     padding-bottom: 120px;
