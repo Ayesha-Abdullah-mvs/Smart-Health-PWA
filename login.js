@@ -5,6 +5,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const form = document.getElementById('loginForm');
     const errorBox = document.getElementById('errorBox');
 
+    if (!roleSelect || !passwordContainer || !passwordInput || !form || !errorBox) {
+        return;
+    }
+
     const updateRoleFields = (role) => {
         if (role === 'senior') {
             passwordContainer.classList.add('hidden');
