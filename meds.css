@@ -214,3 +214,13 @@ form button[type="submit"]:active {
     transform: translate(-2px, -2px);
 }
 /* Chatbot Button */
+
+/* Voice FAB support */
+.bottom-nav {
+    overflow: visible;
+    padding: 0 4px;
+}
+
+.bottom-nav button {
+    min-width: 56px;
+}
