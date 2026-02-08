@@ -20,6 +20,13 @@ document.addEventListener('DOMContentLoaded', () => {
         renderVitalsHistory();
     }
 
+    window.addEventListener("health-data-updated", () => {
+        if (currentPage === 'reports') {
+            renderReports();
+            renderVitalsHistory();
+        }
+    });
+
     function getSourceMeta(entry) {
         if (entry?.enteredBy === "doctor") {
             return { label: "Doctor Prescribed", className: "source-doctor" };

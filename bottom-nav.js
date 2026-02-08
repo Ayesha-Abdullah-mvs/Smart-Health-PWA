@@ -3,6 +3,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const currentPage = document.body.dataset.page;
     buttons.forEach(btn => {
+    if (!btn.dataset.page) {
+      return;
+    }
     if (btn.dataset.page === currentPage) {
       btn.classList.add("active");
     }

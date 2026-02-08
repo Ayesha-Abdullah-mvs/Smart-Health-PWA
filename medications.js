@@ -196,6 +196,13 @@ document.addEventListener("DOMContentLoaded", () => {
   // Run the initial render
   renderMeds();
 
+  window.addEventListener("health-data-updated", (event) => {
+    if (event?.detail?.type === "medicines") {
+      medicines = JSON.parse(localStorage.getItem("medicines")) || [];
+      renderMeds();
+    }
+  });
+
   // Alarm Interval (Only play sound if alarmSound exists on the current page)
   setInterval(() => {
     const now = new Date();
