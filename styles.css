@@ -412,3 +412,13 @@ html, body {
 
 
 
+
+/* Voice FAB support */
+.bottom-nav {
+    overflow: visible;
+    padding: 0 4px;
+}
+
+.bottom-nav button {
+    min-width: 56px;
+}

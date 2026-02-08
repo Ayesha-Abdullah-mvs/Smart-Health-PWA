@@ -283,6 +283,13 @@ document.addEventListener("DOMContentLoaded", () => {
   renderVitals();
   renderVitalsTargets();
 
+  window.addEventListener("health-data-updated", (event) => {
+    if (event?.detail?.type === "vitals") {
+      renderVitals();
+      renderVitalsTargets();
+    }
+  });
+
   if (isDoctor) {
     const targets = getVitalsTargets();
     if (targets) {

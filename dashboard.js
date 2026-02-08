@@ -10,3 +10,12 @@ function loadLatestVitals() {
   document.getElementById("dash-temp").textContent = latest.temp + "°C";
 }
 document.addEventListener("DOMContentLoaded", loadLatestVitals);
+window.addEventListener("health-data-updated", (event) => {
+  const updateType = event?.detail?.type;
+  if (updateType === "vitals") {
+    loadLatestVitals();
+  }
+  if (updateType === "medicines" && typeof renderMeds === "function") {
+    renderMeds();
+  }
+});
