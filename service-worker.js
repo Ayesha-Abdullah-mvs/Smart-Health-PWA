@@ -8,6 +8,7 @@ const ASSETS = [
   "login.html",
   "pedometer.html",
   "vitals.html",
+  "voice.html",
   "manifest.json",
   "icon-192.png",
   "icon-512.png",
@@ -20,6 +21,8 @@ const ASSETS = [
   "vitals.js",
   "medications.js",
   "bottom-nav.js",
+  "voice.js",
+  "voice.css",
   "medications.js"
 ];
 
@@ -43,7 +46,7 @@ self.addEventListener('periodicsync', (event) => {
 });
 
 async function fetchAndStoreSteps() {
-  // 1. In a real-world app, you would fetch data from a 
+  // 1. In a real-world app, you would fetch data from a
   // fitness API here (e.g., Google Fit REST API).
   // 2. Update IndexedDB or local storage with the new count.
   console.log("Syncing steps in the background...");

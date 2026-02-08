@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Voice Input</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="voice.css" />
+</head>
+<body data-page="voice">
+  <nav class="bottom-nav">
+    <button data-page="dashboard"><span>🏠</span><small>Home</small></button>
+    <button data-page="vitals"><span>❤️</span><small>Vitals</small></button>
+    <button data-page="medications"><span>💊</span><small>Meds</small></button>
+    <button data-page="reports"><span>📊</span><small>Reports</small></button>
+    <button data-page="voice"><span>🎤</span><small>Voice</small></button>
+    <button data-page="steps"><span>👣</span><small>Steps</small></button>
+  </nav>
+
+  <main class="page-container">
+    <section class="card">
+      <h2>Add Data Using Voice</h2>
+      <p class="subtitle">Tap a card, speak clearly, then confirm before saving.</p>
+      <p id="voiceStatus" class="status-msg"></p>
+
+      <div id="voiceCards" class="voice-grid">
+        <button class="voice-card" data-action="heartRate">❤️ Add Heart Rate</button>
+        <button class="voice-card" data-action="bloodPressure">🩺 Add Blood Pressure</button>
+        <button class="voice-card" data-action="sugarLevel">🧪 Add Sugar Level</button>
+        <button class="voice-card" data-action="temperature">🌡️ Add Temperature</button>
+        <button class="voice-card" data-action="medicine">💊 Add Medicine</button>
+        <button class="voice-card" data-action="markTaken">✅ Mark Medicine as Taken</button>
+      </div>
+
+      <div id="confirmBox" class="confirm-box hidden">
+        <p id="confirmText"></p>
+        <div class="confirm-actions">
+          <button id="confirmSave" type="button">Confirm</button>
+          <button id="confirmCancel" type="button" class="secondary">Cancel</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="utils.js"></script>
+  <script src="bottom-nav.js"></script>
+  <script src="voice.js"></script>
+</body>
+</html>
