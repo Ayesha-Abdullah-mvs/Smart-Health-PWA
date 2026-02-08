@@ -280,3 +280,13 @@ button[type="submit"]:active {
     box-shadow: 3px 3px 0px 0px rgba(0,0,0,1);
     transform: translate(-2px, -2px);
 }
+
+/* Voice FAB support */
+.bottom-nav {
+    overflow: visible;
+    padding: 0 4px;
+}
+
+.bottom-nav button {
+    min-width: 56px;
+}
