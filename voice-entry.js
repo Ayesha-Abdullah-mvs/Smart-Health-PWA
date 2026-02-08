@@ -21,7 +21,11 @@
     const role = typeof getCurrentRole === "function" ? getCurrentRole() : null;
     return {
       role,
-      isSenior: role === "senior"
+      isDoctor: role === "doctor",
+      isFamily: typeof isFamilyRole === "function" ? isFamilyRole() : false,
+      canEdit: typeof canEditMedsVitals === "function"
+        ? canEditMedsVitals() || role === "doctor"
+        : true
     };
   }
 
@@ -34,15 +38,6 @@
     }
 
     const tokens = normalized.split(/\s+/).filter(Boolean);
-    if (
-      tokens.length >= 2 &&
-      ["one", "two", "three", "four", "five", "six", "seven", "eight", "nine"].includes(tokens[0]) &&
-      ["twenty", "thirty", "forty", "fifty", "sixty", "seventy", "eighty", "ninety"].includes(tokens[1])
-    ) {
-      const hundreds = WORD_NUMBERS[tokens[0]] * 100;
-      const remainder = parseNumberWords(tokens.slice(1).join(" ")) || 0;
-      return hundreds + remainder;
-    }
     let total = 0;
     let current = 0;
 
@@ -184,10 +179,7 @@
 
   function saveVoiceData(parsed) {
     const roleMeta = getRoleMeta();
-    if (!roleMeta.isSenior) {
-      return { ok: false, message: "Voice entry is available only in senior view." };
-    }
-    const enteredBy = undefined;
+    const enteredBy = roleMeta.isDoctor ? "doctor" : (roleMeta.isFamily ? "family" : undefined);
 
     if (parsed.type === "vitals") {
       const latest = getLatestVitals();
@@ -202,6 +194,18 @@
         return { ok: false, message: "Could not complete full vitals record. Please use manual entry for missing fields." };
       }
 
+      if (roleMeta.isDoctor) {
+        localStorage.setItem("vitalsTargets", JSON.stringify({
+          bp: merged.bp,
+          hr: Number(merged.hr),
+          temp: Number(merged.temp),
+          sl: Number(merged.sl),
+          updatedAt: new Date().toISOString(),
+          enteredBy: "doctor"
+        }));
+        return { ok: true, message: "Recommended targets saved successfully." };
+      }
+
       const vitals = JSON.parse(localStorage.getItem("vitals") || "[]");
       const newEntry = {
         bp: merged.bp,
@@ -213,7 +217,6 @@
       };
       vitals.push(newEntry);
       localStorage.setItem("vitals", JSON.stringify(vitals));
-      window.dispatchEvent(new CustomEvent("health-data-updated", { detail: { type: "vitals" } }));
       return { ok: true, message: "Vitals saved successfully." };
     }
 
@@ -229,7 +232,6 @@
         enteredBy
       });
       localStorage.setItem("medicines", JSON.stringify(meds));
-      window.dispatchEvent(new CustomEvent("health-data-updated", { detail: { type: "medicines" } }));
       return { ok: true, message: "Medicine added successfully." };
     }
 
@@ -244,9 +246,9 @@
       });
 
       if (!match) return { ok: false, message: "No matching medicine found to mark as taken." };
+      if (roleMeta.isDoctor) return { ok: false, message: "Doctor view cannot mark medicines as taken." };
       match.taken = true;
       localStorage.setItem("medicines", JSON.stringify(meds));
-      window.dispatchEvent(new CustomEvent("health-data-updated", { detail: { type: "medicines" } }));
       return { ok: true, message: "Medicine marked as taken." };
     }
 
@@ -288,15 +290,11 @@
     if (!nav) return;
 
     const roleMeta = getRoleMeta();
-    if (!roleMeta.isSenior) {
-      return;
-    }
     const { voiceBtn, sheet } = createVoiceUI(nav);
     const optionsContainer = sheet.querySelector(".voice-options");
     const statusNode = sheet.querySelector("#voiceStatus");
     const confirmNode = sheet.querySelector("#voiceConfirm");
     let recognition = null;
-    let activeSilenceTimeout = null;
 
     function openSheet() {
       sheet.classList.remove("hidden");
@@ -307,10 +305,6 @@
     function closeSheet() {
       sheet.classList.add("hidden");
       if (recognition) recognition.abort();
-      if (activeSilenceTimeout) {
-        clearTimeout(activeSilenceTimeout);
-        activeSilenceTimeout = null;
-      }
       statusNode.textContent = "Choose an option to start.";
     }
 
@@ -318,6 +312,13 @@
       voiceBtn.classList.add("disabled");
       voiceBtn.disabled = true;
       voiceBtn.title = "Voice input is not supported on this browser. Please use manual entry.";
+      return;
+    }
+
+    if (!roleMeta.canEdit) {
+      voiceBtn.classList.add("disabled");
+      voiceBtn.disabled = true;
+      voiceBtn.title = "This role is read-only. Please use available manual views.";
       return;
     }
 
@@ -329,67 +330,16 @@
       card.addEventListener("click", () => {
         confirmNode.classList.add("hidden");
         confirmNode.innerHTML = "";
-        const beginRecognition = (attempt = 0) => {
-          let finalTranscript = "";
-          let endedWithError = false;
+        recognition = new SpeechRecognition();
+        recognition.lang = "en-US";
+        recognition.interimResults = false;
+        recognition.maxAlternatives = 1;
 
-          recognition = new SpeechRecognition();
-          recognition.lang = "en-US";
-          recognition.interimResults = true;
-          recognition.maxAlternatives = 1;
+        statusNode.textContent = "Listening…";
 
-          statusNode.textContent = "Listening…";
-          if (activeSilenceTimeout) clearTimeout(activeSilenceTimeout);
-          activeSilenceTimeout = setTimeout(() => {
-            if (recognition) recognition.stop();
-          }, 7000);
-
-          recognition.onresult = (event) => {
-            if (activeSilenceTimeout) {
-              clearTimeout(activeSilenceTimeout);
-              activeSilenceTimeout = null;
-            }
-            statusNode.textContent = "Processing…";
-            for (let i = event.resultIndex; i < event.results.length; i += 1) {
-              const fragment = event.results[i][0].transcript || "";
-              if (event.results[i].isFinal) {
-                finalTranscript += ` ${fragment}`;
-              }
-            }
-          };
-
-          recognition.onerror = (event) => {
-            endedWithError = true;
-            if (activeSilenceTimeout) {
-              clearTimeout(activeSilenceTimeout);
-              activeSilenceTimeout = null;
-            }
-            if (event.error === "not-allowed" || event.error === "service-not-allowed") {
-              statusNode.textContent = "Microphone permission was denied. Please continue using manual entry.";
-              return;
-            }
-            if (attempt < 1) {
-              statusNode.textContent = "I could not hear clearly. Trying once more…";
-              setTimeout(() => beginRecognition(attempt + 1), 400);
-              return;
-            }
-            statusNode.textContent = "Could not capture voice. Please try again.";
-          };
-
-          recognition.onend = () => {
-            const transcript = finalTranscript.trim();
-            recognition = null;
-            if (endedWithError) return;
-            if (!transcript) {
-              if (attempt < 1) {
-                statusNode.textContent = "No speech detected. Please speak again.";
-                setTimeout(() => beginRecognition(attempt + 1), 400);
-              } else {
-                statusNode.textContent = "No speech detected. Please try again.";
-              }
-              return;
-            }
-
+        recognition.onresult = (event) => {
+          statusNode.textContent = "Processing…";
+          const transcript = event.results[0][0].transcript;
           const parsed = parseSpeech(option.key, transcript);
           if (parsed.error) {
             statusNode.textContent = parsed.error;
@@ -412,7 +362,9 @@
             const response = saveVoiceData(parsed);
             statusNode.textContent = response.message;
             confirmNode.classList.add("hidden");
-            confirmNode.innerHTML = "";
+            if (response.ok) {
+              setTimeout(() => window.location.reload(), 550);
+            }
           });
 
           confirmNode.querySelector(".cancel-btn").addEventListener("click", () => {
@@ -420,25 +372,30 @@
             confirmNode.innerHTML = "";
             statusNode.textContent = "Entry cancelled. No data saved.";
           });
-          };
-
-          recognition.start();
         };
 
-        beginRecognition();
+        recognition.onerror = (event) => {
+          if (event.error === "not-allowed" || event.error === "service-not-allowed") {
+            statusNode.textContent = "Microphone permission was denied. Please continue using manual entry.";
+          } else {
+            statusNode.textContent = "Could not capture voice. Please try again.";
+          }
+        };
+
+        recognition.onend = () => {
+          recognition = null;
+        };
+
+        recognition.start();
       });
       optionsContainer.appendChild(card);
     });
 
-    voiceBtn.addEventListener("click", (event) => {
-      event.preventDefault();
-      event.stopPropagation();
-      openSheet();
+    voiceBtn.addEventListener("click", openSheet);
+    sheet.addEventListener("click", (event) => {
+      if (event.target.dataset.close === "1" || event.target.classList.contains("voice-close")) {
+        closeSheet();
+      }
     });
-
-    const closeButton = sheet.querySelector(".voice-close");
-    const backdrop = sheet.querySelector(".voice-sheet__backdrop");
-    closeButton.addEventListener("click", closeSheet);
-    backdrop.addEventListener("click", closeSheet);
   });
 })();
