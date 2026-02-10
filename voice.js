@@ -21,9 +21,48 @@ document.addEventListener("DOMContentLoaded", () => {
     return;
   }
 
+  if (!window.isSecureContext) {
+    setStatus("Voice input requires HTTPS (or localhost).", "error");
+  }
+
   let recognition = null;
   let pendingSave = null;
   let activeButton = null;
+  let recognizedText = "";
+
+  const WORD_TO_NUMBER = {
+    zero: 0,
+    one: 1,
+    two: 2,
+    three: 3,
+    four: 4,
+    five: 5,
+    six: 6,
+    seven: 7,
+    eight: 8,
+    nine: 9,
+    ten: 10,
+    eleven: 11,
+    twelve: 12,
+    thirteen: 13,
+    fourteen: 14,
+    fifteen: 15,
+    sixteen: 16,
+    seventeen: 17,
+    eighteen: 18,
+    nineteen: 19,
+    twenty: 20,
+    thirty: 30,
+    forty: 40,
+    fifty: 50,
+    sixty: 60,
+    seventy: 70,
+    eighty: 80,
+    ninety: 90,
+    hundred: 100,
+    thousand: 1000,
+    point: "."
+  };
 
   function setStatus(message, type = "info") {
     statusEl.textContent = message;
@@ -56,15 +95,77 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function parseNumber(text) {
     const m = text.match(/\d+(?:\.\d+)?/);
-    return m ? Number(m[0]) : null;
+    if (m) return Number(m[0]);
+
+    const normalized = text.toLowerCase().replace(/-/g, " ").replace(/ and /g, " ");
+    const tokens = normalized.split(/\s+/).filter(Boolean);
+    if (!tokens.length) return null;
+
+    let total = 0;
+    let current = 0;
+    let decimal = "";
+    let inDecimal = false;
+
+    for (const token of tokens) {
+      if (!(token in WORD_TO_NUMBER)) continue;
+      const value = WORD_TO_NUMBER[token];
+
+      if (value === ".") {
+        inDecimal = true;
+        continue;
+      }
+
+      if (inDecimal) {
+        decimal += String(value);
+        continue;
+      }
+
+      if (value === 1000) {
+        current *= value;
+        total += current;
+        current = 0;
+        continue;
+      }
+
+      if (value === 100) {
+        current = (current || 1) * value;
+        continue;
+      }
+
+      current += value;
+    }
+
+    const intPart = total + current;
+    if (intPart === 0 && !decimal) return null;
+    return Number(decimal ? `${intPart}.${decimal}` : intPart);
   }
 
   function parseBloodPressure(text) {
-    const normalized = text.toLowerCase().replace(/over/g, "/").replace(/\s+/g, " ");
+    const rawNormalized = text
+      .toLowerCase()
+      .replace(/\s+/g, " ");
+    const normalized = rawNormalized.replace(/\bslash\b/g, "/").replace(/\bover\b/g, "/");
     const slash = normalized.match(/(\d{2,3})\s*\/\s*(\d{2,3})/);
     if (slash) return `${slash[1]}/${slash[2]}`;
+
+    const overWords = normalized.match(/([a-z\s-]+)\s*\/\s*([a-z\s-]+)/);
+    if (overWords) {
+      const systolic = parseNumber(overWords[1]);
+      const diastolic = parseNumber(overWords[2]);
+      if (systolic && diastolic) return `${systolic}/${diastolic}`;
+    }
+
     const nums = normalized.match(/\d{2,3}/g);
     if (nums && nums.length >= 2) return `${nums[0]}/${nums[1]}`;
+
+    const tokens = rawNormalized.split(/\s+/);
+    const overIndex = tokens.findIndex((t) => t === "over");
+    if (overIndex > 0 && overIndex < tokens.length - 1) {
+      const systolic = parseNumber(tokens.slice(0, overIndex).join(" "));
+      const diastolic = parseNumber(tokens.slice(overIndex + 1).join(" "));
+      if (systolic && diastolic) return `${systolic}/${diastolic}`;
+    }
+
     return null;
   }
 
@@ -137,9 +238,10 @@ document.addEventListener("DOMContentLoaded", () => {
   function runRecognition(action, button) {
     if (recognition) recognition.abort();
     recognition = new SpeechRecognition();
-    recognition.lang = "en-US";
+    recognition.lang = navigator.language || "en-US";
     recognition.interimResults = false;
     recognition.maxAlternatives = 1;
+    recognizedText = "";
 
     if (activeButton) activeButton.classList.remove("listening");
     activeButton = button;
@@ -148,6 +250,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     recognition.onresult = (event) => {
       const transcript = (event.results[0][0].transcript || "").trim();
+      recognizedText = transcript;
       activeButton.classList.remove("listening");
       handleTranscript(action, transcript);
     };
@@ -160,6 +263,13 @@ document.addEventListener("DOMContentLoaded", () => {
     recognition.onnomatch = () => {
       activeButton.classList.remove("listening");
       setStatus("Could not understand. Please try again.", "error");
+    };
+
+    recognition.onend = () => {
+      if (activeButton) activeButton.classList.remove("listening");
+      if (!recognizedText) {
+        setStatus("No speech detected. Allow microphone permission and try again.", "error");
+      }
     };
 
     recognition.start();
