@@ -41,6 +41,21 @@ document.addEventListener("DOMContentLoaded", () => {
     const radius = 90;
     const circumference = 2 * Math.PI * radius;
 
+    function getTodayDateKey() {
+        return new Date().toISOString().slice(0, 10);
+    }
+
+    function resetDailyStepsIfNeeded() {
+        const today = getTodayDateKey();
+        const lastStepResetDate = localStorage.getItem("lastStepResetDate");
+
+        if (lastStepResetDate !== today) {
+            stepsToday = 0;
+            localStorage.setItem("stepsToday", "0");
+            localStorage.setItem("lastStepResetDate", today);
+        }
+    }
+
     function updateUI() {
         // Update Dashboard Page
         if (dashSteps) dashSteps.textContent = stepsToday.toLocaleString();
@@ -71,6 +86,8 @@ document.addEventListener("DOMContentLoaded", () => {
             progressCircle.style.strokeDashoffset = offset;
         }
     }
+
+    resetDailyStepsIfNeeded();
 
     if (!canEditGoals) {
         if (pageContainer) {
@@ -104,6 +121,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (addStepsBtn) {
         addStepsBtn.addEventListener("click", () => {
             if (isDoctor) return;
+            resetDailyStepsIfNeeded();
             const val = parseInt(stepsInput.value);
             if (!val || val <= 0) return;
             stepsToday += val;
@@ -140,6 +158,7 @@ document.addEventListener("DOMContentLoaded", () => {
             if (isDoctor) return;
             if (walkInterval) return;
             walkInterval = setInterval(() => {
+                resetDailyStepsIfNeeded();
                 stepsToday += 1;
                 localStorage.setItem("stepsToday", stepsToday);
                 updateUI();

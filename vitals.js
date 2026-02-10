@@ -16,8 +16,12 @@ document.addEventListener("DOMContentLoaded", () => {
   const vitalsTargetsContainer = document.getElementById("vitalsTargets");
   const vitalsTargetsEmpty = document.getElementById("vitalsTargetsEmpty");
   const vitalsTargetsGrid = document.getElementById("vitalsTargetsGrid");
+  const bpField = document.getElementById("bp");
+  const hrField = document.getElementById("hr");
+  const tempField = document.getElementById("temp");
+  const slField = document.getElementById("sl");
 
-  let editingTimestamp = null;
+  let editingVitalId = null;
 
   if (!form) return;
 
@@ -30,6 +34,12 @@ document.addEventListener("DOMContentLoaded", () => {
       return [];
     }
   };
+
+  const saveVitalsHistory = (vitalsHistory) => {
+    localStorage.setItem("vitals", JSON.stringify(vitalsHistory));
+  };
+
+  const getVitalIdentifier = (entry) => entry.id || entry.timestamp;
 
   const formatTimestamp = (timestamp) => {
     if (!timestamp) return "Unknown time";
@@ -56,6 +66,21 @@ document.addEventListener("DOMContentLoaded", () => {
     } catch (err) {
       return null;
     }
+  };
+
+  const setFormState = (entry) => {
+    if (isDoctor) {
+      submitButton.textContent = entry ? "Update Target" : "Save Target";
+      return;
+    }
+    submitButton.textContent = entry ? "Update Vitals" : "Save Vitals";
+  };
+
+  const fillForm = (entry) => {
+    bpField.value = entry.bp || "";
+    hrField.value = entry.hr || "";
+    tempField.value = entry.temp || "";
+    slField.value = entry.sl || "";
   };
 
   const renderVitalsTargets = () => {
@@ -119,12 +144,14 @@ document.addEventListener("DOMContentLoaded", () => {
       return bTime - aTime;
     });
 
-    const latestTimestamp = sortedHistory[0]?.timestamp;
+    const latestVital = sortedHistory[0];
+    const latestId = latestVital ? getVitalIdentifier(latestVital) : null;
 
     sortedHistory.forEach((entry) => {
       const listItem = document.createElement("li");
       listItem.className = "vitals-item";
-      const isLatest = entry.timestamp === latestTimestamp;
+      const entryId = getVitalIdentifier(entry);
+      const isLatest = entryId === latestId;
       const isLocked = (isFamily && !isLatest) || isDoctor;
       if (isLocked) {
         listItem.classList.add("locked-entry");
@@ -140,6 +167,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
       if (isEditable && !isDoctor) {
         const actionWrapper = document.createElement("div");
+        actionWrapper.className = "vitals-actions";
+
         if (isLocked) {
           const lockBadge = document.createElement("span");
           lockBadge.className = "lock-badge";
@@ -150,15 +179,16 @@ document.addEventListener("DOMContentLoaded", () => {
           editButton.type = "button";
           editButton.className = "action-button";
           editButton.textContent = "Edit";
-          editButton.addEventListener("click", () => {
-            editingTimestamp = entry.timestamp;
-            document.getElementById("bp").value = entry.bp || "";
-            document.getElementById("hr").value = entry.hr || "";
-            document.getElementById("temp").value = entry.temp || "";
-            document.getElementById("sl").value = entry.sl || "";
-            submitButton.textContent = "Update Vitals";
-          });
+          editButton.addEventListener("click", () => window.editVital(entryId));
+
+          const deleteButton = document.createElement("button");
+          deleteButton.type = "button";
+          deleteButton.className = "action-button delete-button";
+          deleteButton.textContent = "Delete";
+          deleteButton.addEventListener("click", () => window.deleteVital(entryId));
+
           actionWrapper.appendChild(editButton);
+          actionWrapper.appendChild(deleteButton);
         }
         header.appendChild(actionWrapper);
       }
@@ -216,17 +246,47 @@ document.addEventListener("DOMContentLoaded", () => {
     formTitle.textContent = "Recommended Target";
   }
 
+  window.editVital = (id) => {
+    if (!isEditable || isDoctor) return;
+    const vitalsHistory = getVitalsHistory();
+    const entry = vitalsHistory.find((item) => getVitalIdentifier(item) === id);
+    if (!entry) return;
+
+    const sortedHistory = vitalsHistory.slice().sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
+    const latestId = sortedHistory[0] ? getVitalIdentifier(sortedHistory[0]) : null;
+    if (isFamily && id !== latestId) return;
+
+    editingVitalId = id;
+    fillForm(entry);
+    setFormState(entry);
+  };
+
+  window.deleteVital = (id) => {
+    if (!isEditable || isFamily || isDoctor) return;
+    const vitalsHistory = getVitalsHistory();
+    const updatedHistory = vitalsHistory.filter((item) => getVitalIdentifier(item) !== id);
+    saveVitalsHistory(updatedHistory);
+
+    if (editingVitalId === id) {
+      form.reset();
+      editingVitalId = null;
+      setFormState(null);
+    }
+
+    renderVitals();
+  };
+
   form.addEventListener("submit", (e) => {
     e.preventDefault();
 
-    const bp = document.getElementById("bp").value.trim();
-    const hr = document.getElementById("hr").value.trim();
-    const temp = document.getElementById("temp").value.trim();
-    const sl = document.getElementById("sl").value.trim();
+    const bp = bpField.value.trim();
+    const hr = hrField.value.trim();
+    const temp = tempField.value.trim();
+    const sl = slField.value.trim();
 
     if (!bp || !hr || !temp || !sl) {
       statusMsg.textContent = "Please fill all fields!";
-      statusMsg.className = "error"; // Using class for styling
+      statusMsg.className = "error";
       statusMsg.style.color = "red";
       return;
     }
@@ -248,8 +308,8 @@ document.addEventListener("DOMContentLoaded", () => {
       localStorage.setItem("vitalsTargets", JSON.stringify(targetPayload));
       statusMsg.textContent = "Recommended targets saved!";
     } else {
-      if (editingTimestamp) {
-        const entry = vitalsHistory.find(item => item.timestamp === editingTimestamp);
+      if (editingVitalId) {
+        const entry = vitalsHistory.find((item) => getVitalIdentifier(item) === editingVitalId);
         if (entry) {
           entry.bp = entryPayload.bp;
           entry.hr = entryPayload.hr;
@@ -262,20 +322,21 @@ document.addEventListener("DOMContentLoaded", () => {
       } else {
         const vitalsEntry = {
           ...entryPayload,
+          id: Date.now(),
           timestamp: new Date().toISOString(),
           enteredBy: isFamily ? "family" : undefined
         };
         vitalsHistory.push(vitalsEntry);
       }
 
-      localStorage.setItem("vitals", JSON.stringify(vitalsHistory));
+      saveVitalsHistory(vitalsHistory);
       statusMsg.textContent = "Vitals saved successfully!";
     }
     statusMsg.style.color = "green";
 
     form.reset();
-    editingTimestamp = null;
-    submitButton.textContent = isDoctor ? "Save Target" : "Save Vitals";
+    editingVitalId = null;
+    setFormState(null);
     renderVitals();
     renderVitalsTargets();
   });
@@ -286,15 +347,10 @@ document.addEventListener("DOMContentLoaded", () => {
   if (isDoctor) {
     const targets = getVitalsTargets();
     if (targets) {
-      document.getElementById("bp").value = targets.bp || "";
-      document.getElementById("hr").value = targets.hr || "";
-      document.getElementById("temp").value = targets.temp || "";
-      document.getElementById("sl").value = targets.sl || "";
-      submitButton.textContent = "Update Target";
+      fillForm(targets);
+      setFormState(targets);
     } else {
-      submitButton.textContent = "Save Target";
+      setFormState(null);
     }
   }
 });
-
-
