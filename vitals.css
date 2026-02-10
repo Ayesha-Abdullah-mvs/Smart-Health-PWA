@@ -212,6 +212,27 @@ button[type="submit"]:active {
     font-size: 0.95rem;
 }
 
+
+
+.vitals-actions {
+    display: flex;
+    gap: 0.5rem;
+    margin-right: 0.75rem;
+}
+
+.action-button {
+    border: var(--border-width) solid var(--border-color);
+    background: var(--color-white);
+    color: #000;
+    padding: 0.4rem 0.7rem;
+    font-weight: 800;
+    cursor: pointer;
+    box-shadow: 2px 2px 0px 0px rgba(0,0,0,1);
+}
+
+.delete-button {
+    background: #fee2e2;
+}
 .vitals-item-grid {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));

@@ -3,10 +3,14 @@ function loadLatestVitals() {
 
   if (vitals.length === 0) return;
 
-  const latest = vitals[vitals.length - 1];
+  const latest = vitals
+    .slice()
+    .sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime())[0];
 
-  document.getElementById("dash-bp").textContent = latest.bp;
-  document.getElementById("dash-hr").textContent = latest.hr;
-  document.getElementById("dash-temp").textContent = latest.temp + "°C";
+  if (!latest) return;
+
+  document.getElementById("dash-bp").textContent = latest.bp || "--";
+  document.getElementById("dash-hr").textContent = latest.hr || "--";
+  document.getElementById("dash-temp").textContent = latest.temp ? `${latest.temp}°C` : "--";
 }
 document.addEventListener("DOMContentLoaded", loadLatestVitals);
