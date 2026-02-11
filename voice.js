@@ -359,7 +359,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   confirmCancel.addEventListener("click", () => {
     pendingSave = null;
-    confirmBox.classList.add("hidden");
+    confirmOverlay.classList.add("hidden");
     setStatus("Cancelled. You can try again.");
   });
 
