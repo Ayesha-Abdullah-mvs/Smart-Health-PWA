@@ -195,8 +195,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Run the initial render
   renderMeds();
-
-  // Alarm Interval (Only play sound if alarmSound exists on the current page)
+ 
   setInterval(() => {
     const now = new Date();
     const currentTime = now.toTimeString().slice(0, 5);
@@ -204,7 +203,14 @@ document.addEventListener("DOMContentLoaded", () => {
       if (med.time === currentTime && !med.notified) {
         if (alarmSound) alarmSound.play();
         if ("Notification" in window && Notification.permission === "granted") {
-          new Notification("Medication Reminder", { body: `Time to take: ${med.name}` });
+          const notification = buildMedicationNotification(med);
+          if ("serviceWorker" in navigator) {
+            navigator.serviceWorker.ready
+              .then(reg => reg.showNotification(notification.title, notification.options))
+              .catch(() => new Notification(notification.title, notification.options));
+          } else {
+            new Notification(notification.title, notification.options);
+          }
         }
         med.notified = true;
         saveData();
