@@ -209,22 +209,29 @@ h2 {
   z-index: 2000;
 }
 
-/* Override old card behavior */
+/* Modal uses SAME card styling as page */
 .confirm-overlay .confirm-box {
-  margin: 0;                 /* 🚨 IMPORTANT */
-  width: min(90%, 420px);
-  border-radius: 14px;
-  box-shadow: 20px 20px 0 0 #000;
-  animation: popIn 0.18s ease-out;
+  margin: 0;
+  width: min(92%, 420px);
+
+  /* Match card look */
+  border-radius: 0; /* square like other cards */
+  box-shadow: var(--card-shadow); /* SAME shadow variable */
+  border: 3px solid var(--border-color);
+  background: var(--card-bg);
+
+  animation: popIn 0.12s ease-out;
 }
 
+/* Subtle animation only (no scale drama) */
 @keyframes popIn {
   from {
-    transform: scale(0.95);
+    transform: translateY(6px);
     opacity: 0;
   }
   to {
-    transform: scale(1);
+    transform: translateY(0);
     opacity: 1;
   }
 }
+
