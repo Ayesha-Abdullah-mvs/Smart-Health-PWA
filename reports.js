@@ -12,8 +12,8 @@ document.addEventListener('DOMContentLoaded', () => {
             const notice = document.createElement("div");
             notice.className = "read-only-banner";
             notice.textContent = isDoctor
-                ? "Doctor view: reports are read-only."
-                : "Family view: reports are read-only.";
+                ? "Doctor view"
+                : "Family view";
             pageContainer.prepend(notice);
         }
         renderReports();
