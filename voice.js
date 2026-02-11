@@ -18,6 +18,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const confirmText = document.getElementById("confirmText");
   const confirmSave = document.getElementById("confirmSave");
   const confirmCancel = document.getElementById("confirmCancel");
+  const confirmOverlay = document.getElementById("confirmOverlay");
+
 
   const support = detectVoiceSupport();
   const voiceOutput = createVoiceOutput(support);
@@ -344,14 +346,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function promptConfirm(message, onConfirm) {
     confirmText.textContent = message;
-    confirmBox.classList.remove("hidden");
+    confirmOverlay.classList.remove("hidden");
     pendingSave = onConfirm;
   }
 
   confirmSave.addEventListener("click", () => {
     if (pendingSave) pendingSave();
     pendingSave = null;
-    confirmBox.classList.add("hidden");
+    confirmOverlay.classList.add("hidden");
     setStatus("Saved successfully!", "success", true);
   });
 
