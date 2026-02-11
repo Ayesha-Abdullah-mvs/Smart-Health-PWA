@@ -8,22 +8,26 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   const statusEl = document.getElementById("voiceStatus");
+  const supportNoteEl = document.getElementById("voiceSupportNote");
   const cardsContainer = document.getElementById("voiceCards");
+  const manualInputBox = document.getElementById("manualInputBox");
+  const manualAction = document.getElementById("manualAction");
+  const manualTranscript = document.getElementById("manualTranscript");
+  const manualProcess = document.getElementById("manualProcess");
   const confirmBox = document.getElementById("confirmBox");
   const confirmText = document.getElementById("confirmText");
   const confirmSave = document.getElementById("confirmSave");
   const confirmCancel = document.getElementById("confirmCancel");
 
-  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-  if (!SpeechRecognition) {
-    statusEl.textContent = "Voice input is not supported in this browser.";
-    cardsContainer.querySelectorAll("button").forEach(btn => btn.disabled = true);
-    return;
-  }
+  const support = detectVoiceSupport();
+  const voiceOutput = createVoiceOutput(support);
 
   if (!window.isSecureContext) {
     setStatus("Voice input requires HTTPS (or localhost).", "error");
   }
+
+  showCompatibilityMessage();
+  checkMicrophonePermission();
 
   let recognition = null;
   let pendingSave = null;
@@ -64,9 +68,131 @@ document.addEventListener("DOMContentLoaded", () => {
     point: "."
   };
 
-  function setStatus(message, type = "info") {
+  function detectVoiceSupport() {
+    const ua = navigator.userAgent || "";
+    const platform = navigator.platform || "";
+    const maxTouchPoints = navigator.maxTouchPoints || 0;
+
+    const isIOS = /iPhone|iPad|iPod/.test(ua) || (platform === "MacIntel" && maxTouchPoints > 1);
+    const isSafari = /^((?!chrome|android).)*safari/i.test(ua);
+    const isHuaweiBrowser = /HuaweiBrowser|HMSCore|HONOR/i.test(ua);
+
+    return {
+      recognitionCtor: window.SpeechRecognition || window.webkitSpeechRecognition || null,
+      hasSpeechSynthesis: typeof window.speechSynthesis !== "undefined",
+      hasUtterance: typeof window.SpeechSynthesisUtterance !== "undefined",
+      isIOS,
+      isSafari,
+      isHuaweiBrowser
+    };
+  }
+
+  function createVoiceOutput(capabilities) {
+    const canSpeak = capabilities.hasSpeechSynthesis && capabilities.hasUtterance;
+    let preferredVoice = null;
+
+    if (!canSpeak) {
+      return { canSpeak: false, speak: () => {} };
+    }
+
+    const loadVoice = () => {
+      const voices = window.speechSynthesis.getVoices();
+      if (!voices.length) return;
+
+      const language = (navigator.language || "en-US").toLowerCase();
+      preferredVoice =
+        voices.find((voice) => voice.lang && voice.lang.toLowerCase() === language) ||
+        voices.find((voice) => voice.lang && voice.lang.toLowerCase().startsWith(language.split("-")[0])) ||
+        voices.find((voice) => /en/i.test(voice.lang || "")) ||
+        voices[0] ||
+        null;
+    };
+
+    loadVoice();
+    if (typeof window.speechSynthesis.onvoiceschanged !== "undefined") {
+      window.speechSynthesis.onvoiceschanged = loadVoice;
+    }
+
+    return {
+      canSpeak,
+      speak(message, fromGesture = false) {
+        if (!message || !fromGesture) return;
+
+        try {
+          const utterance = new SpeechSynthesisUtterance(message);
+          utterance.lang = navigator.language || "en-US";
+          if (preferredVoice) utterance.voice = preferredVoice;
+          utterance.rate = 1;
+          utterance.pitch = 1;
+          window.speechSynthesis.cancel();
+          window.speechSynthesis.speak(utterance);
+        } catch (error) {
+          console.warn("[voice] Speech synthesis failed:", error);
+        }
+      }
+    };
+  }
+
+  function setStatus(message, type = "info", speakFromGesture = false) {
     statusEl.textContent = message;
     statusEl.style.color = type === "error" ? "#b91c1c" : (type === "success" ? "#166534" : "#111827");
+
+    if ((type === "success" || type === "error") && voiceOutput.canSpeak) {
+      voiceOutput.speak(message, speakFromGesture);
+    }
+  }
+
+  function showCompatibilityMessage() {
+    if (support.isIOS && support.isSafari && !support.recognitionCtor) {
+      supportNoteEl.textContent = "iOS Safari does not provide Web Speech recognition. Manual input is enabled.";
+      manualInputBox.classList.remove("hidden");
+      disableVoiceButtons();
+      return;
+    }
+
+    if (support.isHuaweiBrowser && !support.recognitionCtor) {
+      supportNoteEl.textContent = "Huawei Browser/WebView has limited speech recognition support. Manual input is enabled.";
+      manualInputBox.classList.remove("hidden");
+      disableVoiceButtons();
+      return;
+    }
+
+    if (!support.recognitionCtor) {
+      supportNoteEl.textContent = "Speech recognition is unavailable in this browser. Use manual input.";
+      manualInputBox.classList.remove("hidden");
+      disableVoiceButtons();
+      return;
+    }
+
+    supportNoteEl.textContent = "Voice recognition is available. Tap a card to start listening.";
+    if (!voiceOutput.canSpeak) {
+      supportNoteEl.textContent += " Spoken feedback is unavailable on this browser.";
+    }
+  }
+
+  function disableVoiceButtons() {
+    cardsContainer.querySelectorAll("button").forEach((btn) => {
+      btn.disabled = true;
+      btn.classList.remove("listening");
+    });
+  }
+
+  async function checkMicrophonePermission() {
+    if (!support.recognitionCtor || !navigator.permissions || !navigator.permissions.query) return;
+
+    try {
+      const permission = await navigator.permissions.query({ name: "microphone" });
+      if (permission.state === "denied") {
+        setStatus("Microphone access is blocked. Enable it in browser settings.", "error");
+      }
+      permission.onchange = () => {
+        if (permission.state === "denied") {
+          setStatus("Microphone access was denied. Use manual input or browser settings.", "error");
+        }
+      };
+    } catch (error) {
+      console.info("[voice] Microphone permission state API unavailable:", error);
+    }
   }
 
   function getVitals() {
@@ -226,7 +352,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (pendingSave) pendingSave();
     pendingSave = null;
     confirmBox.classList.add("hidden");
-    setStatus("Saved successfully!", "success");
+    setStatus("Saved successfully!", "success", true);
   });
 
   confirmCancel.addEventListener("click", () => {
@@ -235,12 +361,24 @@ document.addEventListener("DOMContentLoaded", () => {
     setStatus("Cancelled. You can try again.");
   });
 
+  function createRecognition() {
+    if (!support.recognitionCtor) return null;
+    const instance = new support.recognitionCtor();
+    instance.lang = navigator.language || "en-US";
+    instance.interimResults = false;
+    instance.maxAlternatives = 1;
+    return instance;
+  }
+
   function runRecognition(action, button) {
+    if (!support.recognitionCtor) {
+      setStatus("This browser does not support speech recognition. Please use manual input.", "error", true);
+      manualInputBox.classList.remove("hidden");
+      return;
+    }
+
     if (recognition) recognition.abort();
-    recognition = new SpeechRecognition();
-    recognition.lang = navigator.language || "en-US";
-    recognition.interimResults = false;
-    recognition.maxAlternatives = 1;
+    recognition = createRecognition();
     recognizedText = "";
 
     if (activeButton) activeButton.classList.remove("listening");
@@ -252,17 +390,32 @@ document.addEventListener("DOMContentLoaded", () => {
       const transcript = (event.results[0][0].transcript || "").trim();
       recognizedText = transcript;
       activeButton.classList.remove("listening");
-      handleTranscript(action, transcript);
+      handleTranscript(action, transcript, true);
     };
 
-    recognition.onerror = () => {
+    recognition.onerror = (event) => {
       activeButton.classList.remove("listening");
-      setStatus("Could not understand. Please try again.", "error");
+      const errorCode = event?.error || "unknown";
+      console.warn("[voice] Recognition error:", errorCode, event);
+
+      const byCode = {
+        "not-allowed": "Microphone permission denied. Enable microphone access and try again.",
+        "service-not-allowed": "Speech service is unavailable in this browser.",
+        "audio-capture": "No microphone detected. Please connect/enable a microphone.",
+        network: "Network issue while recognizing speech. Check connection and retry.",
+        "no-speech": "No speech detected. Please speak clearly and try again.",
+        "aborted": "Voice listening was cancelled. Tap again to retry."
+      };
+      setStatus(byCode[errorCode] || "Could not understand speech. Please try again.", "error", true);
+
+      if (errorCode === "service-not-allowed" || errorCode === "not-allowed") {
+        manualInputBox.classList.remove("hidden");
+      }
     };
 
     recognition.onnomatch = () => {
       activeButton.classList.remove("listening");
-      setStatus("Could not understand. Please try again.", "error");
+      setStatus("Could not understand. Please try again.", "error", true);
     };
 
     recognition.onend = () => {
@@ -272,61 +425,77 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     };
 
-    recognition.start();
+    try {
+      recognition.start();
+    } catch (error) {
+      console.warn("[voice] Failed to start recognition:", error);
+      setStatus("Voice could not start on this browser session. Use manual input below.", "error", true);
+      manualInputBox.classList.remove("hidden");
+    }
   }
 
-  function handleTranscript(action, text) {
+  function handleTranscript(action, text, fromGesture = false) {
     if (!text) {
-      setStatus("Could not understand. Please try again.", "error");
+      setStatus("Could not understand. Please try again.", "error", fromGesture);
       return;
     }
 
     if (action === "heartRate") {
       const hr = parseNumber(text);
-      if (!hr) return setStatus("No number detected. Please try again.", "error");
+      if (!hr) return setStatus("No number detected. Please try again.", "error", fromGesture);
       promptConfirm(`You said: ${hr} bpm. Save this?`, () => createVitalsEntry({ hr }));
       return;
     }
 
     if (action === "bloodPressure") {
       const bp = parseBloodPressure(text);
-      if (!bp) return setStatus("No blood pressure value detected. Please try again.", "error");
+      if (!bp) return setStatus("No blood pressure value detected. Please try again.", "error", fromGesture);
       promptConfirm(`You said: ${bp}. Save this?`, () => createVitalsEntry({ bp }));
       return;
     }
 
     if (action === "sugarLevel") {
       const sl = parseNumber(text);
-      if (!sl) return setStatus("No number detected. Please try again.", "error");
+      if (!sl) return setStatus("No number detected. Please try again.", "error", fromGesture);
       promptConfirm(`You said: ${sl} mg/dl. Save this?`, () => createVitalsEntry({ sl }));
       return;
     }
 
     if (action === "temperature") {
       const temp = parseNumber(text);
-      if (!temp) return setStatus("No temperature detected. Please try again.", "error");
+      if (!temp) return setStatus("No temperature detected. Please try again.", "error", fromGesture);
       promptConfirm(`You said: ${temp} °C. Save this?`, () => createVitalsEntry({ temp }));
       return;
     }
 
     if (action === "medicine") {
       const med = parseMedicine(text);
-      if (!med) return setStatus("Could not detect medicine details. Please try again.", "error");
+      if (!med) return setStatus("Could not detect medicine details. Please try again.", "error", fromGesture);
       promptConfirm(`You said: ${med.name}${med.dosage ? ` (${med.dosage})` : ""} at ${med.time}. Save this?`, () => saveMedicine(med));
       return;
     }
 
     if (action === "markTaken") {
       const med = parseMedicine(text);
-      if (!med?.name) return setStatus("Could not detect medicine name. Please try again.", "error");
+      if (!med?.name) return setStatus("Could not detect medicine name. Please try again.", "error", fromGesture);
       promptConfirm(`You said: mark ${med.name} as taken. Save this?`, () => {
         const ok = markMedicineTakenByName(med.name);
-        if (!ok) setStatus("Medicine not found. Please try the exact name.", "error");
+        if (!ok) setStatus("Medicine not found. Please try the exact name.", "error", fromGesture);
       });
     }
   }
 
   document.querySelectorAll(".voice-card").forEach((button) => {
     button.addEventListener("click", () => runRecognition(button.dataset.action, button));
+  });
+
+  manualProcess.addEventListener("click", () => {
+    const text = manualTranscript.value.trim();
+    if (!text) {
+      setStatus("Type the details first, then submit.", "error", true);
+      return;
+    }
+
+    handleTranscript(manualAction.value, text, true);
   });
 });

@@ -22,6 +22,7 @@
       <h2>Add Data Using Voice</h2>
       <p class="subtitle">Tap a card, speak clearly, then confirm before saving.</p>
       <p id="voiceStatus" class="status-msg"></p>
+      <p id="voiceSupportNote" class="support-note" aria-live="polite"></p>
 
       <div id="voiceCards" class="voice-grid">
         <button class="voice-card" data-action="heartRate">❤️ Add Heart Rate</button>
@@ -31,6 +32,23 @@
         <button class="voice-card" data-action="medicine">💊 Add Medicine</button>
         <button class="voice-card" data-action="markTaken">✅ Mark Medicine as Taken</button>
       </div>
+
+      <section id="manualInputBox" class="manual-box hidden" aria-live="polite">
+        <h3>Manual Input</h3>
+        <p>Voice recognition is limited on this browser. You can type details and save.</p>
+        <label for="manualAction">Action</label>
+        <select id="manualAction">
+          <option value="heartRate">Add Heart Rate</option>
+          <option value="bloodPressure">Add Blood Pressure</option>
+          <option value="sugarLevel">Add Sugar Level</option>
+          <option value="temperature">Add Temperature</option>
+          <option value="medicine">Add Medicine</option>
+          <option value="markTaken">Mark Medicine as Taken</option>
+        </select>
+        <label for="manualTranscript">Details</label>
+        <textarea id="manualTranscript" rows="3" placeholder="Example: 120 over 80 OR Paracetamol 500mg 8 pm"></textarea>
+        <button id="manualProcess" type="button">Use Typed Input</button>
+      </section>
 
       <div id="confirmBox" class="confirm-box hidden">
         <p id="confirmText"></p>
