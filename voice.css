@@ -219,7 +219,7 @@ h2 {
   /* FORCE identical card appearance */
   background: #ffffff !important;
   border: 3px solid var(--border-color);
-  box-shadow: var(--card-shadow);
+  box-shadow: 10px 10px 0 0 #000;
   border-radius: 0;
 
   opacity: 1;
