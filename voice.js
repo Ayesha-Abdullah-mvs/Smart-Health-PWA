@@ -21,9 +21,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const support = detectVoiceSupport();
   const voiceOutput = createVoiceOutput(support);
-  const userAgent = navigator.userAgent || "";
-  const hasSpeechRecognitionApi = Boolean(window.SpeechRecognition || window.webkitSpeechRecognition);
-  const useNativeChromeAndroidVoice = hasSpeechRecognitionApi && /Chrome/i.test(userAgent) && /Android/i.test(userAgent);
 
   if (!window.isSecureContext) {
     setStatus("Voice input requires HTTPS (or localhost).", "error");
@@ -146,11 +143,6 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function showCompatibilityMessage() {
-    if (!useNativeChromeAndroidVoice) {
-      supportNoteEl.textContent = "Using server voice transcription fallback for this browser.";
-      return;
-    }
-
     if (support.isIOS && support.isSafari && !support.recognitionCtor) {
       supportNoteEl.textContent = "iOS Safari does not provide Web Speech recognition. Manual input is enabled.";
       manualInputBox.classList.remove("hidden");
@@ -186,7 +178,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   async function checkMicrophonePermission() {
-    if (!useNativeChromeAndroidVoice || !support.recognitionCtor || !navigator.permissions || !navigator.permissions.query) return;
+    if (!support.recognitionCtor || !navigator.permissions || !navigator.permissions.query) return;
 
     try {
       const permission = await navigator.permissions.query({ name: "microphone" });
@@ -378,7 +370,6 @@ document.addEventListener("DOMContentLoaded", () => {
     return instance;
   }
 
-  // DO NOT TOUCH EXISTING ANDROID/CHROME CODE
   function runRecognition(action, button) {
     if (!support.recognitionCtor) {
       setStatus("This browser does not support speech recognition. Please use manual input.", "error", true);
@@ -443,114 +434,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  function getCurrentUserId() {
-    if (typeof getSession === "function") {
-      return getSession()?.seniorId || "";
-    }
-    return "";
-  }
-
-  function mapEntryType(action) {
-    const map = {
-      bloodPressure: "bp",
-      sugarLevel: "sugar",
-      heartRate: "heartRate",
-      temperature: "temperature",
-      medicine: "medicine",
-      markTaken: "medicine"
-    };
-    return map[action] || "medicine";
-  }
-
-  async function transcribeWithBackend(action, audioBlob) {
-    const formData = new FormData();
-    formData.append("audio", audioBlob, "voice-input.webm");
-    formData.append("entryType", mapEntryType(action));
-    formData.append("userId", getCurrentUserId());
-
-    const response = await fetch("/api/speech-to-text", {
-      method: "POST",
-      body: formData
-    });
-
-    if (!response.ok) {
-      throw new Error(`speech_to_text_failed_${response.status}`);
-    }
-
-    const payload = await response.json();
-    if (!payload?.text || typeof payload.text !== "string") {
-      throw new Error("speech_to_text_empty_response");
-    }
-
-    return payload.text.trim();
-  }
-
-  let mediaRecorder = null;
-  let mediaStream = null;
-  let mediaChunks = [];
-  let fallbackAction = "";
-
-  async function runFallbackRecording(action, button) {
-    if (!navigator.mediaDevices?.getUserMedia || typeof MediaRecorder === "undefined") {
-      setStatus("Could not process audio", "error", true);
-      manualInputBox.classList.remove("hidden");
-      return;
-    }
-
-    if (mediaRecorder?.state === "recording") {
-      mediaRecorder.stop();
-      return;
-    }
-
-    fallbackAction = action;
-    mediaChunks = [];
-
-    if (activeButton) activeButton.classList.remove("listening");
-    activeButton = button;
-    activeButton.classList.add("listening");
-
-    try {
-      mediaStream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      mediaRecorder = new MediaRecorder(mediaStream);
-
-      mediaRecorder.ondataavailable = (event) => {
-        if (event.data && event.data.size > 0) {
-          mediaChunks.push(event.data);
-        }
-      };
-
-      mediaRecorder.onerror = () => {
-        if (activeButton) activeButton.classList.remove("listening");
-        setStatus("Could not process audio", "error", true);
-      };
-
-      mediaRecorder.onstop = async () => {
-        if (activeButton) activeButton.classList.remove("listening");
-        setStatus("Processing...");
-
-        const audioBlob = new Blob(mediaChunks, { type: mediaRecorder.mimeType || "audio/webm" });
-        mediaStream?.getTracks().forEach((track) => track.stop());
-
-        try {
-          const transcript = await transcribeWithBackend(fallbackAction, audioBlob);
-          handleTranscript(fallbackAction, transcript, true);
-        } catch (error) {
-          console.warn("[voice] Backend transcription failed:", error);
-          setStatus("Could not process audio", "error", true);
-        }
-      };
-
-      // Fallback mode UI state
-      setStatus("Listening...");
-      mediaRecorder.start();
-    } catch (error) {
-      if (activeButton) activeButton.classList.remove("listening");
-      console.warn("[voice] Failed to start MediaRecorder:", error);
-      setStatus("Could not process audio", "error", true);
-      manualInputBox.classList.remove("hidden");
-    }
-  }
-
   function handleTranscript(action, text, fromGesture = false) {
     if (!text) {
       setStatus("Could not understand. Please try again.", "error", fromGesture);
@@ -603,15 +486,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   document.querySelectorAll(".voice-card").forEach((button) => {
-    button.addEventListener("click", () => {
-      // DO NOT TOUCH EXISTING ANDROID/CHROME CODE
-      if (useNativeChromeAndroidVoice) {
-        runRecognition(button.dataset.action, button);
-        return;
-      }
-
-      runFallbackRecording(button.dataset.action, button);
-    });
+    button.addEventListener("click", () => runRecognition(button.dataset.action, button));
   });
 
   manualProcess.addEventListener("click", () => {
