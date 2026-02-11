@@ -199,6 +199,8 @@ h2 {
 }
 /* ===== MODAL CONFIRM POPUP ===== */
 
+/* ===== CONFIRM MODAL (EXACT CARD CLONE) ===== */
+
 .confirm-overlay {
   position: fixed;
   inset: 0;
@@ -209,29 +211,18 @@ h2 {
   z-index: 2000;
 }
 
-/* Modal uses SAME card styling as page */
+/* Use the SAME card styling, no reinterpretation */
 .confirm-overlay .confirm-box {
   margin: 0;
   width: min(92%, 420px);
 
-  /* Match card look */
-  border-radius: 0; /* square like other cards */
-  box-shadow: var(--card-shadow); /* SAME shadow variable */
+  /* FORCE identical card appearance */
+  background: #ffffff !important;
   border: 3px solid var(--border-color);
-  background: var(--card-bg);
+  box-shadow: var(--card-shadow);
+  border-radius: 0;
 
-  animation: popIn 0.12s ease-out;
+  opacity: 1;
 }
 
-/* Subtle animation only (no scale drama) */
-@keyframes popIn {
-  from {
-    transform: translateY(6px);
-    opacity: 0;
-  }
-  to {
-    transform: translateY(0);
-    opacity: 1;
-  }
-}
 
