@@ -197,3 +197,34 @@ h2 {
   box-shadow: 3px 3px 0 0 #000;
   transform: translate(-2px, -2px);
 }
+/* ===== MODAL CONFIRM POPUP ===== */
+
+.confirm-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+}
+
+/* Override old card behavior */
+.confirm-overlay .confirm-box {
+  margin: 0;                 /* 🚨 IMPORTANT */
+  width: min(90%, 420px);
+  border-radius: 14px;
+  box-shadow: 20px 20px 0 0 #000;
+  animation: popIn 0.18s ease-out;
+}
+
+@keyframes popIn {
+  from {
+    transform: scale(0.95);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
