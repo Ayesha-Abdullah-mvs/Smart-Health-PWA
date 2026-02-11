@@ -1,26 +1,32 @@
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", () => {␍␊
   const medForm = document.getElementById("medForm");
   const medList = document.getElementById("medList");
   const alarmSound = document.getElementById("alarmSound");
-  
-  // Role & Permission Checks
   const currentRole = typeof getCurrentRole === "function" ? getCurrentRole() : null;
   const isDoctor = currentRole === "doctor";
-  const isEditable = (typeof canEditMedsVitals === "function" 
-    ? canEditMedsVitals() 
+  const isEditable = (typeof canEditMedsVitals === "function"
+    ? canEditMedsVitals()
     : (typeof canEdit === "function" ? canEdit() : true)) || isDoctor;
   const isFamily = typeof isFamilyRole === "function" ? isFamilyRole() : false;
-
+  const pageContainer = document.querySelector(".page-container");
   const medName = document.getElementById("medName");
   const medDosage = document.getElementById("medDosage");
   const medTime = document.getElementById("medTime");
   const submitButton = medForm ? medForm.querySelector("button[type='submit']") : null;
+  const formTitle = medForm ? medForm.querySelector("h2") : null;
 
   let medicines = JSON.parse(localStorage.getItem("medicines")) || [];
   let editingMedId = null;
 
   function saveData() {
     localStorage.setItem("medicines", JSON.stringify(medicines));
+  }
+ function renderReadOnlyNotice() {
+    if (!pageContainer) return;
+    const notice = document.createElement("div");
+    notice.className = "read-only-banner";
+    notice.textContent = "Medications are read-only for this role.";
+    pageContainer.prepend(notice);
   }
 
   function isPastTime(time) {
@@ -30,80 +36,40 @@ document.addEventListener("DOMContentLoaded", () => {
     return time < currentTime;
   }
 
-  // --- NEW: RENDER FUNCTION ---
-  window.renderMeds = () => {
-    if (!medList) return;
-    medList.innerHTML = "";
+  function setFormState(med) {
+    if (!medForm || !submitButton) return;
+    if (med) {
+      submitButton.textContent = isDoctor ? "Update Prescription" : "Update Medicine";
+    } else {
+      submitButton.textContent = isDoctor ? "Add Prescription" : "Add Medicine";
+    }
+  }
 
-    medicines.forEach(med => {
-      const li = document.createElement("li");
-      li.className = `med-item ${med.taken ? 'taken' : ''}`;
-      li.innerHTML = `
-        <div class="med-info">
-          <strong>${med.name}</strong> - ${med.dosage} <br>
-          <small>Time: ${med.time}</small>
-        </div>
-        <div class="med-actions">
-          <button onclick="toggleTaken('${med.id}')">${med.taken ? '✅' : '🕒'}</button>
-          <button onclick="editMed('${med.id}')">✏️</button>
-          <button onclick="deleteMed('${med.id}')">🗑️</button>
-        </div>
-      `;
-      medList.appendChild(li);
-    });
-  };
-
-  // --- FIXED: FORM SUBMISSION ---
-  if (medForm && isEditable) {
-    medForm.addEventListener("submit", (e) => {
-      e.preventDefault();
-
-      if (editingMedId) {
-        // Update existing
-        const index = medicines.findIndex(m => m.id === editingMedId);
-        if (index !== -1) {
-          medicines[index] = { 
-            ...medicines[index], 
-            name: medName.value, 
-            dosage: medDosage.value, 
-            time: medTime.value 
-          };
-        }
-        editingMedId = null;
-      } else {
-        // Add new
-        const newMed = {
-          id: Date.now().toString(),
-          name: medName.value,
-          dosage: medDosage.value,
-          time: medTime.value,
-          taken: false,
-          notified: false
-        };
-        medicines.push(newMed);
+  function getSourceMeta(entry) {
+    medicines.push(newMed);
       }
-
       saveData();
       renderMeds();
       medForm.reset();
-      submitButton.textContent = isDoctor ? "Add Prescription" : "Add Medicine";
+      editingMedId = null;
+      setFormState(null);
     });
   } else if (medForm && !isEditable) {
     medForm.classList.add("hidden");
+    renderReadOnlyNotice();
   }
 
-  // --- GLOBAL BUTTON ACTIONS ---
+  // Global functions for the buttons
   window.toggleTaken = (id) => {
     if (!isEditable || isDoctor) return;
     const med = medicines.find(m => m.id === id);
     if (med && !(isFamily && isPastTime(med.time))) {
       med.taken = !med.taken;
       saveData();
-      renderMeds();
+      renderMeds(); // Re-render to show updated status
     }
   };
-
-  window.deleteMed = (id) => {
+window.deleteMed = (id) => {
     if (!isEditable || isFamily || isDoctor) return;
     medicines = medicines.filter(m => m.id !== id);
     saveData();
@@ -114,23 +80,24 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!isEditable) return;
     const med = medicines.find(m => m.id === id);
     if (!med) return;
+    if ((isFamily || isDoctor) && isPastTime(med.time)) return;
     editingMedId = id;
-    medName.value = med.name;
-    medDosage.value = med.dosage;
-    medTime.value = med.time;
-    submitButton.textContent = "Update Medicine";
+    medName.value = med.name || "";
+    medDosage.value = med.dosage || "";
+    medTime.value = med.time || "";
+    setFormState(med);
   };
 
-  // Initial Run
+  // Run the initial render
   renderMeds();
 
-  // Alarm Interval
+  // Alarm Interval (Only play sound if alarmSound exists on the current page)
   setInterval(() => {
     const now = new Date();
     const currentTime = now.toTimeString().slice(0, 5);
     medicines.forEach(med => {
       if (med.time === currentTime && !med.notified) {
-        if (alarmSound) alarmSound.play().catch(() => console.log("Audio blocked by browser"));
+        if (alarmSound) alarmSound.play();
         if ("Notification" in window && Notification.permission === "granted") {
           new Notification("Medication Reminder", { body: `Time to take: ${med.name}` });
         }
